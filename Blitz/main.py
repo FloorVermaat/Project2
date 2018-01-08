@@ -21,7 +21,8 @@ snd_folder = os.path.join(game_folder, 'sounds')
 pygame.init()
 pygame.mixer.init()
 
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)
+
 pygame.display.set_caption("The bestest of games")
 clock = pygame.time.Clock()
 keys = pygame.key.get_pressed()
@@ -40,14 +41,14 @@ def draw_text(surf, text, size, x, y):
 # adding mob to mob groups and spawning them
 def newmob():
     m = Mob()
-    all_sprites.add(m)
+    Blitz_sprites.add(m)
     mobs.add(m)
 
 
 # adding enemyships to enemyship group and spawning them
 def enemymob():
     e = EnemyShip()
-    all_sprites.add(e)
+    Blitz_sprites.add(e)
     enemyship.add(e)
 
 
@@ -64,7 +65,7 @@ def draw_shield_bar(surf, x, y, pct):
         pct = 0
     bar_length = 70
     bar_height = 20
-    fill = (pct / 300) * bar_length
+    fill = (pct / 150) * bar_length
     outline_rect = pygame.Rect(x, y, bar_length, bar_height)
     fill_rect = pygame.Rect(x, y, fill, bar_height)
     pygame.draw.rect(surf, GREEN, fill_rect)
@@ -105,7 +106,7 @@ def draw_lives(surf, x, y, lives, img):
 
 def name_input_screen():
     global nameinputscreen, intro_screen, text
-    font = pygame.font.Font("8.TTF", 16)
+    font = pygame.font.Font("8-BIT WONDER.ttf", 16)
     input_box = pygame.Rect(W / 2 - 100, H / 2 - 50, 140, 32)
     input_boxbackground = input_box
     color_inactive = pygame.Color('lightskyblue3')
@@ -239,22 +240,23 @@ def show_victory_screen():
 def shield_status():
     if not player.shield_st:
         death_expl = Explosion(player.rect.center, "player")
-        all_sprites.add(death_expl)
+        Blitz_sprites.add(death_expl)
         player.hide()
         player.lives -= 1
-        player.shield = 300
+        player.shield = 150
         player.shield_st1 = True
         player.shield_st = True
         player.powerbar = 0
         player.power = 1
     # if shield is at half, this happens
-    if player.shield <= 150 and player.shield >= 1 and player.shield_st1:
-        player.shield = 150
+    if player.shield <= 75 and player.shield >= 1 and player.shield_st1:
+        player.shield = 75
         shields_50.play()
         player.shield_st1 = False
     # if shield is down, this happens
     if player.shield <= 0 and player.shield_st:
         player.shield_st = False
+        shields_50.stop()
         shields.play()
 
 
@@ -265,11 +267,11 @@ def collision_checks():
     for hits in power:
         if hits.type == "shield":
             player.shield += 50
-            if player.shield >= 300:
-                player.shield = 300
-            if player.shield > 150:
+            if player.shield >= 150:
+                player.shield = 150
+            if player.shield > 75:
                 player.shield_st1 = True
-            if player.shield in range(1, 150):
+            if player.shield in range(1, 75):
                 player.shield_st = True
         if hits.type == "shoot":
             player.powerbar = poweruptime
@@ -279,7 +281,7 @@ def collision_checks():
     bulletvsplayer = pygame.sprite.spritecollide(player, enemybullets, True, pygame.sprite.collide_mask)
     for i in bulletvsplayer:
         expl = Explosion(i.rect.center, "small")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         player.shield -= 75
         # if you die this happens
         shield_status()
@@ -288,11 +290,11 @@ def collision_checks():
     shipvsplayer = pygame.sprite.spritecollide(player, enemyship, True, pygame.sprite.collide_mask)
     for i in shipvsplayer:
         expl = Explosion(i.rect.center, "player")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         player.shield -= player.shield
         # if you die this happens
         death_expl = Explosion(player.rect.center, "player")
-        all_sprites.add(death_expl)
+        Blitz_sprites.add(death_expl)
         player.hide()
         player.lives -= 1
         player.shield = 300
@@ -305,7 +307,7 @@ def collision_checks():
     hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_mask)
     for hit in hits:
         expl = Explosion(hit.rect.center, "small")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         newmob()
         player.shield -= hit.radius
         # if you die this happens
@@ -320,7 +322,7 @@ def collision_checks():
     enemyvsmobhits = pygame.sprite.groupcollide(enemyship, mobs, False, True, pygame.sprite.collide_mask)
     for hit in enemyvsmobhits:
         expl = Explosion(hit.rect.center, "small")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         newmob()
         hit.shield -= 25
 
@@ -328,7 +330,7 @@ def collision_checks():
     zap = pygame.sprite.groupcollide(mobs, enemybullets, True, True, pygame.sprite.collide_mask)
     for z in zap:
         expl = Explosion(z.rect.center, "large")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         newmob()
         # manage volume for the explosion sounds
         expl_sound = random.choice(explosion_sound)
@@ -340,11 +342,11 @@ def collision_checks():
     for boom in destroy:
         score += 130 - boom.radius
         expl = Explosion(boom.rect.center, "large")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         # spawn powerups
         if random.randrange(0, 10) == 4:
             pow = Powerup(boom.rect.center)
-            all_sprites.add(pow)
+            Blitz_sprites.add(pow)
             powerups.add(pow)
         newmob()
         # manage volume of the explosion sounds
@@ -359,33 +361,37 @@ def collision_checks():
         if i.shield <= 0:
             score += 400
             expl = Explosion(i.rect.center, "player")
-            all_sprites.add(expl)
-            all_sprites.remove(i)
+            Blitz_sprites.add(expl)
+            Blitz_sprites.remove(i)
             enemyship.remove(i)
             if random.randrange(0, 5) == 4:
                 pow = Powerup(i.rect.center)
-                all_sprites.add(pow)
+                Blitz_sprites.add(pow)
                 powerups.add(pow)
 
     # bullet vs bullet collision check
     bulletwipe = pygame.sprite.groupcollide(bullets, enemybullets, True, True, pygame.sprite.collide_mask)
     for i in bulletwipe:
         expl = Explosion(i.rect.center, 'small')
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
 
     # bullet vs Bosship collision check
     bulletvsboss = pygame.sprite.spritecollide(BosShip, bullets, True, pygame.sprite.collide_mask)
     for i in bulletvsboss:
         expl = Explosion(i.rect.center, "small")
-        all_sprites.add(expl)
+        Blitz_sprites.add(expl)
         BosShip.shield -= 75
         if BosShip.shield <= 0:
             expl = Explosion(i.rect.center, "player")
-            all_sprites.add(expl)
-            all_sprites.remove(BosShip)
+            Blitz_sprites.add(expl)
+            Blitz_sprites.remove(BosShip)
             score += 5000
             bossbattle = False
             victory = True
+        if random.randrange(0, 10) == 4:
+            pow = Powerup(i.rect.center)
+            Blitz_sprites.add(pow)
+            powerups.add(pow)
 
 
 
@@ -405,7 +411,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_delay = 400
         self.last_update = pygame.time.get_ticks()
         self.last_update1 = pygame.time.get_ticks()
-        self.shield = 300
+        self.shield = 150
         self.shield_st = True
         self.shield_st1 = True
         self.lives = 3
@@ -491,18 +497,18 @@ class Player(pygame.sprite.Sprite):
             self.last_update = now
             if self.power == 1:
                 bullet = Bullet(self.rect.centerx, self.rect.top, -10)
-                all_sprites.add(bullet)
+                Blitz_sprites.add(bullet)
                 bullets.add(bullet)
             if self.power == 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery, -10)
                 bullet2 = Bullet(self.rect.right, self.rect.centery, -10)
-                all_sprites.add(bullet1, bullet2)
+                Blitz_sprites.add(bullet1, bullet2)
                 bullets.add(bullet1, bullet2)
             if self.power == 3:
                 bullet1 = Bullet(self.rect.centerx, self.rect.top, -10)
                 bullet2 = Bullet(self.rect.left, self.rect.centery, -10)
                 bullet3 = Bullet(self.rect.right, self.rect.centery, -10)
-                all_sprites.add(bullet1, bullet2, bullet3)
+                Blitz_sprites.add(bullet1, bullet2, bullet3)
                 bullets.add(bullet1, bullet2, bullet3)
         # delay for the shooting sound
         if now1 - self.last_update1 > 500:
@@ -625,14 +631,14 @@ class EnemyShip(pygame.sprite.Sprite):
                 if self.shoot_delay <= 180:
                     self.shoot_delay = 180
                 bullet = EnemyBullet(img, x, y, movy, movx)
-                all_sprites.add(bullet)
+                Blitz_sprites.add(bullet)
                 enemybullets.add(bullet)
             if self.type == "laserbeam":
                 bullet = EnemyBullet(img, x + 25, y - 25, movy, movx)
-                all_sprites.add(bullet)
+                Blitz_sprites.add(bullet)
                 enemybullets.add(bullet)
                 bullet2 = EnemyBullet(img, x - 25, y - 25, movy, -movx)
-                all_sprites.add(bullet2)
+                Blitz_sprites.add(bullet2)
                 enemybullets.add(bullet2)
 
 
@@ -642,17 +648,20 @@ class BossShip(pygame.sprite.Sprite):
         self.image = spaceship_boss
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = random.randrange(50, W-50)
+        self.rect.x = -250
         self.rect.y = 200
         self.speedy = 0
-        self.speedx = 2
+        self.speedx = 4
         self.shoot_delay = 250
         self.last_update = pygame.time.get_ticks()
         self.shield = 5000
+        self.onscreen = False
 
     def update(self):
         if bossbattle:
             self.shoot()
+            if self.rect.left > 0:
+                self.onscreen = True
             # determines movement of the Boss
             self.rect.x += self.speedx
             self.rect.y += self.speedy
@@ -660,18 +669,23 @@ class BossShip(pygame.sprite.Sprite):
                 self.speedx = -4
                 self.rect.x += self.speedx
                 self.rect.y += self.speedy
-            elif self.rect.left <= 0:
+                if self.shield <= 2500:
+                    self.speedx = -25
+                    self.shoot_delay = 125
+            elif self.rect.left <= 0 and self.onscreen:
                 self.speedx = 4
                 self.rect.x += self.speedx
                 self.rect.y += self.speedy
-
+                if self.shield <= 2500:
+                    self.speedx = 25
+                    self.shoot_delay = 125
     def shoot(self):
         # delay for shooting
         now = pygame.time.get_ticks()
         if now - self.last_update > self.shoot_delay:
             self.last_update = now
             bullet = EnemyBullet(Enemybullet_boss, self.rect.centerx, self.rect.bottom, +10, 0)
-            all_sprites.add(bullet)
+            Blitz_sprites.add(bullet)
             enemybullets.add(bullet)
 
 
@@ -891,122 +905,131 @@ for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
 pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
-pygame.mixer.music.set_volume(0.9)
+pygame.mixer.music.set_volume(0.5)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
 
 
+#Look up the highscore
+with open(os.path.join(game_folder, HS_File), 'r+') as f:
+    try:
+        highscore = int(f.read())
+    except:
+        highscore = 0
+    f.close()
+
 # different scenes of the game
-nameinputscreen = True
-intro_screen = False
+intro_screen = True
 game_over = False
-done = False
 bossbattle = False
 victory = False
+BlitzGameRun = False
 
 background = Background()
 score = 0
-# -------- Main Program Loop -----------
-while not done:
-    if nameinputscreen:
-        name_input_screen()
 
-    if intro_screen:
-        with open(os.path.join(game_folder, HS_File), 'r+') as f:
-            try:
-                highscore = int(f.read())
-            except:
-                highscore = 0
-            f.close()
-        bossbattle = False
-        game_over = False
-        victory = False
-        show_intro_screen()
-        intro_screen = False
-        # Groups
-        all_sprites = pygame.sprite.Group()
-        mobs = pygame.sprite.Group()
-        enemyship = pygame.sprite.Group()
-        bullets = pygame.sprite.Group()
-        enemybullets = pygame.sprite.Group()
-        powerups = pygame.sprite.Group()
-        BosShip = BossShip()
-        enemyfleet = EnemyShip()
-        player = Player()
-        all_sprites.add(player)
-        # number of enemies
-        for i in range(10):
-            newmob()
-        # scoreboard
-        score = 0
-        # start DA MUSIC!
-        pygame.mixer.music.play(loops=-1)
-        pygame.display.flip()
+class Blitz:
+    def __init__(self, screen):
+        self.screen = screen
 
-    if game_over:
-        show_gameover_screen()
-        #pygame.display.flip()
-    if victory:
-        show_victory_screen()
+    def blitz_Game(self):
+        global nameinputscreen, intro_screen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score
+        done = False
+        # -------- Main Program Loop -----------
+        while not done:
 
-    # loop at right fps
-    clock.tick(FPS)
-    # --- Main event loop
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
+            if intro_screen:
+                bossbattle = False
+                game_over = False
+                victory = False
+                show_intro_screen()
+                intro_screen = False
+                # Groups
+                Blitz_sprites = pygame.sprite.Group()
+                mobs = pygame.sprite.Group()
+                enemyship = pygame.sprite.Group()
+                bullets = pygame.sprite.Group()
+                enemybullets = pygame.sprite.Group()
+                powerups = pygame.sprite.Group()
+                BosShip = BossShip()
+                enemyfleet = EnemyShip()
+                player = Player()
+                Blitz_sprites.add(player)
+                # number of enemies
+                for i in range(10):
+                    newmob()
+                # scoreboard
+                score = 0
+                # start DA MUSIC!
+                pygame.mixer.music.play(loops=-1)
+                pygame.display.flip()
 
-    # Update
-    all_sprites.update()
+            if game_over:
+                show_gameover_screen()
+                # pygame.display.flip()
+            if victory:
+                show_victory_screen()
 
-    # collisionchecks
-    collision_checks()
+            # loop at right fps
+            clock.tick(FPS)
+            # --- Main event loop
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
 
-    # enemyspawner that takes points in consideration
-    if score >= enemyfleet.enemyspawn + 500 and not bossbattle:
-        for i in range(1):
-            enemyfleet.distance += 100
-            enemymob()
-            enemyfleet.enemyspawn = score
+            # Update
+            Blitz_sprites.update()
 
-    # BOSS BATTLE!
-    if score >= 2000 and not bossbattle:
-        all_sprites.remove(enemyship)
-        all_sprites.remove(mobs)
-        mobs.remove()
-        enemyship.remove()
-        all_sprites.add(BosShip)
-        bossbattle = True
-    if bossbattle:
-        all_sprites.remove(enemyship)
-        all_sprites.remove(mobs)
-        mobs.remove()
-        enemyship.remove()
+            # collisionchecks
+            collision_checks()
+
+            # enemyspawner that takes points in consideration
+            if score >= enemyfleet.enemyspawn + 500 and not bossbattle:
+                for i in range(1):
+                    enemyfleet.distance += 100
+                    enemymob()
+                    enemyfleet.enemyspawn = score
+
+            # BOSS BATTLE!
+            if score >= 1000 and not bossbattle:
+                Blitz_sprites.remove(enemyship)
+                Blitz_sprites.remove(mobs)
+                mobs.empty()
+                enemyship.empty()
+                Blitz_sprites.add(BosShip)
+                bossbattle = True
+            if bossbattle:
+                Blitz_sprites.remove(enemyship)
+                Blitz_sprites.remove(mobs)
+                mobs.remove()
+                enemyship.remove()
+
+            # Draw / Render
+            self.screen.fill(BLACK)
+            background.draw(self.screen)
+            Blitz_sprites.draw(self.screen)
+            draw_text(self.screen, str(score), 18, W / 2, 10)
+            draw_text(self.screen, "Space Pirate " + text, 12, 120, 10)
+            # draw shield, only if you have shield
+            if player.shield > 0:
+                draw_shield_bar(self.screen, W - 80, H - 70, player.shield)
+            # draw power up, only if you have an active powerup
+            if player.powerbar > 0:
+                draw_powerup_bar(self.screen, W - W + 10, H - 70, player.powerbar)
+            # draw bossbar, only when bossbattle
+            if bossbattle:
+                draw_bosshield_bar(self.screen, W / 2 + 40, 10, BosShip.shield)
+            draw_lives(self.screen, W - (W - 100), H - H + 70, player.lives, player_minilives)
+            # --- Hiding the mouse
+            pygame.mouse.set_visible(False)
+            # --- updating screen
+            pygame.display.flip()
+
+        # Close the window and quit.
+        #pygame.quit()
+        done = True
 
 
-
-    # Draw / Render
-    screen.fill(BLACK)
-    background.draw(screen)
-    all_sprites.draw(screen)
-    draw_text(screen, str(score), 18, W / 2, 10)
-    draw_text(screen, "Space Pirate " + text, 12, 120, 10)
-    # draw shield, only if you have shield
-    if player.shield > 0:
-        draw_shield_bar(screen, W - 80 , H - 70, player.shield)
-    # draw power up, only if you have an active powerup
-    if player.powerbar > 0:
-        draw_powerup_bar(screen, W - W + 10, H - 70, player.powerbar)
-    # draw bossbar, only when bossbattle
-    if bossbattle:
-        draw_bosshield_bar(screen, W / 2 + 40, 10, BosShip.shield)
-    draw_lives(screen, W - (W - 100), H - H + 70, player.lives, player_minilives)
-    # --- Hiding the mouse
-    pygame.mouse.set_visible(False)
-    # --- updating screen
-    pygame.display.flip()
-    Done = False
-
-# Close the window and quit.
-pygame.quit()
+BLITZ = Blitz(screen)
+BLITZ.blitz_Game()
