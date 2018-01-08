@@ -1,7 +1,7 @@
 import pygame as pg
 import pygame as pygame
 from settings import *
-import CTT.main
+
 
 #CTT Import
 
@@ -87,6 +87,11 @@ class Main:
             pygame.display.flip()
             self.clock.tick(FPS)
 
+    def load_CTT(self):
+        import CTT.main as CTT
+        #CTT.init(self.screen)
+        CTT.CTT(self.screen)
 
 M = Main()
 M.name_input_screen()
+M.load_CTT()

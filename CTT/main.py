@@ -5,12 +5,15 @@
 
 import pygame as pg
 import random
-from settings import *
-from sprites import *
+from CTT.settings import *
+from CTT.sprites import *
 from pygame import *
 
 class Climb_The_Tower_Game:
-    def __init__(self):
+    def __init__(self, screen):
+        #Get Screen from Integration
+        self.screen = screen
+
         # initialize game window, etc
 
         #pg.mixer.pre_init(44100, -16, 2, 2048)
@@ -28,7 +31,7 @@ class Climb_The_Tower_Game:
         self.spriteArrayTower = []
         i = 1
         while i <= 361:
-            self.path = "tower/" + str(i) + ".png"
+            self.path = "CTT/tower/" + str(i) + ".png"
             #print(i)
             self.spriteArrayTower.append(pg.image.load(self.path).convert_alpha())
             i += 1
@@ -169,8 +172,7 @@ class Climb_The_Tower_Game:
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_q:
-                    pg.quit()
-                    quit()
+                    self.running = False
 
     def draw(self):
         # Climb_The_Tower_Game Loop - draw
@@ -233,8 +235,8 @@ class Climb_The_Tower_Game:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-def CTT():
-    CTT = Climb_The_Tower_Game()
+def CTT(screen):
+    CTT = Climb_The_Tower_Game(screen)
     CTT.show_start_screen()
     while CTT.running:
         CTT.new()
@@ -243,5 +245,3 @@ def CTT():
         else:
             CTT.show_go_screen()
     pg.quit()
-
-CTT()

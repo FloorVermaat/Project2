@@ -1,5 +1,5 @@
 # game options/settings
-from platforms import *
+from CTT.platforms import *
 TITLE = "Jump"
 WIDTH = 1280
 HEIGHT = 720

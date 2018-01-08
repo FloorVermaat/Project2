@@ -1,14 +1,14 @@
 # Sprite classes for platform game
 import pygame as pg
-from settings import *
+from CTT.settings import *
 vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game):
         pg.sprite.Sprite.__init__(self)
-        self.sprites_left = pg.image.load("sprites/player_l.png")
-        self.sprites_null = pg.image.load("sprites/player.png")
-        self.sprites_right = pg.image.load("sprites/player_r.png")
+        self.sprites_left = pg.image.load("CTT/sprites/player_l.png")
+        self.sprites_null = pg.image.load("CTT/sprites/player.png")
+        self.sprites_right = pg.image.load("CTT/sprites/player_r.png")
 
         self.game = game
         self.image = self.sprites_null
@@ -185,14 +185,14 @@ class Tower(pg.sprite.Sprite):
 
 class Music:
     def __init__(self):
-        self.jump1 = pg.mixer.Sound("assets/jumppp12.ogg")
-        self.jump2 = pg.mixer.Sound("assets/jumppp23.ogg")
-        self.land1 = pg.mixer.Sound("assets/Land1.wav")
-        self.land2 = pg.mixer.Sound("assets/Land1.wav")
-        self.land3 = pg.mixer.Sound("assets/Land1.wav")
+        self.jump1 = pg.mixer.Sound("CTT/assets/jumppp12.ogg")
+        self.jump2 = pg.mixer.Sound("CTT/assets/jumppp23.ogg")
+        self.land1 = pg.mixer.Sound("CTT/assets/Land1.wav")
+        self.land2 = pg.mixer.Sound("CTT/assets/Land1.wav")
+        self.land3 = pg.mixer.Sound("CTT/assets/Land1.wav")
         self.land1.set_volume(0.2)
 
-        self.bg = pg.mixer.Sound("assets/ErrorManagement.ogg")
+        self.bg = pg.mixer.Sound("CTT/assets/ErrorManagement.ogg")
         self.bg.set_volume(0.02)
 
 
