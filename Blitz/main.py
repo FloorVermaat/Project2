@@ -217,7 +217,7 @@ def show_victory_screen():
     while waiting:
         clock.tick(FPS)
         background.draw(screen)
-        draw_text(screen, "Space Pirate " + text, 12, 120, 10)
+        draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
         draw_text(screen, "VICTORY", 64, W / 2, H / 8)
         draw_text(screen, "your score was " + str(score), 15, W / 2, H / 3)
         draw_text(screen, "Press R key to return to homescreen", 15, W / 2, H / 2)
