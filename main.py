@@ -94,12 +94,8 @@ class Main:
 
     def load_Blitz(self):
         import Blitz.main as Blitz
-        Blitz.st
+        Blitz.Start(self.screen, Name)
 
-
-
-        Blitz(self.screen)
-        BLITZ.blitz_Game()
 
         #BLITZ = Blitz(screen)
         #BLITZ.blitz_Game()

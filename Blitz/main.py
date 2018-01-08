@@ -1034,6 +1034,9 @@ class Blitz:
 
 
 
-def Start(screen):
-    BLITZ = Blitz(screen)
+def Start(ext_screen, ext_name):
+    global screen, Name
+    BLITZ = Blitz(ext_screen)
+    screen = ext_screen
+    Name = ext_name
     BLITZ.blitz_Game()
