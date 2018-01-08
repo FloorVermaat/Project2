@@ -101,7 +101,66 @@ class Main:
         #BLITZ.blitz_Game()
 
     def select_Minigame(self):
-        waiting = True
+        global intro_screen, Worldselect
+        self.BlitzButton = pygame.Rect(W / 2 - 70, H / 2 - 300, 140, 32)
+        self.ClimbButton = pygame.Rect(W / 2 - 250, H / 2 - 200, 500, 32)
+        self.RaceButton = pygame.Rect(W / 2 - 70, H / 2 - 100, 140, 32)
+        self.ShootButton = pygame.Rect(W / 2 - 70, H / 2 + 150 - 50, 140, 32)
+        self.EvadeButton = pygame.Rect(W / 2 - 70, H / 2 + 200 - 50, 140, 32)
+        done = False
+        while not done:
+            self.clock.tick(FPS)
+            self.screen.fill(BLACK)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+                if self.BlitzButton.collidepoint(pygame.mouse.get_pos()):
+                    #
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # If user clicks the Blitz button:
+                    if self.BlitzButton.collidepoint(event.pos):
+                        M.load_Blitz()
+                        done = True
+                    if self.ClimbButton.collidepoint(event.pos):
+                        M.load_CTT()
+                        done = True
+                    if self.RaceButton.collidepoint(event.pos):
+                        pass
+                    if self.ShootButton.collidepoint(event.pos):
+                        pass
+                    if self.EvadeButton.collidepoint(event.pos):
+                        pass
+
+            # Blit the boxes
+            pygame.draw.rect(self.screen, BLACK, self.BlitzButton)
+            pygame.draw.rect(self.screen, BLACK, self.ClimbButton)
+            pygame.draw.rect(self.screen, BLACK, self.RaceButton)
+            pygame.draw.rect(self.screen, BLACK, self.ShootButton)
+            pygame.draw.rect(self.screen, BLACK, self.EvadeButton)
+            # Background of the boxes
+            pygame.draw.rect(self.screen, WHITE, self.BlitzButton, 5)
+            pygame.draw.rect(self.screen, WHITE, self.ClimbButton, 5)
+            pygame.draw.rect(self.screen, WHITE, self.RaceButton, 5)
+            pygame.draw.rect(self.screen, WHITE, self.ShootButton, 5)
+            pygame.draw.rect(self.screen, WHITE, self.EvadeButton, 5)
+
+            # Draw text on the boxes
+            self.draw_text(self.screen, "Blitz", 25, self.BlitzButton.x + 70, self.BlitzButton.y + 0)
+            self.draw_text(self.screen, "Climb The Tower", 25, self.ClimbButton.x + 250, self.ClimbButton.y + 0)
+
+            # Flip the screen
+            pygame.display.flip()
+
+
+
+
+
+
+
+
+      waiting = True
         while waiting:
             self.clock.tick(FPS)
             for event in pg.event.get():
