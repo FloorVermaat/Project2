@@ -13,12 +13,12 @@ class Climb_The_Tower_Game:
     def __init__(self):
         # initialize game window, etc
 
-        pg.mixer.pre_init(44100, -16, 2, 2048)
-        pg.mixer.init()
-        pg.init()
+        #pg.mixer.pre_init(44100, -16, 2, 2048)
+        #pg.mixer.init()
+        #pg.init()
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption(TITLE)
+        #self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        #pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
         self.running = True

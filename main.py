@@ -1,6 +1,13 @@
 import pygame as pg
 import pygame as pygame
 from settings import *
+import CTT.main
+
+#CTT Import
+
+
+#Import CTT Minigame
+
 
 
 class Main:
@@ -79,6 +86,7 @@ class Main:
             pygame.draw.rect(self.screen, color, input_box, 5)
             pygame.display.flip()
             self.clock.tick(FPS)
+
 
 M = Main()
 M.name_input_screen()
