@@ -11,19 +11,6 @@ from pygame import *
 
 class Game:
     def __init__(self):
-        # initialize game window, etc
-
-        pg.mixer.pre_init(44100, -16, 2, 2048)
-        pg.mixer.init()
-        pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), FULLSCREEN)
-        pg.display.set_caption(TITLE)
-        self.clock = pg.time.Clock()
-        self.running = True
-        self.font_name = pg.font.match_font(FONT_NAME)
-
-
-
         self.spriteArrayTower = []
         i = 1
         while i <= 361:
