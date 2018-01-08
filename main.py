@@ -92,6 +92,40 @@ class Main:
         #CTT.init(self.screen)
         CTT.CTT(self.screen)
 
+    def load_Blitz(self):
+        import Blitz.main as Blitz
+        Blitz.st
+
+
+
+        Blitz(self.screen)
+        BLITZ.blitz_Game()
+
+        #BLITZ = Blitz(screen)
+        #BLITZ.blitz_Game()
+
+    def select_Minigame(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.running = False
+                pressed = pg.key.get_pressed()
+                if pressed[pg.K_b]:
+                    print("b is pressed")
+                    waiting = False
+                    M.load_Blitz()
+
+                elif pressed[pg.K_c]:
+                    print("c is pressed")
+                    waiting = False
+                    M.load_CTT()
+
+
+
 M = Main()
-M.name_input_screen()
-M.load_CTT()
+Name = M.name_input_screen()
+print(Name)
+M.select_Minigame()

@@ -18,20 +18,20 @@ img_folder2 = os.path.join(img_folder, )
 snd_folder = os.path.join(game_folder, 'sounds')
 
 # Initialize pygame and create window
-pygame.init()
-pygame.mixer.init()
+#pygame.init()
+#pygame.mixer.init()
 
-screen = pygame.display.set_mode(size)
+#screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("The bestest of games")
 clock = pygame.time.Clock()
 keys = pygame.key.get_pressed()
-text = ""
+Name = ""
 
 
 # drawing text on screen
 def draw_text(surf, text, size, x, y):
-    font_name = pygame.font.Font("8.TTF", size)
+    font_name = pygame.font.Font("Blitz/8.TTF", size)
     text_surface = font_name.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
@@ -195,7 +195,7 @@ def show_intro_screen():
     while waiting:
         clock.tick(FPS)
         background.draw(screen)
-        draw_text(screen, "Space Pirate " + text, 12, 120, 10)
+        draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
         draw_text(screen, "Blitz", 64, W / 2, H / 8)
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
@@ -254,7 +254,7 @@ def shield_status():
         shields_50.play()
         player.shield_st1 = False
     # if shield is down, this happens
-    if player.shield <= 0 and player.shield_st:
+    if player.shield <= 0: #and player.shield_st:
         player.shield_st = False
         shields_50.stop()
         shields.play()
@@ -313,10 +313,6 @@ def collision_checks():
         # if you die this happens
         shield_status()
 
-    death_expl = Explosion(player.rect.center, "player")
-    # if the player died and exposion finished playing
-    if player.lives == 0 and not death_expl.alive():
-        game_over = True
 
     # enemyship vs mob collision check
     enemyvsmobhits = pygame.sprite.groupcollide(enemyship, mobs, False, True, pygame.sprite.collide_mask)
@@ -905,7 +901,7 @@ for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
 pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(0.4)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
@@ -934,7 +930,7 @@ class Blitz:
         self.screen = screen
 
     def blitz_Game(self):
-        global nameinputscreen, intro_screen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score
+        global nameinputscreen, intro_screen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score, game_over, Name
         done = False
         # -------- Main Program Loop -----------
         while not done:
@@ -983,6 +979,11 @@ class Blitz:
 
             # collisionchecks
             collision_checks()
+            death_expl = Explosion(player.rect.center, "player")
+            # if the player died and exposion finished playing
+            if player.lives == 0 and not death_expl.alive():
+                game_over = True
+
 
             # enemyspawner that takes points in consideration
             if score >= enemyfleet.enemyspawn + 500 and not bossbattle:
@@ -1010,7 +1011,7 @@ class Blitz:
             background.draw(self.screen)
             Blitz_sprites.draw(self.screen)
             draw_text(self.screen, str(score), 18, W / 2, 10)
-            draw_text(self.screen, "Space Pirate " + text, 12, 120, 10)
+            draw_text(self.screen, "Space Pirate " + Name, 12, 120, 10)
             # draw shield, only if you have shield
             if player.shield > 0:
                 draw_shield_bar(self.screen, W - 80, H - 70, player.shield)
@@ -1027,9 +1028,12 @@ class Blitz:
             pygame.display.flip()
 
         # Close the window and quit.
-        #pygame.quit()
         done = True
 
 
-BLITZ = Blitz(screen)
-BLITZ.blitz_Game()
+
+
+
+def Start(screen):
+    BLITZ = Blitz(screen)
+    BLITZ.blitz_Game()
