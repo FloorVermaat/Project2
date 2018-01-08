@@ -901,7 +901,7 @@ for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
 pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.2)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
