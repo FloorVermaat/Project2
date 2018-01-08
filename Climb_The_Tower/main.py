@@ -9,8 +9,22 @@ from settings import *
 from sprites import *
 from pygame import *
 
-class Game:
+class Climb_The_Tower_Game:
     def __init__(self):
+        # initialize game window, etc
+
+        pg.mixer.pre_init(44100, -16, 2, 2048)
+        pg.mixer.init()
+        pg.init()
+
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        pg.display.set_caption(TITLE)
+
+        self.clock = pg.time.Clock()
+        self.running = True
+        self.font_name = pg.font.match_font(FONT_NAME)
+
+
         self.spriteArrayTower = []
         i = 1
         while i <= 361:
@@ -48,29 +62,16 @@ class Game:
 
         self.player = Player(self)
         self.all_sprites.add(self.player)
-        #for plat in PLATFORM_LIST:
-        #    p = Platform(*plat, GREEN)
-        #    self.all_sprites.add(p)
-        #    self.platforms.add(p)
 
         for plat in PLATFORM_LIST:
             p = Platform(*plat, RED)
             self.all_sprites.add(p)
             self.platforms.add(p)
 
-
-
-        #i = 0
-        #for plat in Platform_3D_Array:
-        #    p = Platform(i, HEIGHT - 50 - 1 * i, BLUE)
-        #    self.all_sprites.add(p)
-        #    self.platforms.add(p)
-        #    i += 1
-
         self.run()
 
     def run(self):
-        # Game Loop
+        # Climb_The_Tower_Game Loop
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
@@ -79,7 +80,7 @@ class Game:
             self.draw()
 
     def update(self):
-        # Game Loop - Update
+        # Climb_The_Tower_Game Loop - Update
         self.all_sprites.update()
 
         # check if player hits a platform - only if falling
@@ -142,30 +143,10 @@ class Game:
             self.all_sprites.add(p)
             self.platforms_last.add(p)
 
-            #Safe old rotation
+            #Save old rotation
             self.platforms_last.rotation = rotation
             self.platforms_last.height = height
 
-
-
-            # Check If new Platform Hits Platform
-            #hits = pg.sprite.groupcollide(self.platforms, self.platforms_last, False, False)
-            #if hits:
-                #print(hits)
-                #for plat in self.platforms.last:
-                #        plat.kill()
-
-
-
-
-
-        # spawn new tower parts to keep it always on screen
-        #while len(self.tower) < 13:
-        #    t = Tower(self.spriteArrayTower, 10*self.tower.i, self.tower.i)
-        #    self.all_sprites.add(t)
-        #    self.tower.add(t)
-        #    self.tower.i += 1
-        #    pass
 
         if self.score >= 250:
             self.win = True
@@ -173,7 +154,7 @@ class Game:
 
 
     def events(self):
-        # Game Loop - events
+        # Climb_The_Tower_Game Loop - events
         for event in pg.event.get():
             # check for closing window
             if event.type == pg.QUIT:
@@ -192,7 +173,7 @@ class Game:
                     quit()
 
     def draw(self):
-        # Game Loop - draw
+        # Climb_The_Tower_Game Loop - draw
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
@@ -252,13 +233,15 @@ class Game:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-g = Game()
-g.show_start_screen()
-while g.running:
-    g.new()
-    if g.win:
-        g.show_win_screen()
-    else:
-        g.show_go_screen()
+def CTT():
+    CTT = Climb_The_Tower_Game()
+    CTT.show_start_screen()
+    while CTT.running:
+        CTT.new()
+        if CTT.win:
+            CTT.show_win_screen()
+        else:
+            CTT.show_go_screen()
+    pg.quit()
 
-pg.quit()
+CTT()
