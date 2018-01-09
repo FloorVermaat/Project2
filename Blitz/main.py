@@ -162,7 +162,7 @@ def name_input_screen():
 
 
 def show_gameover_screen():
-    global highscore, intro_screen, game_over
+    global highscore, game_over
     waiting = True
     newhighscore = False
     pygame.mixer.music.fadeout(1000)
@@ -185,7 +185,7 @@ def show_gameover_screen():
             if test.type == pygame.QUIT:
                 pygame.quit()
             if pygame.key.get_pressed()[pygame.K_r]:
-                intro_screen = True
+                Blitz.intro_screen = True
                 game_over = False
                 waiting = False
             if pygame.key.get_pressed()[pygame.K_q]:
@@ -210,6 +210,7 @@ def show_intro_screen():
             if test.type == pygame.QUIT:
                 pygame.quit()
             if pygame.key.get_pressed()[pygame.K_r]:
+                Blitz.done = False
                 waiting = False
             if pygame.key.get_pressed()[pygame.K_q]:
                 Blitz.done = True
@@ -922,7 +923,6 @@ with open(os.path.join(game_folder, HS_File), 'r+') as f:
     f.close()
 
 # different scenes of the game
-intro_screen = True
 game_over = False
 bossbattle = False
 victory = False
@@ -938,12 +938,11 @@ class Blitz:
         self.intro_screen = True
 
     def blitz_Game(self):
-        global nameinputscreen, intro_screen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score, game_over, Name
+        global nameinputscreen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score, game_over, Name
         # -------- Main Program Loop -----------
         while not self.done:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_q]:
-                self.intro_screen = True
+
 
             if self.intro_screen:
                 bossbattle = False
@@ -970,6 +969,9 @@ class Blitz:
                 # start DA MUSIC!
                 pygame.mixer.music.play(loops=-1)
                 pygame.display.flip()
+
+            #if keys[pygame.K_q]:
+             #   self.intro_screen = True
 
             if keys[pygame.K_q]:
                 self.done = True
@@ -1019,6 +1021,7 @@ class Blitz:
                 mobs.remove()
                 enemyship.remove()
 
+            print(self.intro_screen)
             # Draw / Render
             self.screen.fill(BLACK)
             background.draw(self.screen)
