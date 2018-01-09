@@ -99,9 +99,9 @@ class Main:
         import Blitz.main as Blitz
         Blitz.Start(self.screen, Name)
 
-
-        #BLITZ = Blitz(screen)
-        #BLITZ.blitz_Game()
+    def load_SR(self):
+        import SR.main as SR
+        SR.SR(self.screen)
 
     # loading the planets to the spritegroup
     def load_Planets(self):
@@ -163,14 +163,19 @@ class Main:
                     # If user clicks the Blitz button:
                     if self.BlitzPlanet.rect.collidepoint(event.pos):
                         M.load_Blitz()
+
                     if self.ClimbPlanet.rect.collidepoint(event.pos):
                         M.load_CTT()
+
                     if self.RacePlanet.rect.collidepoint(event.pos):
-                        pass
+                        M.load_SR()
+
                     if self.ShootPlanet.rect.collidepoint(event.pos):
                         pass
+
                     if self.EvadePlanet.rect.collidepoint(event.pos):
                         pass
+
                     if self.ExitPlanet.rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()

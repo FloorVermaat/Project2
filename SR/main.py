@@ -275,10 +275,9 @@ def draw_player_health(surf, x, y, pct):
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, screen):
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption(TITLE)
+        self.screen = screen
         self.clock = pg.time.Clock()
         self.load_data()
 
@@ -423,6 +422,9 @@ class Game:
         pg.display.flip()
         self.wait_for_key()
 
+        pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
+        pg.mixer.music.play(-1)
+
 
     def show_go_screen(self):
         self.screen.fill(BLACK)
@@ -430,6 +432,10 @@ class Game:
                        WIDTH / 2, 300, align="center")
         self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
+
+        pg.mixer.music.fadeout(1000)
+
+
         pg.display.flip()
         self.wait_for_key()
 
@@ -469,13 +475,14 @@ class Game:
                     waiting = False
                     self.quit()
 
-# create the game object
-g = Game()
-g.show_start_screen()
-pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
-pg.mixer.music.play(-1)
-while True:
-    g.new()
-    g.run()
-    g.show_go_screen()
+
+
+def SR(screen):
+    # create the game object
+    g = Game(screen)
+    g.show_start_screen()
+    while True:
+        g.new()
+        g.run()
+        g.show_go_screen()
 
