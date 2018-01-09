@@ -188,6 +188,8 @@ def show_gameover_screen():
                 intro_screen = True
                 game_over = False
                 waiting = False
+            if pygame.key.get_pressed()[pygame.K_q]:
+                Blitz.done = True
 
 
 def show_intro_screen():
@@ -201,13 +203,17 @@ def show_intro_screen():
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
-        draw_text(screen, "Press Q key to begin", 15, W / 2, H / 1.3)
+        draw_text(screen, "Press q key to Exit at any time", 15, W / 2, H / 1.2)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
         pygame.display.flip()
         for test in pygame.event.get():
             if test.type == pygame.QUIT:
                 pygame.quit()
             if pygame.key.get_pressed()[pygame.K_r]:
+                waiting = False
+            if pygame.key.get_pressed()[pygame.K_q]:
+                Blitz.done = True
+                Blitz.intro_screen = False
                 waiting = False
 
 
@@ -238,6 +244,7 @@ def show_victory_screen():
                 intro_screen = True
                 victory = False
                 waiting = False
+
 
 def shield_status():
     if not player.shield_st:
@@ -390,7 +397,6 @@ def collision_checks():
             pow = Powerup(i.rect.center)
             Blitz_sprites.add(pow)
             powerups.add(pow)
-
 
 
 class Player(pygame.sprite.Sprite):
@@ -928,22 +934,23 @@ score = 0
 class Blitz:
     def __init__(self, screen):
         self.screen = screen
+        self.done = False
+        self.intro_screen = True
 
     def blitz_Game(self):
         global nameinputscreen, intro_screen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score, game_over, Name
-        done = False
         # -------- Main Program Loop -----------
-        while not done:
+        while not self.done:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_q] and not intro_screen:
-                intro_screen = True
+            if keys[pygame.K_q]:
+                self.intro_screen = True
 
-            if intro_screen:
+            if self.intro_screen:
                 bossbattle = False
                 game_over = False
                 victory = False
                 show_intro_screen()
-                intro_screen = False
+                self.intro_screen = False
                 # Groups
                 Blitz_sprites = pygame.sprite.Group()
                 mobs = pygame.sprite.Group()
@@ -964,6 +971,9 @@ class Blitz:
                 pygame.mixer.music.play(loops=-1)
                 pygame.display.flip()
 
+            if keys[pygame.K_q]:
+                self.done = True
+
             if game_over:
                 show_gameover_screen()
                 # pygame.display.flip()
@@ -975,7 +985,7 @@ class Blitz:
             # --- Main event loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    done = True
+                    self.done = True
 
             # Update
             Blitz_sprites.update()
