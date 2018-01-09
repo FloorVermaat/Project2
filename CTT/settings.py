@@ -7,10 +7,10 @@ FPS = 60
 FONT_NAME = 'arial'
 
 # Player properties
-PLAYER_ACC = 0.5
+PLAYER_ACC = 0.6
 PLAYER_FRICTION = -0.05
-PLAYER_GRAV = 0.8
-PLAYER_JUMP = 20
+PLAYER_GRAV = 0.7
+PLAYER_JUMP = 22
 
 # Starting platforms
 #PLATFORM_LIST = [(0, HEIGHT - 40, WIDTH, 40),
