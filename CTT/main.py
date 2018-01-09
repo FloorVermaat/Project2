@@ -136,7 +136,7 @@ class Climb_The_Tower_Game:
             height = random.randrange(-300, -55)
             while (height - self.platforms_last.height) in range(-50,50):
                 print("Height to close" + str(int(height - self.platforms_last.height)))
-                height = random.randrange(-300, -55)
+                height = random.randrange(-280, -55)
 
 
 
@@ -151,7 +151,7 @@ class Climb_The_Tower_Game:
             self.platforms_last.height = height
 
 
-        if self.score >= 250:
+        if self.score >= 1000:
             self.win = True
             self.playing = False
 
