@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from random import *
 from os import path
-from settings import *
+from SS.settings import *
 vec = pg.math.Vector2
 
 # tijdelijk
