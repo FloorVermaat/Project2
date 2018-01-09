@@ -208,7 +208,7 @@ class Main:
 
 
 
-            # Draw text on the boxes
+            # Draw text
             self.draw_text(self.screen, "Blitz", 14, self.BlitzPlanet.rect.x + self.BlitzPlanet.rect.w / 2,
                            self.BlitzPlanet.rect.y - 40)
             self.draw_text(self.screen, "Climb The Tower", 14, self.ClimbPlanet.rect.x + self.ClimbPlanet.rect.w / 2,
@@ -221,6 +221,9 @@ class Main:
                            self.ShootPlanet.rect.y - 40)
             self.draw_text(self.screen, "Exit", 14, self.ExitPlanet.rect.x + self.ExitPlanet.rect.w / 2,
                            self.ExitPlanet.rect.y - 40)
+
+            self.draw_text(self.screen, "To Play   Fly To A Planet And Press Enter", 14, W / 2,
+                           H - 100)
 
 
             # game loop update
