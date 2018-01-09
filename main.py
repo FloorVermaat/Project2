@@ -114,6 +114,46 @@ class Main:
         self.MainGame_sprites.add(self.EvadePlanet)
         self.ExitPlanet = ExitPlanet()
         self.MainGame_sprites.add(self.ExitPlanet)
+        self.MainSpaceship = MainPlayer(W / 2, H - 100)
+        self.MainGame_sprites.add(self.MainSpaceship)
+
+
+    def MouseOver_Actions(self):
+        if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.BlitzPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.BlitzPlanet.active = True
+        else:
+            self.BlitzPlanet.active = False
+
+        if self.ClimbPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.ClimbPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.ClimbPlanet.active = True
+        else:
+            self.ClimbPlanet.active = False
+
+        if self.RacePlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.RacePlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.RacePlanet.active = True
+        else:
+            self.RacePlanet.active = False
+
+        if self.ShootPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.ShootPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.ShootPlanet.active = True
+        else:
+            self.ShootPlanet.active = False
+
+        if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.EvadePlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.EvadePlanet.active = True
+        else:
+            self.EvadePlanet.active = False
+
+        if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.ExitPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.ExitPlanet.active = True
+        else:
+            self.ExitPlanet.active = False
 
     def select_Minigame(self):
         self.load_Planets()
@@ -122,39 +162,12 @@ class Main:
             self.screen.fill(BLACK)
             self.background.draw(self.screen)
             self.clock.tick(FPS)
+            self.MouseOver_Actions()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 # Mouse over actions
-                if self.BlitzPlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.BlitzPlanet.active = True
-                else:
-                    self.BlitzPlanet.active = False
 
-                if self.ClimbPlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.ClimbPlanet.active = True
-                else:
-                    self.ClimbPlanet.active = False
-
-                if self.RacePlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.RacePlanet.active = True
-                else:
-                    self.RacePlanet.active = False
-
-                if self.ShootPlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.ShootPlanet.active = True
-                else:
-                    self.ShootPlanet.active = False
-
-                if self.EvadePlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.EvadePlanet.active = True
-                else:
-                    self.EvadePlanet.active = False
-
-                if self.ExitPlanet.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.ExitPlanet.active = True
-                else:
-                    self.ExitPlanet.active = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # If user clicks the Blitz button:
@@ -176,6 +189,23 @@ class Main:
                     if self.ExitPlanet.rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            M.load_Blitz()
+                        if self.ClimbPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            M.load_CTT()
+                        if self.RacePlanet.rect.colliderect(self.MainSpaceship.rect):
+                            M.load_SR()
+                        if self.ShootPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            M.load_SS()
+                        if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
+                            pass
+                        if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            pygame.quit()
+                            sys.exit()
+
 
 
             # Draw text on the boxes

@@ -1,7 +1,7 @@
 from settings import *
 import pygame as pg
 import pygame as pygame
-
+vec = pygame.math.Vector2
 
 class BlitzPlanet(pg.sprite.Sprite):
     def __init__(self):
@@ -273,3 +273,47 @@ class Background(object):
             self.image = new_image
             self.rect = self.image.get_rect()
             self.rect.center = old_center
+
+
+class MainPlayer(pg.sprite.Sprite):
+    def __init__(self, x, y):
+        pg.sprite.Sprite.__init__(self)
+        self.image_orig = pg.image.load(os.path.join(img_folder, "spaceship.png")).convert_alpha()
+        self.image = self.image_orig.copy()
+        self.rect = self.image.get_rect()
+        self.vel = vec(0, 0)
+        self.pos = vec(x, y)
+        self.rot = 90
+        self.clock = pg.time.Clock()
+        self.dt = self.clock.tick(FPS) / 1000.0
+
+    def get_keys(self):
+        self.rot_speed = 0
+        self.vel = vec(0, 0)
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT] or keys[pg.K_a]:
+            self.rot_speed = 200
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            self.rot_speed = -200
+        if keys[pg.K_UP] or keys[pg.K_w]:
+                self.vel = vec(300, 0).rotate(-self.rot)
+        if keys[pg.K_DOWN] or keys[pg.K_s]:
+            self.vel = vec(-300 / 2, 0).rotate(-self.rot)
+
+    def update(self):
+        self.get_keys()
+        self.rot = (self.rot + self.rot_speed * self.dt) % 360
+        self.image = pg.transform.rotate(self.image_orig, self.rot)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.pos += self.vel * self.dt
+        if self.pos.x > WIDTH:
+            self.pos.x = 0
+        if self.pos.x < 0:
+            self.pos.x = WIDTH
+        if self.pos.y > HEIGHT:
+            self.pos.y = 0
+        if self.pos.y < 0:
+            self.pos.y = HEIGHT
+
+

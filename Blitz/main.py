@@ -1024,7 +1024,6 @@ class Blitz:
                 mobs.remove()
                 enemyship.remove()
 
-            print(self.intro_screen)
             # Draw / Render
             self.screen.fill(BLACK)
             background.draw(self.screen)
