@@ -11,6 +11,7 @@ PLAYER_JUMP = 20
 
 # Loading High Score (pickle version)
 
+
 try:
     with open('score.dat', 'rb') as file:
         score = pickle.load(file)
