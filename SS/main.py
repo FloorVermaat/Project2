@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from random import *
 from os import path
-from settings import *
+from SS.settings import *
 vec = pg.math.Vector2
 
 # tijdelijk
@@ -212,10 +212,8 @@ def draw_player_health(surf, x, y, pct):
     pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 class Game:
-    def __init__(self):
-        pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption(TITLE)
+    def __init__(self, screen):
+        self.screen = screen
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
@@ -245,7 +243,7 @@ class Game:
         self.screen.blit(text_surface, text_rect)
 
     def load_data(self):
-        game_folder = path.dirname(__file__)
+        game_folder = 'SS/'
         img_folder = path.join(game_folder, 'img')
         sound_folder = path.join(game_folder, 'sound')
         music_folder = path.join(game_folder, 'music')
@@ -438,13 +436,14 @@ class Game:
                     waiting = False
 
 
+def SS(screen):
+    # create the game object
+    g = Game(screen)
+    g.show_start_screen()
+    # pg.mixer.music.load(path.join(sound_folder, 'music.mp3'))
+    # pg.mixer.music.play(-1)
+    while True:
+        g.new()
+        g.run()
+        g.show_go_screen()
 
-# create the game object
-g = Game()
-g.show_start_screen()
-# pg.mixer.music.load(path.join(sound_folder, 'music.mp3'))
-# pg.mixer.music.play(-1)
-while True:
-    g.new()
-    g.run()
-    g.show_go_screen()

@@ -104,6 +104,10 @@ class Main:
         import SR.main as SR
         SR.SR(self.screen)
 
+    def load_SS(self):
+        import SS.main as SS
+        SS.SS(self.screen)
+
     # loading the planets to the spritegroup
     def load_Planets(self):
         self.MainGame_sprites = pg.sprite.Group()
@@ -172,7 +176,7 @@ class Main:
                         M.load_SR()
 
                     if self.ShootPlanet.rect.collidepoint(event.pos):
-                        pass
+                        M.load_SS()
 
                     if self.EvadePlanet.rect.collidepoint(event.pos):
                         pass
