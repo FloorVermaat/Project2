@@ -346,6 +346,7 @@ class Game:
 
     def run(self):
         # game loop - set self.playing = False to end the game
+        self.done = False
         self.playing = True
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0  # fix for Python 2.x
@@ -373,8 +374,8 @@ class Game:
         hits = pg.sprite.spritecollide(self.player, self.points, False, collide_hit_rect)
         for hit in hits:
             self.score += POINTS_GIVEN
-            if self.score > 3000:
-                g.show_win_screen()
+            #if self.score > 100:
+                #g.show_win_screen()
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -406,6 +407,10 @@ class Game:
                     self.paused = not self.paused
                 if event.key == pg.K_ESCAPE:
                     self.quit()
+                if event.key == pg.K_q:
+                    self.show_start_screen()
+                    self.score = 0
+
 
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
@@ -420,6 +425,7 @@ class Game:
         self.draw_text("Press a key to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
+        Game.new()
         self.wait_for_key()
 
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
@@ -432,10 +438,7 @@ class Game:
                        WIDTH / 2, 300, align="center")
         self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
-
         pg.mixer.music.fadeout(1000)
-
-
         pg.display.flip()
         self.wait_for_key()
 
@@ -473,9 +476,9 @@ class Game:
                     self.quit()
                 if event.type == pg.KEYUP:
                     waiting = False
-                    self.quit()
+                    done = True
 
-
+#if done = True
 
 def SR(screen):
     # create the game object
