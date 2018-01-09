@@ -3,6 +3,7 @@ import pygame as pygame
 from settings import *
 from Sprites import *
 import sys
+import importlib
 
 
 #CTT Import
@@ -20,7 +21,7 @@ class Main:
         pg.mixer.init()
         pg.init()
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
@@ -96,8 +97,8 @@ class Main:
         CTT.CTT(self.screen)
 
     def load_Blitz(self):
-        import Blitz.main as Blitz
-        Blitz.Start(self.screen, Name)
+            import Blitz.main as Blitz
+            Blitz.Start(self.screen, Name)
 
     def load_SR(self):
         import SR.main as SR

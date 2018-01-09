@@ -410,7 +410,7 @@ class Game:
                 if event.key == pg.K_q:
                     self.show_start_screen()
                     self.score = 0
-
+                    self.map = Map(path.join(game_folder, 'map2.txt'))
 
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
@@ -425,7 +425,7 @@ class Game:
         self.draw_text("Press a key to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
-        Game.new()
+        pg.event.wait()
         self.wait_for_key()
 
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
