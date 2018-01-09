@@ -7,11 +7,12 @@ class Player(pg.sprite.Sprite):
     def __init__(self, game):
         pg.sprite.Sprite.__init__(self)
         self.sprites_left = pg.image.load("CTT/sprites/player_l.png")
-        self.sprites_null = pg.image.load("CTT/sprites/player.png")
+        self.sprites_idle = pg.image.load("CTT/sprites/player_idle.png")
         self.sprites_right = pg.image.load("CTT/sprites/player_r.png")
+        self.sprites_jump = pg.image.load("CTT/sprites/player_jump.png")
 
         self.game = game
-        self.image = self.sprites_null
+        self.image = self.sprites_idle
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.pos = vec(WIDTH / 2, HEIGHT / 1.5)
@@ -36,7 +37,7 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_LEFT] or keys[pg.K_a]:
             self.image = self.sprites_left
         else:
-            self.image = self.sprites_null
+            self.image = self.sprites_idle
 
 
         # apply friction
