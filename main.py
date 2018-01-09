@@ -1,6 +1,8 @@
 import pygame as pg
 import pygame as pygame
 from settings import *
+from Sprites import *
+import sys
 
 
 #CTT Import
@@ -32,6 +34,7 @@ class Main:
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
+
 
     def name_input_screen(self):
         font = pygame.font.Font("Blitz/8.TTF", 16)
@@ -100,13 +103,24 @@ class Main:
         #BLITZ = Blitz(screen)
         #BLITZ.blitz_Game()
 
+    # loading the planets to the spritegroup
+    def load_Planets(self):
+        self.MainGame_sprites = pg.sprite.Group()
+        self.BlitzPlanet = BlitzPlanet()
+        self.MainGame_sprites.add(self.BlitzPlanet)
+        self.ClimbPlanet = ClimbPlanet()
+        self.MainGame_sprites.add(self.ClimbPlanet)
+        self.RacePlanet = RacePlanet()
+        self.MainGame_sprites.add(self.RacePlanet)
+        self.ShootPlanet = ShootPlanet()
+        self.MainGame_sprites.add(self.ShootPlanet)
+        self.EvadePlanet = EvadePlanet()
+        self.MainGame_sprites.add(self.EvadePlanet)
+        self.ExitPlanet = ExitPlanet()
+        self.MainGame_sprites.add(self.ExitPlanet)
+
     def select_Minigame(self):
-        global intro_screen, Worldselect
-        self.BlitzButton = pygame.Rect(W / 2 - 70, H / 2 - 300, 140, 32)
-        self.ClimbButton = pygame.Rect(W / 2 - 250, H / 2 - 200, 500, 32)
-        self.RaceButton = pygame.Rect(W / 2 - 70, H / 2 - 100, 140, 32)
-        self.ShootButton = pygame.Rect(W / 2 - 70, H / 2 + 150 - 50, 140, 32)
-        self.EvadeButton = pygame.Rect(W / 2 - 70, H / 2 + 200 - 50, 140, 32)
+        self.load_Planets()
         done = False
         while not done:
             self.clock.tick(FPS)
@@ -114,41 +128,74 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                # Mouse over actions
+                if self.BlitzPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.BlitzPlanet.active = True
+                else:
+                    self.BlitzPlanet.active = False
 
-                if self.BlitzButton.collidepoint(pygame.mouse.get_pos()):
-                    #
+                if self.ClimbPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.ClimbPlanet.active = True
+                else:
+                    self.ClimbPlanet.active = False
+
+                if self.RacePlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.RacePlanet.active = True
+                else:
+                    self.RacePlanet.active = False
+
+                if self.ShootPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.ShootPlanet.active = True
+                else:
+                    self.ShootPlanet.active = False
+
+                if self.EvadePlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.EvadePlanet.active = True
+                else:
+                    self.EvadePlanet.active = False
+
+                if self.ExitPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.ExitPlanet.active = True
+                else:
+                    self.ExitPlanet.active = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # If user clicks the Blitz button:
-                    if self.BlitzButton.collidepoint(event.pos):
+                    if self.BlitzPlanet.rect.collidepoint(event.pos):
                         M.load_Blitz()
-                        done = True
-                    if self.ClimbButton.collidepoint(event.pos):
+                    if self.ClimbPlanet.rect.collidepoint(event.pos):
                         M.load_CTT()
-                        done = True
-                    if self.RaceButton.collidepoint(event.pos):
+                    if self.RacePlanet.rect.collidepoint(event.pos):
                         pass
-                    if self.ShootButton.collidepoint(event.pos):
+                    if self.ShootPlanet.rect.collidepoint(event.pos):
                         pass
-                    if self.EvadeButton.collidepoint(event.pos):
+                    if self.EvadePlanet.rect.collidepoint(event.pos):
                         pass
+                    if self.ExitPlanet.rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
 
-            # Blit the boxes
-            pygame.draw.rect(self.screen, BLACK, self.BlitzButton)
-            pygame.draw.rect(self.screen, BLACK, self.ClimbButton)
-            pygame.draw.rect(self.screen, BLACK, self.RaceButton)
-            pygame.draw.rect(self.screen, BLACK, self.ShootButton)
-            pygame.draw.rect(self.screen, BLACK, self.EvadeButton)
-            # Background of the boxes
-            pygame.draw.rect(self.screen, WHITE, self.BlitzButton, 5)
-            pygame.draw.rect(self.screen, WHITE, self.ClimbButton, 5)
-            pygame.draw.rect(self.screen, WHITE, self.RaceButton, 5)
-            pygame.draw.rect(self.screen, WHITE, self.ShootButton, 5)
-            pygame.draw.rect(self.screen, WHITE, self.EvadeButton, 5)
 
             # Draw text on the boxes
-            self.draw_text(self.screen, "Blitz", 25, self.BlitzButton.x + 70, self.BlitzButton.y + 0)
-            self.draw_text(self.screen, "Climb The Tower", 25, self.ClimbButton.x + 250, self.ClimbButton.y + 0)
+            self.draw_text(self.screen, "Blitz", 14, self.BlitzPlanet.rect.x + self.BlitzPlanet.rect.w / 2,
+                           self.BlitzPlanet.rect.y - 40)
+            self.draw_text(self.screen, "Climb The Tower", 14, self.ClimbPlanet.rect.x + self.ClimbPlanet.rect.w / 2,
+                           self.ClimbPlanet.rect.y - 40)
+            self.draw_text(self.screen, "Space Race", 14, self.RacePlanet.rect.x + self.RacePlanet.rect.w / 2,
+                           self.RacePlanet.rect.y - 40)
+            self.draw_text(self.screen, "Space Escape", 14, self.EvadePlanet.rect.x + self.EvadePlanet.rect.w / 2,
+                           self.EvadePlanet.rect.y - 40)
+            self.draw_text(self.screen, "Space Shooter", 14, self.ShootPlanet.rect.x + self.ShootPlanet.rect.w / 2,
+                           self.ShootPlanet.rect.y - 40)
+            self.draw_text(self.screen, "Exit", 14, self.ExitPlanet.rect.x + self.ExitPlanet.rect.w / 2,
+                           self.ExitPlanet.rect.y - 40)
+
+
+            # game loop update
+            self.MainGame_sprites.update()
+
+            # gameloop draw
+            self.MainGame_sprites.draw(self.screen)
 
             # Flip the screen
             pygame.display.flip()
@@ -160,23 +207,23 @@ class Main:
 
 
 
-      waiting = True
-        while waiting:
-            self.clock.tick(FPS)
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    waiting = False
-                    self.running = False
-                pressed = pg.key.get_pressed()
-                if pressed[pg.K_b]:
-                    print("b is pressed")
-                    waiting = False
-                    M.load_Blitz()
-
-                elif pressed[pg.K_c]:
-                    print("c is pressed")
-                    waiting = False
-                    M.load_CTT()
+#      waiting = True
+#        while waiting:
+#            self.clock.tick(FPS)
+#            for event in pg.event.get():
+#                if event.type == pg.QUIT:
+#                    waiting = False
+#                    self.running = False
+#                pressed = pg.key.get_pressed()
+#                if pressed[pg.K_b]:
+##                    print("b is pressed")
+#                    waiting = False
+#                    M.load_Blitz()
+#
+#                elif pressed[pg.K_c]:
+#                    print("c is pressed")
+#                    waiting = False
+#                    M.load_CTT()
 
 
 

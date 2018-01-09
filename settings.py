@@ -1,3 +1,4 @@
+import os
 # game options/settings
 TITLE = "Minigame 1"
 W = WIDTH = 1280
@@ -14,3 +15,6 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 LIGHTBLUE = (0, 155, 155)
 BGCOLOR = BLACK
+
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, "img")

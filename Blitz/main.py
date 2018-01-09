@@ -192,6 +192,7 @@ def show_gameover_screen():
 
 def show_intro_screen():
     waiting = True
+    pygame.mixer.music.fadeout(1000)
     while waiting:
         clock.tick(FPS)
         background.draw(screen)
@@ -200,6 +201,7 @@ def show_intro_screen():
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
+        draw_text(screen, "Press Q key to begin", 15, W / 2, H / 1.3)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
         pygame.display.flip()
         for test in pygame.event.get():
@@ -471,9 +473,7 @@ class Player(pygame.sprite.Sprite):
                 # self.image = self.image_left
 
         # function keys
-        if keys[pygame.K_q]:
-            pygame.quit()
-            sys.exit()
+
         if keys[pygame.K_SPACE]: # or event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             # amount of bullets on screen
             self.shoot()
@@ -934,8 +934,15 @@ class Blitz:
         done = False
         # -------- Main Program Loop -----------
         while not done:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_q] and not intro_screen:
+                intro_screen = True
+            elif keys[pygame.K_q]:
+                done = True
 
             if intro_screen:
+                if keys[pygame.K_q]:
+                    done = True
                 bossbattle = False
                 game_over = False
                 victory = False
@@ -1022,8 +1029,6 @@ class Blitz:
             if bossbattle:
                 draw_bosshield_bar(self.screen, W / 2 + 40, 10, BosShip.shield)
             draw_lives(self.screen, W - (W - 100), H - H + 70, player.lives, player_minilives)
-            # --- Hiding the mouse
-            pygame.mouse.set_visible(False)
             # --- updating screen
             pygame.display.flip()
 
