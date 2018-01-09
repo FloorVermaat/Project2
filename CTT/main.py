@@ -133,7 +133,7 @@ class Climb_The_Tower_Game:
                 rotation = random.randrange(0, 200)
 
 
-            height = random.randrange(-300, -55)
+            height = random.randrange(-280, -55)
             while (height - self.platforms_last.height) in range(-50,50):
                 print("Height to close" + str(int(height - self.platforms_last.height)))
                 height = random.randrange(-280, -55)
@@ -244,4 +244,3 @@ def CTT(screen):
             CTT.show_win_screen()
         else:
             CTT.show_go_screen()
-    pg.quit()
