@@ -21,12 +21,13 @@ class Main:
         pg.mixer.init()
         pg.init()
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
         self.running = True
         self.font_name = pg.font.match_font(FONT_NAME)
+        self.background = Background()
 
     # drawing text on screen
     def draw_text(self, surf, text, size, x, y):
@@ -49,30 +50,20 @@ class Main:
         level_nameInput = False
 
         while not level_nameInput:
+            # moving background
+            self.background.draw(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    # If the user clicked on the input_box rect.
-                    if input_box.collidepoint(event.pos):
-                        # Toggle the active variable.
-                        active = not active
-                    else:
-                        active = False
-                    # Change the current color of the input box.
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
-                    if active:
-                        if event.key == pygame.K_RETURN and len(text) >= 3:
-                            intro_screen = True
-                            nameinputscreen = False
-                            done = True
-                            return text
+                    if event.key == pygame.K_RETURN and len(text) >= 3:
+                        return text
 
-                        elif event.key == pygame.K_BACKSPACE:
-                            text = text[:-1]
-                        else:
-                            text += event.unicode
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
 
             # Render the current text.
             txt_surface = font.render(text, True, BLACK)
@@ -128,8 +119,9 @@ class Main:
         self.load_Planets()
         done = False
         while not done:
-            self.clock.tick(FPS)
             self.screen.fill(BLACK)
+            self.background.draw(self.screen)
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()

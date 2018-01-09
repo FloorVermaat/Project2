@@ -45,7 +45,7 @@ class BlitzPlanet(pg.sprite.Sprite):
 class ClimbPlanet(pg.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(os.path.join(img_folder, "Climb planet.png")).convert_alpha()
+        self.image = pg.image.load(os.path.join(img_folder, "Climb planet2.png")).convert_alpha()
         self.image_orig = self.image.copy()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
@@ -235,3 +235,41 @@ class ExitPlanet(pg.sprite.Sprite):
             if self.sizey < 180:
                 self.sizey += 5
             self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
+
+
+class Background(object):
+    def __init__(self):
+        self.image_orig = pygame.image.load(os.path.join(img_folder, "spacebackground.png")).convert()
+        self.image = self.image_orig.copy()
+        self.image.get_rect()
+        self.y = 720
+        self.rel_y = 0
+        self.rect = self.image.get_rect()
+        self.speed = 0
+        self.speed_regulator = True
+        self.rot = 0
+        self.rot_speed = 0.5
+        self.last_update = pygame.time.get_ticks()
+        self.rect.center = [640, 360]
+
+    def draw(self, surface):
+        # background movement
+        self.rel_y = self.y % self.image.get_rect().height
+        surface.blit(self.image, [0, self.rel_y - self.image.get_rect().height])
+        if self.rel_y < 1080:
+            surface.blit(self.image, (0, self.rel_y))
+        self.y += 0.8 # + self.speed
+
+    def draw2(self, surface):
+        surface.blit(self.image, [-1920, -1080])
+        now = pygame.time.get_ticks()
+        if now - self.last_update > 50:
+            self.last_update = now
+            self.rot = self.rot + self.rot_speed
+            if self.rot >= 360:
+                self.rot = 1
+            new_image = pygame.transform.rotate(self.image_orig, self.rot)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
