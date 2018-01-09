@@ -926,7 +926,6 @@ with open(os.path.join(game_folder, HS_File), 'r+') as f:
 game_over = False
 bossbattle = False
 victory = False
-BlitzGameRun = False
 
 background = Background()
 score = 0

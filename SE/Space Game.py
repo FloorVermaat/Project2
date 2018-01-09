@@ -28,6 +28,7 @@ def draw_text(surf, text, size, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
+
 def newmob():
     m = Mob()
     all_sprites.add(m)
@@ -97,13 +98,13 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.speedy = 0
         keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_DOWN]:
+        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             self.speedy += 10
-        if keystate[pygame.K_UP]:
+        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             self.speedy -= 10
-        if keystate[pygame.K_RIGHT]:
+        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             self.speedx += 10
-        if keystate[pygame.K_LEFT]:
+        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.speedx -= 10
         if keystate[pygame.K_SPACE]:
             self.shoot()
@@ -208,7 +209,7 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect.center = center
 
 # Load all game graphics
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 heart = pygame.image.load(path.join(img_dir, "heart_2.gif")).convert()
 live = pygame.transform.scale(heart, (30, 30))
 meteor_images = []
@@ -243,80 +244,84 @@ pygame.display.set_caption("Space Escape")
 clock = pygame.time.Clock()
 
 background = pygame.image.load("starfield.jpg").convert()
-x = 0
 
 pygame.mixer.music.play(loops=-1)
 
 # Game loop
-game_over = True
 
-running = True
-while running:
-    if game_over:
-        show_go_screen()
-        game_over = False
-        all_sprites = pygame.sprite.Group()
-        mobs = pygame.sprite.Group()
-        bullets = pygame.sprite.Group()
-        player = Player()
-        all_sprites.add(player)
-        for i in range(20):
+def Escape_Game():
+    global all_sprites, mobs, bullets
+    running = True
+    game_over = True
+    x = 0
+    while running:
+        if game_over:
+            show_go_screen()
+            game_over = False
+            all_sprites = pygame.sprite.Group()
+            mobs = pygame.sprite.Group()
+            bullets = pygame.sprite.Group()
+            player = Player()
+            all_sprites.add(player)
+            for i in range(20):
+                newmob()
+            score = 0
+
+        # Keep loop running at the right speed
+        clock.tick(FPS)
+        # Process input (events)
+        for event in pygame.event.get():
+            # Check for closing window
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Update
+        all_sprites.update()
+
+        # Check to see if a bullet hit mob
+        hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+        for hit in hits:
+            score += 50 - hit.radius
+            expl_sound.play()
+            expl = Explosion(hit.rect.center, 'lg')
+            all_sprites.add(expl)
             newmob()
-        score = 0
 
-    # Keep loop running at the right speed
-    clock.tick(FPS)
-    # Process input (events)
-    for event in pygame.event.get():
-        # Check for closing window
-        if event.type == pygame.QUIT:
-            running = False
+        # Check to see if a mob hit the player
+        hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
+        for hit in hits:
+            player.shield -= hit.radius * 2
+            expl = Explosion(hit.rect.center, 'sm')
+            all_sprites.add(expl)
+            newmob()
+            if player.shield <= 0:
+                player_die_sound.play()
+                death_explosion = Explosion(player.rect.center, 'player')
+                all_sprites.add(death_explosion)
+                player.hide()
+                player.lives -= 1
+                player.shield = 100
 
-    # Update
-    all_sprites.update()
+        # If the player died and the explosion has finished playing
+        if player.lives == 0 and not death_explosion.alive():
+            game_over = True
 
-    # Check to see if a bullet hit mob
-    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
-    for hit in hits:
-        score += 50 - hit.radius
-        expl_sound.play()
-        expl = Explosion(hit.rect.center, 'lg')
-        all_sprites.add(expl)
-        newmob()
+        # Draw / Render
+        rel_x = x % background.get_rect().width
 
-    # Check to see if a mob hit the player
-    hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
-    for hit in hits:
-        player.shield -= hit.radius * 2
-        expl = Explosion(hit.rect.center, 'sm')
-        all_sprites.add(expl)
-        newmob()
-        if player.shield <= 0:
-            player_die_sound.play()
-            death_explosion = Explosion(player.rect.center, 'player')
-            all_sprites.add(death_explosion)
-            player.hide()
-            player.lives -= 1
-            player.shield = 100
+        screen.blit(background, (rel_x - background.get_rect().width, 0))
+        if rel_x < WIDTH:
+            screen.blit(background, (rel_x, 0))
+        x -= 2
 
-    # If the player died and the explosion has finished playing
-    if player.lives == 0 and not death_explosion.alive():
-        game_over = True
+        all_sprites.draw(screen)
 
-    # Draw / Render
-    rel_x = x % background.get_rect().width
+        draw_text(screen, str(score), 30, WIDTH / 2, 10)
+        draw_shield_bar(screen, 5, 5, player.shield)
+        draw_lives(screen, WIDTH - 100, 5, player.lives, live)
+        # After drawing everything, flip the display
+        pygame.display.flip()
 
-    screen.blit(background, (rel_x - background.get_rect().width, 0))
-    if rel_x < WIDTH:
-        screen.blit(background, (rel_x, 0))
-    x -= 2
+    pygame.quit()
 
-    all_sprites.draw(screen)
-
-    draw_text(screen, str(score), 30, WIDTH / 2, 10)
-    draw_shield_bar(screen, 5, 5, player.shield)
-    draw_lives(screen, WIDTH - 100, 5, player.lives, live)
-    # After drawing everything, flip the display
-    pygame.display.flip()
-
-pygame.quit()
+Escape_Game()
