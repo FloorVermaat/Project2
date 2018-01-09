@@ -974,12 +974,16 @@ class Blitz:
              #   self.intro_screen = True
 
             if keys[pygame.K_q]:
+                pygame.mixer.music.fadeout(1000)
                 self.done = True
 
             if game_over:
+                self.intro_screen = True
                 show_gameover_screen()
+
                 # pygame.display.flip()
             if victory:
+                self.intro_screen = True
                 show_victory_screen()
 
             # loop at right fps
@@ -1008,13 +1012,13 @@ class Blitz:
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            if score >= 1000 and not bossbattle:
-                Blitz_sprites.remove(enemyship)
-                Blitz_sprites.remove(mobs)
-                mobs.empty()
-                enemyship.empty()
-                Blitz_sprites.add(BosShip)
-                bossbattle = True
+            #if score >= 1000 and not bossbattle:
+                #Blitz_sprites.remove(enemyship)
+                #Blitz_sprites.remove(mobs)
+                #mobs.empty()
+                #enemyship.empty()
+                #Blitz_sprites.add(BosShip)
+                #bossbattle = True
             if bossbattle:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
