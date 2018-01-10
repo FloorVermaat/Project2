@@ -275,10 +275,8 @@ def Escape_Game():
     tunnel_hoogte = 200
 
     while len(tunnel) < 128 * 2:
-
         while tunnel_hoogte > tunnel_half:
             tunnel_hoogte += -5
-
         while tunnel_hoogte <= 0:
             tunnel_hoogte += 5
 
@@ -287,13 +285,9 @@ def Escape_Game():
         # Boven Helft Tunnel
         t = Tunnel(tunnel_i, 0, tunnel_hoogte)
         tunnel.add(t)
-        all_sprites.add(t)
-
         # Onder Helft Tunnel
         t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
         tunnel.add(t)
-        all_sprites.add(t)
-
         tunnel_i += 10
 
 
@@ -324,6 +318,9 @@ def Escape_Game():
 
         # Update
         all_sprites.update()
+        tunnel.update()
+
+
 
         # Check to see if a bullet hit mob
         hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
@@ -362,6 +359,7 @@ def Escape_Game():
         x -= 2
 
         all_sprites.draw(screen)
+        tunnel.draw(screen)
 
         draw_text(screen, str(score), 30, WIDTH / 2, 10)
         draw_shield_bar(screen, 5, 5, player.shield)
