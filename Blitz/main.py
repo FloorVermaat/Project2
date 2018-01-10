@@ -427,6 +427,7 @@ class Player(pygame.sprite.Sprite):
         self.power_time = pygame.time.get_ticks()
         self.powerbar = 0
         self.powerbar_time = pygame.time.get_ticks()
+        self.shootsoundeffectdelay = 500
 
     def update(self):
         # power up bar timer
@@ -480,11 +481,16 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x -= self.speed
                 # self.image = self.image_left
 
+        if bossbattle and BosShip.shield < 2500:
+            self.shoot_delay = 1000
+            self.shootsoundeffectdelay = 1000
+
         # function keys
 
         if keys[pygame.K_SPACE]: # or event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             # amount of bullets on screen
             self.shoot()
+
 
     def powerup(self):
         self.power += 1
@@ -515,7 +521,7 @@ class Player(pygame.sprite.Sprite):
                 Blitz_sprites.add(bullet1, bullet2, bullet3)
                 bullets.add(bullet1, bullet2, bullet3)
         # delay for the shooting sound
-        if now1 - self.last_update1 > 500:
+        if now1 - self.last_update1 > self.shootsoundeffectdelay:
             self.last_update1 = now1
             shoot_sound.play()
 
@@ -660,6 +666,7 @@ class BossShip(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.shield = 5000
         self.onscreen = False
+        self.say = False
 
     def update(self):
         if bossbattle:
@@ -682,7 +689,10 @@ class BossShip(pygame.sprite.Sprite):
                 self.rect.y += self.speedy
                 if self.shield <= 2500:
                     self.speedx = 25
-                    self.shoot_delay = 125
+                    self.shoot_delay = 100
+                    if not self.say:
+                        shields_50.play()
+                        self.say = True
     def shoot(self):
         # delay for shooting
         now = pygame.time.get_ticks()

@@ -39,6 +39,9 @@ class Main:
 
 
     def name_input_screen(self):
+        # start da music
+        pygame.mixer.music.load(os.path.join(snd_folder, "Takeoff.wav"))
+        pygame.mixer.music.set_volume(0.3)
         font = pygame.font.Font("Blitz/8.TTF", 16)
         input_box = pygame.Rect(W / 2 - 100, H / 2 - 50, 140, 32)
         input_boxbackground = input_box
@@ -50,6 +53,7 @@ class Main:
         level_nameInput = False
 
         while not level_nameInput:
+            pygame.mixer.music.play(loops=1)
             # moving background
             self.background.draw(self.screen)
             for event in pygame.event.get():
