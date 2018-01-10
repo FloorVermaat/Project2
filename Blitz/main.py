@@ -188,8 +188,9 @@ def show_gameover_screen():
                 Blitz.intro_screen = True
                 game_over = False
                 waiting = False
-            if pygame.key.get_pressed()[pygame.K_q]:
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
                 Blitz.done = True
+                waiting = False
 
 
 def show_intro_screen():
@@ -198,12 +199,12 @@ def show_intro_screen():
     while waiting:
         clock.tick(FPS)
         background.draw(screen)
+        screen.blit(blitzlogo, [W / 2 - 300, -20])
         draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
-        draw_text(screen, "Blitz", 64, W / 2, H / 8)
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
-        draw_text(screen, "Press q key to Exit at any time", 15, W / 2, H / 1.2)
+        draw_text(screen, "Press esc key to Exit at any time", 15, W / 2, H / 1.2)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
         pygame.display.flip()
         for test in pygame.event.get():
@@ -212,7 +213,7 @@ def show_intro_screen():
             if pygame.key.get_pressed()[pygame.K_r]:
                 Blitz.done = False
                 waiting = False
-            if pygame.key.get_pressed()[pygame.K_q]:
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
                 Blitz.done = True
                 Blitz.intro_screen = False
                 waiting = False
@@ -897,6 +898,9 @@ enemyimages["suicide"] = spacemine_image
 enemyimages["normal"] = spaceship_enemy
 enemyimages["laserbeam"] = spacelaserbeam_image
 
+# Blitz logo
+blitzlogo = pygame.image.load(os.path.join(img_folder, "blitz logo.png")).convert_alpha()
+
 # Sounds
 # shooting sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_folder, "Laser_Shoot11.wav"))
@@ -972,7 +976,7 @@ class Blitz:
             #if keys[pygame.K_q]:
              #   self.intro_screen = True
 
-            if keys[pygame.K_q]:
+            if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
                 pygame.mixer.music.fadeout(1000)
                 self.done = True
 
@@ -1011,13 +1015,13 @@ class Blitz:
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            #if score >= 1000 and not bossbattle:
-                #Blitz_sprites.remove(enemyship)
-                #Blitz_sprites.remove(mobs)
-                #mobs.empty()
-                #enemyship.empty()
-                #Blitz_sprites.add(BosShip)
-                #bossbattle = True
+            if score >= 1000 and not bossbattle:
+                Blitz_sprites.remove(enemyship)
+                Blitz_sprites.remove(mobs)
+                mobs.empty()
+                enemyship.empty()
+                Blitz_sprites.add(BosShip)
+                bossbattle = True
             if bossbattle:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)

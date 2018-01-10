@@ -166,9 +166,7 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                # Mouse over actions
-
-
+                # Loading game actions
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # If user clicks the Blitz button:
                     if self.BlitzPlanet.rect.collidepoint(event.pos):
@@ -221,8 +219,9 @@ class Main:
                            self.ShootPlanet.rect.y - 40)
             self.draw_text(self.screen, "Exit", 14, self.ExitPlanet.rect.x + self.ExitPlanet.rect.w / 2,
                            self.ExitPlanet.rect.y - 40)
-
-            self.draw_text(self.screen, "To Play   Fly To A Planet And Press Enter", 14, W / 2,
+            self.draw_text(self.screen, "space pirate " + Name + ":", 14, W / 2,
+                           H - 140)
+            self.draw_text(self.screen, "To Play...Fly To A Planet And Press Enter", 14, W / 2,
                            H - 100)
 
 
