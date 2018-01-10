@@ -1,8 +1,3 @@
-# KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 7
-# Video link: https://youtu.be/rLrMPg-GCqo
-# Splash & End Screens
-
 import pygame as pg
 import random
 from CTT.settings import *
@@ -119,6 +114,7 @@ class Climb_The_Tower_Game:
                     sprite.kill()
         if len(self.platforms) == 0:
             self.playing = False
+            self.M.bg.stop()
 
 
         # spawn new platforms to keep same average number
@@ -172,7 +168,9 @@ class Climb_The_Tower_Game:
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_q:
+                    self.M.bg.stop()
                     self.running = False
+                    self.playing = False
 
     def draw(self):
         # Climb_The_Tower_Game Loop - draw
@@ -223,10 +221,15 @@ class Climb_The_Tower_Game:
                     waiting = False
                     self.running = False
                 pressed = pg.key.get_pressed()
+
                 if pressed[pg.K_c]:
                     self.M.bg.stop()
                     print("c is pressed")
                     waiting = False
+
+                if pressed[pg.K_q]:
+                    waiting = False
+                    self.running = False
 
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)
@@ -244,3 +247,4 @@ def CTT(screen):
             CTT.show_win_screen()
         else:
             CTT.show_go_screen()
+

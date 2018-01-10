@@ -70,6 +70,18 @@ def show_go_screen():
             if event.type == pygame.KEYUP:
                 waiting = False
 
+class Tunnel(pygame.sprite.Sprite):
+    def __init__(self, x, y, h):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((10,h))
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+
+    def update(self):
+
+        self.rect.x += -1
+
 class Player(pygame.sprite.Sprite):
     # Sprite for the Player
     def __init__(self):
@@ -247,6 +259,9 @@ background = pygame.image.load("starfield.jpg").convert()
 
 pygame.mixer.music.play(loops=-1)
 
+tunnel = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+
 # Game loop
 
 def Escape_Game():
@@ -254,15 +269,47 @@ def Escape_Game():
     running = True
     game_over = True
     x = 0
+    tunnel_gat = 200
+    tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+    tunnel_i = 0
+    tunnel_hoogte = 200
+
+    while len(tunnel) < 128 * 2:
+
+        while tunnel_hoogte > tunnel_half:
+            tunnel_hoogte += -5
+
+        while tunnel_hoogte <= 0:
+            tunnel_hoogte += 5
+
+        tunnel_hoogte += random.randrange(-5, 6)
+
+        # Boven Helft Tunnel
+        t = Tunnel(tunnel_i, 0, tunnel_hoogte)
+        tunnel.add(t)
+        all_sprites.add(t)
+
+        # Onder Helft Tunnel
+        t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
+        tunnel.add(t)
+        all_sprites.add(t)
+
+        tunnel_i += 10
+
+
+
+
+
     while running:
         if game_over:
             show_go_screen()
             game_over = False
-            all_sprites = pygame.sprite.Group()
+
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
+
             for i in range(20):
                 newmob()
             score = 0
