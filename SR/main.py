@@ -18,7 +18,6 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 30
 TITLE = "Thijs' game"
-BGCOLOR = BLACK
 
 TILESIZE = 48
 GRIDWIDTH = WIDTH / TILESIZE
@@ -47,7 +46,8 @@ MOB_KNOCKBACK = 20
 game_folder = path.dirname(__file__)
 img_folder = path.join(game_folder, 'img')
 sound_folder = path.join(game_folder, 'sound')
-
+BACKGROUND = 'background.png'
+BACKGROUNDIMAGE = pg.image.load(path.join(img_folder, BACKGROUND)).convert_alpha()
 
 
 
@@ -314,7 +314,7 @@ class Game:
         self.dim_screen.fill((0, 0, 0, 180))
         self.map = Map(path.join(game_folder, 'map2.txt'))
         #player image
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
         #mob image
         self.mob_img = pg.image.load(path.join(img_folder, MOB_IMG)).convert_alpha()
         #wall image
@@ -378,8 +378,9 @@ class Game:
                 #g.show_win_screen()
 
     def draw(self):
+
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        self.screen.fill(BGCOLOR)
+        self.screen.fill(BACKGROUNDGIMAGE)
         # self.draw_grid()
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
@@ -413,7 +414,7 @@ class Game:
                     self.map = Map(path.join(game_folder, 'map2.txt'))
 
     def show_start_screen(self):
-        self.screen.fill(BGCOLOR)
+        self.screen.fill(BLACK)
         self.draw_text("SPACE RACE", self.title_font, 200, RED,
                        WIDTH / 2, 200, align="center")
         self.draw_text("Use WASD or ARROW keys to move", self.title_font, 50, WHITE
