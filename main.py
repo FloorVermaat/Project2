@@ -31,7 +31,7 @@ class Main:
 
     # drawing text on screen
     def draw_text(self, surf, text, size, x, y):
-        font_name = pygame.font.Font("Blitz/8.TTF", size)
+        font_name = pygame.font.Font("Blitz/8.ttf", size)
         text_surface = font_name.render(text, True, WHITE)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
