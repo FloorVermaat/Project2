@@ -86,7 +86,7 @@ class Player(pygame.sprite.Sprite):
     # Sprite for the Player
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("spaceship.png").convert_alpha()
+        self.image = pygame.image.load("SE/spaceship.png").convert_alpha()
         self.image = pygame.transform.rotate(self.image, 270)
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
@@ -255,26 +255,35 @@ pygame.mixer.music.set_volume(0.4)
 pygame.display.set_caption("Space Escape")
 clock = pygame.time.Clock()
 
-background = pygame.image.load("starfield.jpg").convert()
+background = pygame.image.load("SE/starfield.jpg").convert()
 
 pygame.mixer.music.play(loops=-1)
 
-tunnel = pygame.sprite.Group()
+tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
+
 
 # Game loop
 
-def Escape_Game():
-    global all_sprites, mobs, bullets
+def Escape_Game(ext_screen):
+    global all_sprites, mobs, bullets, tunnel_gat, screen
+
+    screen = ext_screen
+
+
     running = True
     game_over = True
     x = 0
-    tunnel_gat = 200
+    tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
     tunnel_i = 0
     tunnel_hoogte = 200
 
-    while len(tunnel) < 128 * 2:
+    diff_1 = False
+    diff_2 = False
+    diff_3 = False
+
+    while len(tunnels) < 128 * 2 + 10:
         while tunnel_hoogte > tunnel_half:
             tunnel_hoogte += -5
         while tunnel_hoogte <= 0:
@@ -284,10 +293,10 @@ def Escape_Game():
 
         # Boven Helft Tunnel
         t = Tunnel(tunnel_i, 0, tunnel_hoogte)
-        tunnel.add(t)
+        tunnels.add(t)
         # Onder Helft Tunnel
         t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
-        tunnel.add(t)
+        tunnels.add(t)
         tunnel_i += 10
 
 
@@ -304,7 +313,9 @@ def Escape_Game():
             player = Player()
             all_sprites.add(player)
 
-            for i in range(20):
+
+
+            for i in range(10):
                 newmob()
             score = 0
 
@@ -316,11 +327,53 @@ def Escape_Game():
             if event.type == pygame.QUIT:
                 running = False
 
+
+        # Keep Creating Tunnels
+        for tunnel in tunnels: #Delete Tunnels
+            if tunnel.rect.x <= -10:
+                tunnel.kill()
+
+
+        while len(tunnels) < (128 * 2) + 25:
+            print(tunnel_half)
+            while tunnel_hoogte > tunnel_half:
+                tunnel_hoogte += -10
+                print('1')
+            while tunnel_hoogte <= 0:
+                tunnel_hoogte += 10
+                print('2')
+
+            tunnel_hoogte += random.randrange(-5, 7)
+
+            # Boven Helft Tunnel
+            t = Tunnel(WIDTH + 10, 0, tunnel_hoogte)
+            tunnels.add(t)
+            # Onder Helft Tunnel
+            t = Tunnel(WIDTH + 10, HEIGHT - tunnel_hoogte, tunnel_hoogte)
+            tunnels.add(t)
+
+        if score > 100 and not diff_1:
+            print("Updated")
+            tunnel_gat = 150
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+            diff_1 = True
+
+        if score > 200 and not diff_2:
+            print("Updated")
+            tunnel_gat = 100
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+            diff_2 = True
+
+        if score > 500 and not diff_3:
+            print("Updated")
+            tunnel_gat = 75
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+            diff_3 = True
+
+
         # Update
         all_sprites.update()
-        tunnel.update()
-
-
+        tunnels.update()
 
         # Check to see if a bullet hit mob
         hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
@@ -329,6 +382,11 @@ def Escape_Game():
             expl_sound.play()
             expl = Explosion(hit.rect.center, 'lg')
             all_sprites.add(expl)
+            newmob()
+
+        # Check to see if a mob hits the wall
+        hits = pygame.sprite.groupcollide(mobs, tunnels, True, False)
+        for hit in hits:
             newmob()
 
         # Check to see if a mob hit the player
@@ -359,7 +417,7 @@ def Escape_Game():
         x -= 2
 
         all_sprites.draw(screen)
-        tunnel.draw(screen)
+        tunnels.draw(screen)
 
         draw_text(screen, str(score), 30, WIDTH / 2, 10)
         draw_shield_bar(screen, 5, 5, player.shield)
@@ -369,4 +427,3 @@ def Escape_Game():
 
     pygame.quit()
 
-Escape_Game()

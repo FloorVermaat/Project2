@@ -115,6 +115,7 @@ class Climb_The_Tower_Game:
         if len(self.platforms) == 0:
             self.playing = False
             self.M.bg.stop()
+            self.M.bg.stop()
 
 
         # spawn new platforms to keep same average number

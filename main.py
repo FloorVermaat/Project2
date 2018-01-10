@@ -103,6 +103,10 @@ class Main:
         import SS.main as SS
         SS.SS(self.screen)
 
+    def load_SE(self):
+        import SE.main as SE
+        SE.Escape_Game(self.screen)
+
     # loading the planets to the spritegroup
     def load_Planets(self):
         self.MainGame_sprites = pg.sprite.Group()
@@ -186,7 +190,7 @@ class Main:
                         M.load_SS()
 
                     if self.EvadePlanet.rect.collidepoint(event.pos):
-                        pass
+                        M.load_SE()
 
                     if self.ExitPlanet.rect.collidepoint(event.pos):
                         pygame.quit()
