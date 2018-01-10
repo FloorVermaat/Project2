@@ -5,6 +5,8 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'img')
 snd_dir = path.join(path.dirname(__file__), 'snd')
 
+Name = ""
+
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
@@ -16,6 +18,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 BROWN = (101, 67, 33)
+GREY = (20, 20, 20)
 
 pygame.init()
 pygame.mixer.init()
@@ -23,8 +26,8 @@ pygame.mixer.init()
 font_name = pygame.font.match_font('arial')
 
 def draw_text(surf, text, size, x, y):
-    font = pygame.font.Font(font_name, size)
-    text_surface = font.render(text, True, WHITE)
+    font_name = pygame.font.Font("Blitz/8.TTF", size)
+    text_surface = font_name.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
@@ -55,10 +58,13 @@ def draw_lives(surf, x, y, lives, img):
 def show_go_screen():
     global tunnels, all_sprites
     screen.blit(background, (0,0))
-    draw_text(screen, "Space Escape", 128, WIDTH / 2, HEIGHT / 4)
-    #draw_text(screen, "Score: " + str(score), 44, WIDTH / 2, HEIGHT / 3)
-    draw_text(screen, "Arrow Keys to Move, Space to Fire!", 44, WIDTH / 2, HEIGHT / 2)
-    draw_text(screen, "Press a key to begin!", 32, WIDTH / 2, HEIGHT * 3 / 4)
+    draw_text(screen, "Space Pirate " + Name, 20, 120, 10)
+    draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
+    draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
+    draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
+    draw_text(screen, "Press any key to begin", 20, WIDTH / 2, HEIGHT / 1.3)
+    draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.2)
+    #draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -99,7 +105,7 @@ class Tunnel(pygame.sprite.Sprite):
     def __init__(self, x, y, h):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((10,h))
-        self.image.fill(BROWN)
+        self.image.fill(GREY)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
