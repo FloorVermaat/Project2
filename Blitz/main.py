@@ -887,7 +887,8 @@ powerup_img["shield"] = shield_img
 
 # enemy ship images
 spaceship_boss_orig = pygame.image.load(os.path.join(img_folder, "64_enemyship.png")).convert_alpha()
-spaceship_boss = pygame.transform.scale(spaceship_boss_orig, (120, 120))
+spaceship_boss_rot = pygame.transform.rotate(spaceship_boss_orig, -90)
+spaceship_boss = pygame.transform.scale(spaceship_boss_rot, (120, 120))
 spaceship_enemy = pygame.transform.rotate(spaceship_image, 180)
 spacemine_image_orig = pygame.image.load(os.path.join(img_folder, "spacemine.png")).convert_alpha()
 spacemine_image = pygame.transform.scale(spacemine_image_orig, (60, 60))
@@ -904,7 +905,7 @@ blitzlogo = pygame.image.load(os.path.join(img_folder, "blitz logo.png")).conver
 # Sounds
 # shooting sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_folder, "Laser_Shoot11.wav"))
-shoot_soundVolume = shoot_sound.set_volume(0.1)
+shoot_soundVolume = shoot_sound.set_volume(0.05)
 # explosion sounds
 explosion_sound = []
 explosion_soundList = ['Explosion4.wav', 'Explosion17.wav']
@@ -912,7 +913,7 @@ for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
 pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(0.1)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
@@ -1053,9 +1054,12 @@ class Blitz:
 
 
 
-def Start(ext_screen, ext_name):
-    global screen, Name
+def Start(ext_screen, ext_name, Shipimage):
+    global screen, Name, spaceship_image
+    shipimage_straight = pygame.transform.rotate(Shipimage, 90)
+    spaceship_image = shipimage_straight
     BLITZ = Blitz(ext_screen)
     screen = ext_screen
     Name = ext_name
     BLITZ.blitz_Game()
+

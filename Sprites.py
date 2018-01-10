@@ -279,6 +279,7 @@ class MainPlayer(pg.sprite.Sprite):
     def __init__(self, x, y):
         pg.sprite.Sprite.__init__(self)
         self.image_orig = pg.image.load(os.path.join(img_folder, "spaceship.png")).convert_alpha()
+        self.image2 = pg.image.load(os.path.join(img_folder, "64_enemyship.png")).convert_alpha()
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
         self.vel = vec(0, 0)
@@ -299,6 +300,8 @@ class MainPlayer(pg.sprite.Sprite):
                 self.vel = vec(300, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vel = vec(-300 / 2, 0).rotate(-self.rot)
+        if keys[pg.K_o]:
+            self.image_orig = self.image2
 
     def update(self):
         self.get_keys()

@@ -89,7 +89,7 @@ class Main:
 
     def load_Blitz(self):
             import Blitz.main as Blitz
-            Blitz.Start(self.screen, Name)
+            Blitz.Start(self.screen, Name, self.MainSpaceship.image_orig)
 
     def load_SR(self):
         import SR.main as SR
