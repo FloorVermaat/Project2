@@ -51,13 +51,15 @@ class Main:
         level_nameInput = False
         movement_down = False
         movement = 0
+        background_mov = 0
 
         while not level_nameInput:
             input_box = pygame.Rect(W / 2 - 100, H / 2 - 50 + movement, 140, 32)
             input_boxbackground = input_box
             # moving background
-            self.background.draw(self.screen, 2)
+            self.background.draw(self.screen, background_mov)
             if movement_down:
+                background_mov += 1
                 movement += 5
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -72,7 +74,7 @@ class Main:
                         text = text[:-1]
                     else:
                         text += event.unicode
-            if movement > 800:
+            if movement > 1000:
                 return text
 
             # Render the current text.
