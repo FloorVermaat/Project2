@@ -61,7 +61,7 @@ class Main:
                     pygame.quit()
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN and len(text) >= 3:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER and len(text) >= 3:
                         return text
 
                     elif event.key == pygame.K_BACKSPACE:
@@ -197,7 +197,7 @@ class Main:
                         sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect):
                             M.load_Blitz()
                         if self.ClimbPlanet.rect.colliderect(self.MainSpaceship.rect):
@@ -207,7 +207,7 @@ class Main:
                         if self.ShootPlanet.rect.colliderect(self.MainSpaceship.rect):
                             M.load_SS()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
-                            pass
+                            M.load_SE()
                         if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect):
                             pygame.quit()
                             sys.exit()
