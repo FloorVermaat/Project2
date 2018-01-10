@@ -46,8 +46,8 @@ MOB_KNOCKBACK = 20
 game_folder = path.dirname(__file__)
 img_folder = path.join(game_folder, 'img')
 sound_folder = path.join(game_folder, 'sound')
-BACKGROUND = 'background.png'
-BACKGROUNDIMAGE = pg.image.load(path.join(img_folder, BACKGROUND)).convert_alpha()
+BACKGROUND = 'SR/img/background.jpg'
+BACKGROUNDIMAGE = pg.image.load(BACKGROUND).convert_alpha()
 
 
 
@@ -378,9 +378,8 @@ class Game:
                 #g.show_win_screen()
 
     def draw(self):
-
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        self.screen.fill(BACKGROUNDGIMAGE)
+        self.screen.blit(BACKGROUNDIMAGE, (0,0))
         # self.draw_grid()
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
