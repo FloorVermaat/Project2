@@ -252,13 +252,13 @@ class Background(object):
         self.last_update = pygame.time.get_ticks()
         self.rect.center = [640, 360]
 
-    def draw(self, surface):
+    def draw(self, surface, speed):
         # background movement
         self.rel_y = self.y % self.image.get_rect().height
         surface.blit(self.image, [0, self.rel_y - self.image.get_rect().height])
         if self.rel_y < 1080:
             surface.blit(self.image, (0, self.rel_y))
-        self.y += 0.8 # + self.speed
+        self.y += 0.8 + speed
 
     def draw2(self, surface):
         surface.blit(self.image, [-1920, -1080])

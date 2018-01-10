@@ -43,31 +43,37 @@ class Main:
         pygame.mixer.music.load(os.path.join(snd_folder, "Takeoff.wav"))
         pygame.mixer.music.set_volume(0.3)
         font = pygame.font.Font("Blitz/8.TTF", 16)
-        input_box = pygame.Rect(W / 2 - 100, H / 2 - 50, 140, 32)
-        input_boxbackground = input_box
         color_inactive = pygame.Color('lightskyblue3')
         color_active = GREEN
         color = color_inactive
         active = False
         text = ''
         level_nameInput = False
+        movement_down = False
+        movement = 0
 
         while not level_nameInput:
-            pygame.mixer.music.play(loops=1)
+            input_box = pygame.Rect(W / 2 - 100, H / 2 - 50 + movement, 140, 32)
+            input_boxbackground = input_box
             # moving background
-            self.background.draw(self.screen)
+            self.background.draw(self.screen, 2)
+            if movement_down:
+                movement += 5
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER and len(text) >= 3:
-                        return text
+                        movement_down = True
+                        pygame.mixer.music.play(loops=1)
 
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
                     else:
                         text += event.unicode
+            if movement > 800:
+                return text
 
             # Render the current text.
             txt_surface = font.render(text, True, BLACK)
@@ -75,14 +81,16 @@ class Main:
             width = max(200, txt_surface.get_width() + 10)
             input_box.w = width
             input_boxbackground.w = width
-            # Blit the text.
-            pygame.draw.rect(self.screen, WHITE, input_boxbackground)
-            self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
-            self.draw_text(self.screen, "The Number One", 64, W / 2, 50)
-            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200)
-            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50)
-            # Blit the input_box rect.
-            pygame.draw.rect(self.screen, color, input_box, 5)
+            # draw input box if not pressed enter
+            if not movement_down:
+                pygame.draw.rect(self.screen, WHITE, input_boxbackground)
+                pygame.draw.rect(self.screen, color, input_box, 5)
+
+            self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5 + movement))
+            self.draw_text(self.screen, "The Number One", 64, W / 2, 50 + movement)
+            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200 + movement)
+            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement)
+
             pygame.display.flip()
             self.clock.tick(FPS)
 
@@ -168,15 +176,15 @@ class Main:
         done = False
         while not done:
             self.screen.fill(BLACK)
-            self.background.draw(self.screen)
+            self.background.draw(self.screen, 0)
             self.clock.tick(FPS)
             self.MouseOver_Actions()
+            # Loading game actions
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                # Loading game actions
+                # If the user clicks on the planets they load with this
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # If user clicks the Blitz button:
                     if self.BlitzPlanet.rect.collidepoint(event.pos):
                         M.load_Blitz()
 
@@ -195,7 +203,7 @@ class Main:
                     if self.ExitPlanet.rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
-
+                # If the user presses enter while ship is on the planet they load with this
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect):
