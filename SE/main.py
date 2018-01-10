@@ -15,6 +15,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+BROWN = (101, 67, 33)
 
 pygame.init()
 pygame.mixer.init()
@@ -55,6 +56,7 @@ def show_start_screen():
     pass
 
 def show_go_screen():
+    global tunnels, all_sprites
     screen.blit(background, (0,0))
     draw_text(screen, "Space Escape", 128, WIDTH / 2, HEIGHT / 4)
     #draw_text(screen, "Score: " + str(score), 44, WIDTH / 2, HEIGHT / 3)
@@ -70,11 +72,38 @@ def show_go_screen():
             if event.type == pygame.KEYUP:
                 waiting = False
 
+
+    tunnel_gat = 400
+    tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+    tunnel_i = 0
+    tunnel_hoogte = 200
+
+    diff_1 = False
+    diff_2 = False
+    diff_3 = False
+
+    while len(tunnels) < 128 * 2 + 10:
+        while tunnel_hoogte > tunnel_half:
+            tunnel_hoogte += -5
+        while tunnel_hoogte <= 0:
+            tunnel_hoogte += 5
+
+        tunnel_hoogte += random.randrange(-5, 6)
+
+        # Boven Helft Tunnel
+        t = Tunnel(tunnel_i, 0, tunnel_hoogte)
+        tunnels.add(t)
+        # Onder Helft Tunnel
+        t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
+        tunnels.add(t)
+        tunnel_i += 10
+
+
 class Tunnel(pygame.sprite.Sprite):
     def __init__(self, x, y, h):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((10,h))
-        self.image.fill(GREEN)
+        self.image.fill(BROWN)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
@@ -283,21 +312,6 @@ def Escape_Game(ext_screen):
     diff_2 = False
     diff_3 = False
 
-    while len(tunnels) < 128 * 2 + 10:
-        while tunnel_hoogte > tunnel_half:
-            tunnel_hoogte += -5
-        while tunnel_hoogte <= 0:
-            tunnel_hoogte += 5
-
-        tunnel_hoogte += random.randrange(-5, 6)
-
-        # Boven Helft Tunnel
-        t = Tunnel(tunnel_i, 0, tunnel_hoogte)
-        tunnels.add(t)
-        # Onder Helft Tunnel
-        t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
-        tunnels.add(t)
-        tunnel_i += 10
 
 
 
@@ -407,6 +421,12 @@ def Escape_Game(ext_screen):
         # If the player died and the explosion has finished playing
         if player.lives == 0 and not death_explosion.alive():
             game_over = True
+            tunnels.empty()
+            all_sprites.empty()
+            diff_1 = False
+            diff_2 = False
+            diff_3 = False
+
 
         # Draw / Render
         rel_x = x % background.get_rect().width
