@@ -145,8 +145,6 @@ class Player(pygame.sprite.Sprite):
             self.speedx -= 10
         if keystate[pygame.K_SPACE]:
             self.shoot()
-        if keystate[pygame.K_q]:
-            pygame.quit()
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -326,8 +324,6 @@ def Escape_Game(ext_screen):
         # Process input (events)
         for event in pygame.event.get():
             # Check for closing window
-            if event.type == pygame.QUIT:
-                running = False
             if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
                 running = False
 
@@ -445,6 +441,4 @@ def Escape_Game(ext_screen):
         draw_lives(screen, WIDTH - 100, 5, player.lives, live)
         # After drawing everything, flip the display
         pygame.display.flip()
-
-    pygame.quit()
 
