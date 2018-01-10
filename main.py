@@ -133,6 +133,8 @@ class Main:
         self.MainGame_sprites.add(self.EvadePlanet)
         self.ExitPlanet = ExitPlanet()
         self.MainGame_sprites.add(self.ExitPlanet)
+        self.BlackHolePlanet = BlackHolePlanet()
+        self.MainGame_sprites.add(self.BlackHolePlanet)
         self.MainSpaceship = MainPlayer(W / 2, H - 200)
         self.MainGame_sprites.add(self.MainSpaceship)
 
@@ -174,6 +176,12 @@ class Main:
         else:
             self.ExitPlanet.active = False
 
+        if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.BlackHolePlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.BlackHolePlanet.active = True
+        else:
+            self.BlackHolePlanet.active = False
+
     def select_Minigame(self):
         self.load_Planets()
         done = False
@@ -204,6 +212,8 @@ class Main:
                         M.load_SE()
 
                     if self.ExitPlanet.rect.collidepoint(event.pos):
+                        pass
+                    if self.BlackHolePlanet.rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
                 # If the user presses enter while ship is on the planet they load with this
@@ -220,6 +230,8 @@ class Main:
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
                             M.load_SE()
                         if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            pass
+                        if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect):
                             pygame.quit()
                             sys.exit()
 
@@ -236,8 +248,8 @@ class Main:
                            self.EvadePlanet.rect.y - 40)
             self.draw_text(self.screen, "Space Shooter", 14, self.ShootPlanet.rect.x + self.ShootPlanet.rect.w / 2,
                            self.ShootPlanet.rect.y - 40)
-            self.draw_text(self.screen, "Exit", 14, self.ExitPlanet.rect.x + self.ExitPlanet.rect.w / 2,
-                           self.ExitPlanet.rect.y - 40)
+            self.draw_text(self.screen, "Exit", 14, self.BlackHolePlanet.rect.x + self.BlackHolePlanet.rect.w / 2 - 50,
+                           self.BlackHolePlanet.rect.y - 25)
             self.draw_text(self.screen, "space pirate " + Name + ":", 14, W / 2,
                            H - 140)
             self.draw_text(self.screen, "To Play...Fly To A Planet And Press Enter", 14, W / 2,

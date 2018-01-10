@@ -1,6 +1,6 @@
 import os
 # game options/settings
-TITLE = "Minigame 1"
+TITLE = "The Number One"
 W = WIDTH = 1280
 H = HEIGHT = 720
 FPS = 60
