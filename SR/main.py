@@ -48,6 +48,7 @@ img_folder = path.join(game_folder, 'img')
 sound_folder = path.join(game_folder, 'sound')
 BACKGROUND = 'SR/img/background.jpg'
 BACKGROUNDIMAGE = pg.image.load(BACKGROUND).convert_alpha()
+BACKGROUNDIMAGE = pg.transform.scale(BACKGROUNDIMAGE, (1280, 720))
 
 
 
@@ -380,6 +381,7 @@ class Game:
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         self.screen.blit(BACKGROUNDIMAGE, (0,0))
+
         # self.draw_grid()
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
