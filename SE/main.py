@@ -29,7 +29,6 @@ def draw_text(surf, text, size, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
-
 def newmob():
     m = Mob()
     all_sprites.add(m)
@@ -52,8 +51,6 @@ def draw_lives(surf, x, y, lives, img):
         img_rect.x = x + 30 * i
         img_rect.y = y
         surf.blit(img, img_rect)
-def show_start_screen():
-    pass
 
 def show_go_screen():
     global tunnels, all_sprites
@@ -97,7 +94,6 @@ def show_go_screen():
         t = Tunnel(tunnel_i, HEIGHT - tunnel_hoogte, tunnel_hoogte)
         tunnels.add(t)
         tunnel_i += 10
-
 
 class Tunnel(pygame.sprite.Sprite):
     def __init__(self, x, y, h):
@@ -299,7 +295,6 @@ def Escape_Game(ext_screen):
 
     screen = ext_screen
 
-
     running = True
     game_over = True
     x = 0
@@ -312,11 +307,6 @@ def Escape_Game(ext_screen):
     diff_2 = False
     diff_3 = False
 
-
-
-
-
-
     while running:
         if game_over:
             show_go_screen()
@@ -326,8 +316,6 @@ def Escape_Game(ext_screen):
             bullets = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
-
-
 
             for i in range(10):
                 newmob()
@@ -340,13 +328,13 @@ def Escape_Game(ext_screen):
             # Check for closing window
             if event.type == pygame.QUIT:
                 running = False
-
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                running = False
 
         # Keep Creating Tunnels
-        for tunnel in tunnels: #Delete Tunnels
+        for tunnel in tunnels:    # Tunnels weghalen als ze van scherm af gaan
             if tunnel.rect.x <= -10:
                 tunnel.kill()
-
 
         while len(tunnels) < (128 * 2) + 25:
             print(tunnel_half)
@@ -384,7 +372,6 @@ def Escape_Game(ext_screen):
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_3 = True
 
-
         # Update
         all_sprites.update()
         tunnels.update()
@@ -397,6 +384,20 @@ def Escape_Game(ext_screen):
             expl = Explosion(hit.rect.center, 'lg')
             all_sprites.add(expl)
             newmob()
+
+        # Check to see if the player hits the wall
+        hits = pygame.sprite.spritecollide(player, tunnels, False)
+        for hit in hits:
+            player.shield = 0
+            expl = Explosion(hit.rect.center, 'sm')
+            all_sprites.add(expl)
+            if player.shield <= 0:
+                player_die_sound.play()
+                death_explosion = Explosion(player.rect.center, 'player')
+                all_sprites.add(death_explosion)
+                player.hide()
+                player.lives -= 1
+                player.shield = 100
 
         # Check to see if a mob hits the wall
         hits = pygame.sprite.groupcollide(mobs, tunnels, True, False)
