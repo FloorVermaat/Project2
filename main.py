@@ -114,7 +114,7 @@ class Main:
         self.MainGame_sprites.add(self.EvadePlanet)
         self.ExitPlanet = ExitPlanet()
         self.MainGame_sprites.add(self.ExitPlanet)
-        self.MainSpaceship = MainPlayer(W / 2, H - 100)
+        self.MainSpaceship = MainPlayer(W / 2, H - 200)
         self.MainGame_sprites.add(self.MainSpaceship)
 
 
