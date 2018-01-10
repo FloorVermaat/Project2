@@ -58,9 +58,7 @@ class Main:
             input_boxbackground = input_box
             # moving background
             self.background.draw(self.screen, background_mov)
-            if movement_down:
-                background_mov += 1
-                movement += 5
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -69,13 +67,16 @@ class Main:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER and len(text) >= 3:
                         movement_down = True
                         pygame.mixer.music.play(loops=1)
-
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
                     else:
                         text += event.unicode
-            if movement > 1000:
-                return text
+
+            if movement_down:
+                background_mov += 1
+                movement += 5
+                if movement > 1000:
+                    return text
 
             # Render the current text.
             txt_surface = font.render(text, True, BLACK)
