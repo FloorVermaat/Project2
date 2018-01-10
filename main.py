@@ -213,9 +213,11 @@ class Main:
 
                     if self.ExitPlanet.rect.collidepoint(event.pos):
                         pass
+
                     if self.BlackHolePlanet.rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
+
                 # If the user presses enter while ship is on the planet they load with this
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:

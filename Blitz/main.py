@@ -63,7 +63,7 @@ def enemymob():
 def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
         pct = 0
-    bar_length = 70
+    bar_length = 200
     bar_height = 20
     fill = (pct / 150) * bar_length
     outline_rect = pygame.Rect(x, y, bar_length, bar_height)
@@ -252,6 +252,7 @@ def shield_status():
     if not player.shield_st:
         death_expl = Explosion(player.rect.center, "player")
         Blitz_sprites.add(death_expl)
+        selfexplosion.play()
         player.hide()
         player.lives -= 1
         player.shield = 150
@@ -306,6 +307,7 @@ def collision_checks():
         # if you die this happens
         death_expl = Explosion(player.rect.center, "player")
         Blitz_sprites.add(death_expl)
+        selfexplosion.play()
         player.hide()
         player.lives -= 1
         player.shield = 300
@@ -916,6 +918,8 @@ blitzlogo = pygame.image.load(os.path.join(img_folder, "blitz logo.png")).conver
 # shooting sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_folder, "Laser_Shoot11.wav"))
 shoot_soundVolume = shoot_sound.set_volume(0.05)
+# self explosion
+selfexplosion = pygame.mixer.Sound(os.path.join(snd_folder, "selfexplosion.wav"))
 # explosion sounds
 explosion_sound = []
 explosion_soundList = ['Explosion4.wav', 'Explosion17.wav']
@@ -1047,7 +1051,7 @@ class Blitz:
             draw_text(self.screen, "Space Pirate " + Name, 12, 120, 10)
             # draw shield, only if you have shield
             if player.shield > 0:
-                draw_shield_bar(self.screen, W - 80, H - 70, player.shield)
+                draw_shield_bar(self.screen, W - 280, H - 70, player.shield)
             # draw power up, only if you have an active powerup
             if player.powerbar > 0:
                 draw_powerup_bar(self.screen, W - W + 10, H - 70, player.powerbar)
