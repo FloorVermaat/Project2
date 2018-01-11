@@ -21,7 +21,7 @@ class Main:
         pg.mixer.init()
         pg.init()
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
@@ -77,13 +77,15 @@ class Main:
         movement = 0
         background_mov = 0
         number_mov_speed = 0
+        Title_mov = True
+        Title_mov_speed = 0
         last_tick = pygame.time.get_ticks()
+
         while not level_nameInput:
             input_box = pygame.Rect(W / 2 - 100, H / 2 - 50 + movement, 140, 32)
             input_boxbackground = input_box
             # moving background
             self.background.draw(self.screen, background_mov)
-            #pygame.mixer.music.play(loops=1)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -105,10 +107,16 @@ class Main:
                 if movement > 1000:
                     return text
             if Number_mov:
-                number_mov_speed += 15
-                if number_mov_speed >= 1880:
-                    Number_mov = False
-                    number_mov_speed = 1880
+                number_mov_speed += 17
+                if number_mov_speed >= 2100:
+                    number_mov_speed = 2100
+                    if pygame.time.get_ticks() - last_tick > 4000:
+                        Number_mov = False
+
+            if not Number_mov:
+                Title_mov_speed -= 2
+                if Title_mov_speed <= -220:
+                    Title_mov_speed = -220
 
             # Render the current text.
             txt_surface = font.render(text, True, BLACK)
@@ -116,17 +124,21 @@ class Main:
             width = max(200, txt_surface.get_width() + 10)
             input_box.w = width
             input_boxbackground.w = width
+
+            self.draw_text(self.screen, "The Number", 64, W / 2 - 100, 300 + movement + Title_mov_speed, WHITE)
+            self.draw_text(self.screen, "One", 64, W / 2 + 336, -1800 + movement + number_mov_speed + Title_mov_speed, RED)
             # draw input box if not pressed enter
-            if not movement_down and not Number_mov:
+            if not movement_down:
                 if pygame.time.get_ticks() - last_tick > 6000:
                     pygame.draw.rect(self.screen, WHITE, input_boxbackground)
                     pygame.draw.rect(self.screen, color, input_box, 5)
                     self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5 + movement))
-
-            self.draw_text(self.screen, "The Number", 64, W / 2 - 100, 80 + movement, WHITE)
-            self.draw_text(self.screen, "One", 64, W / 2 + 336, -1800 + movement + number_mov_speed, RED)
-            self.draw_text(self.screen, "Insert Name And Press Enter", 30, W / 2, 200 + movement, WHITE)
-            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement, WHITE)
+                    self.draw_text(self.screen, "Insert Name And Press Enter", 30, W / 2, 200 + movement, WHITE)
+                    self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement, WHITE)
+            else:
+                self.draw_text(self.screen, "Insert Name And Press Enter", 30, W / 2, 200 + movement, WHITE)
+                self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2,
+                               H / 2 + 50 + movement, WHITE)
 
             pygame.display.flip()
             self.clock.tick(FPS)
