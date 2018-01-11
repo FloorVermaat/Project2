@@ -341,7 +341,7 @@ class Space_race:
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         self.screen.blit(BACKGROUNDIMAGE, (0,0))
-
+        global playing
         # self.draw_grid()
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
@@ -361,6 +361,7 @@ class Space_race:
             pg.mixer.music.unpause()
 
     def events(self):
+        global playing
         # catch all events here
         for event in pg.event.get():
             if event.type == pg.QUIT:
