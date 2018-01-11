@@ -198,7 +198,7 @@ class EvadePlanet(pg.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
 
 
-class ExitPlanet(pg.sprite.Sprite):
+class CreditsPlanet(pg.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pg.image.load(os.path.join(img_folder, "Exit planet.png")).convert_alpha()

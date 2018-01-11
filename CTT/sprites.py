@@ -184,6 +184,54 @@ class Tower(pg.sprite.Sprite):
 
         self.image = self.sprites[self.rotation]
 
+
+class Background(pg.sprite.Sprite):
+    def __init__(self, sprites):
+        pg.sprite.Sprite.__init__(self)
+        self.rotation = 250
+        self.sprites = sprites
+
+        self.image = self.sprites[self.rotation]
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
+
+        self.rot = vec(0, 0)
+        self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
+
+        self.rot.x = self.rotation
+
+
+
+    def update(self):
+        self.acc = vec(0, 0)
+
+        keys = pg.key.get_pressed()
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            self.acc.x = -PLAYER_ACC/25
+        if keys[pg.K_LEFT] or keys[pg.K_a]:
+            self.acc.x = PLAYER_ACC/25
+
+        # apply friction
+        self.acc.x += self.vel.x * PLAYER_FRICTION
+
+        # equations of motion
+        self.vel += self.acc
+        self.rot += self.vel + 0.5 * self.acc
+
+        # Make sure that image is not out of bounds
+        if self.rot.x > 500:
+            self.rot.x += -500
+        if self.rot.x < 1:
+            self.rot.x += 500
+
+
+        self.rotation = int(self.rot.x)
+
+
+        self.image = self.sprites[self.rotation]
+
 class Music:
     def __init__(self):
         self.jump1 = pg.mixer.Sound("CTT/assets/jumppp12.ogg")
