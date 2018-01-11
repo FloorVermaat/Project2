@@ -107,7 +107,7 @@ class Main:
                 if movement > 1000:
                     return text
             if Number_mov:
-                number_mov_speed += 17
+                number_mov_speed += 16
                 if number_mov_speed >= 2100:
                     number_mov_speed = 2100
                     if pygame.time.get_ticks() - last_tick > 4000:
