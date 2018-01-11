@@ -4,7 +4,7 @@ TITLE = "The Number One"
 W = WIDTH = 1280
 H = HEIGHT = 720
 FPS = 60
-FONT_NAME = 'arial'
+FONT_NAME = "Blitz/8.ttf"
 
 # define colors
 WHITE = (255, 255, 255)

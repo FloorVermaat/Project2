@@ -26,16 +26,38 @@ class Main:
 
         self.clock = pg.time.Clock()
         self.running = True
-        self.font_name = pg.font.match_font(FONT_NAME)
         self.background = Background()
+        self.font_name = "Blitz/8.TTF"
 
     # drawing text on screen
-    def draw_text(self, surf, text, size, x, y):
-        font_name = pygame.font.Font("Blitz/8.ttf", size)
-        text_surface = font_name.render(text, True, WHITE)
+    def draw_text(self, surf, text, size, x, y, color):
+        font_name = pygame.font.Font("Blitz/8.TTF", size)
+        text_surface = font_name.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
+
+    def Credits_screen(self):
+        done = False
+        movement = 0
+        while not done:
+            # moving background
+            self.background.draw(self.screen, 0)
+            movement_down = True
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            if movement_down:
+                movement -= 5
+                #if movement > 1000:
+
+            self.draw_text(self.screen, "The Number One", 64, W / 2, 50 + movement, WHITE)
+            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200 + movement, WHITE)
+            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement, WHITE)
+
+            pygame.display.flip()
+            self.clock.tick(FPS)
+
 
 
     def name_input_screen(self):
@@ -50,8 +72,10 @@ class Main:
         text = ''
         level_nameInput = False
         movement_down = False
+        Number_mov = True
         movement = 0
         background_mov = 0
+        number_mov_speed = 0
 
         while not level_nameInput:
             input_box = pygame.Rect(W / 2 - 100, H / 2 - 50 + movement, 140, 32)
@@ -72,11 +96,16 @@ class Main:
                     else:
                         text += event.unicode
 
-            if movement_down:
+            if movement_down and not Number_mov:
                 background_mov += 1
                 movement += 5
                 if movement > 1000:
                     return text
+            if Number_mov:
+                number_mov_speed += 2
+                if number_mov_speed >= 180:
+                    Number_mov = False
+                    number_mov_speed = 180
 
             # Render the current text.
             txt_surface = font.render(text, True, BLACK)
@@ -90,9 +119,11 @@ class Main:
                 pygame.draw.rect(self.screen, color, input_box, 5)
 
             self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5 + movement))
-            self.draw_text(self.screen, "The Number One", 64, W / 2, 50 + movement)
-            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200 + movement)
-            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement)
+            self.draw_text(self.screen, "The Number", 64, W / 2 - 100, 80 + movement, WHITE)
+
+            self.draw_text(self.screen, "One", 64, W / 2 + 336, -100 + movement + number_mov_speed, RED)
+            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200 + movement, WHITE)
+            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement, WHITE)
 
             pygame.display.flip()
             self.clock.tick(FPS)
@@ -131,8 +162,8 @@ class Main:
         self.MainGame_sprites.add(self.ShootPlanet)
         self.EvadePlanet = EvadePlanet()
         self.MainGame_sprites.add(self.EvadePlanet)
-        self.ExitPlanet = ExitPlanet()
-        self.MainGame_sprites.add(self.ExitPlanet)
+        self.CreditsPlanet = CreditsPlanet()
+        self.MainGame_sprites.add(self.CreditsPlanet)
         self.BlackHolePlanet = BlackHolePlanet()
         self.MainGame_sprites.add(self.BlackHolePlanet)
         self.MainSpaceship = MainPlayer(W / 2, H - 200)
@@ -170,11 +201,11 @@ class Main:
         else:
             self.EvadePlanet.active = False
 
-        if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect) or \
-                self.ExitPlanet.rect.collidepoint(pygame.mouse.get_pos()):
-            self.ExitPlanet.active = True
+        if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.CreditsPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.CreditsPlanet.active = True
         else:
-            self.ExitPlanet.active = False
+            self.CreditsPlanet.active = False
 
         if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect) or \
                 self.BlackHolePlanet.rect.collidepoint(pygame.mouse.get_pos()):
@@ -211,8 +242,8 @@ class Main:
                     if self.EvadePlanet.rect.collidepoint(event.pos):
                         M.load_SE()
 
-                    if self.ExitPlanet.rect.collidepoint(event.pos):
-                        pass
+                    if self.CreditsPlanet.rect.collidepoint(event.pos):
+                        self.Credits_screen()
 
                     if self.BlackHolePlanet.rect.collidepoint(event.pos):
                         pygame.quit()
@@ -231,8 +262,8 @@ class Main:
                             M.load_SS()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
                             M.load_SE()
-                        if self.ExitPlanet.rect.colliderect(self.MainSpaceship.rect):
-                            pass
+                        if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect):
+                            self.Credits_screen()
                         if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect):
                             pygame.quit()
                             sys.exit()
@@ -241,21 +272,23 @@ class Main:
 
             # Draw text
             self.draw_text(self.screen, "Blitz", 14, self.BlitzPlanet.rect.x + self.BlitzPlanet.rect.w / 2,
-                           self.BlitzPlanet.rect.y - 40)
+                           self.BlitzPlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Climb The Tower", 14, self.ClimbPlanet.rect.x + self.ClimbPlanet.rect.w / 2,
-                           self.ClimbPlanet.rect.y - 40)
+                           self.ClimbPlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Space Race", 14, self.RacePlanet.rect.x + self.RacePlanet.rect.w / 2,
-                           self.RacePlanet.rect.y - 40)
+                           self.RacePlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Space Escape", 14, self.EvadePlanet.rect.x + self.EvadePlanet.rect.w / 2,
-                           self.EvadePlanet.rect.y - 40)
+                           self.EvadePlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Space Shooter", 14, self.ShootPlanet.rect.x + self.ShootPlanet.rect.w / 2,
-                           self.ShootPlanet.rect.y - 40)
+                           self.ShootPlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Exit", 14, self.BlackHolePlanet.rect.x + self.BlackHolePlanet.rect.w / 2 - 50,
-                           self.BlackHolePlanet.rect.y - 25)
+                           self.BlackHolePlanet.rect.y - 25, WHITE)
+            self.draw_text(self.screen, "Credits", 14, self.CreditsPlanet.rect.x + self.CreditsPlanet.rect.w / 2,
+                           self.CreditsPlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "space pirate " + Name + ":", 14, W / 2,
-                           H - 140)
+                           H - 140, WHITE)
             self.draw_text(self.screen, "To Play...Fly To A Planet And Press Enter", 14, W / 2,
-                           H - 100)
+                           H - 100, WHITE)
 
 
             # game loop update
