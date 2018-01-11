@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 335
+MOB_SPEED = 350
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -168,18 +168,6 @@ class Mob(pg.sprite.Sprite):
             pg.draw.rect(self.image, col, self.health_bar)
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.walls
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        self.image = game.wall_img
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-
-class moving_wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -450,15 +438,7 @@ class Space_race:
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
         pg.event.wait()
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.quit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_q:
-                    self.playing = False
-                    pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
-                    pg.mixer.music.play(-1)
-        self.wait_for_start()
+        self.wait_for_key()
 
 
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
@@ -487,7 +467,8 @@ class Space_race:
         self.wait_for_escape()
         self.score = 0
 
-    def wait_for_start(self):
+    def wait_for_key(self):
+        global playing
         pg.event.wait()
         waiting = True
         while waiting:
@@ -498,10 +479,15 @@ class Space_race:
                     self.quit()
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
-                        waiting = False
+                        playing = True
                         self.playing = True
+                        waiting = False
                         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
                         pg.mixer.music.play(-1)
+                    if event.key == pg.K_q:
+                        playing = False
+                        waiting = False
+
 
     def wait_for_escape(self):
         import main as M
@@ -517,6 +503,7 @@ class Space_race:
                     M.select_Minigame()
 
     def go_to_start(self):
+        global playing
         pg.event.wait()
         waiting = True
         while waiting:
@@ -526,14 +513,22 @@ class Space_race:
                     waiting = False
                     self.quit()
                 if event.type == pg.KEYDOWN:
-                    waiting = False
-                    self.show_start_screen()
+                    if event.key == pg.K_r:
+                        self.show_start_screen()
+                        waiting = False
+                    if event.key == pg.K_q:
+                        playing = False
+                        waiting = False
+
+
+
+playing = True
 
 def SR(screen):
     # create the game object
     SR = Space_race(screen)
     SR.show_start_screen()
-    while SR.playing:
+    while playing:
         SR.new()
         SR.run()
         SR.show_go_screen()
