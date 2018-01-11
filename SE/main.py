@@ -49,7 +49,7 @@ def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
         pct = 0
     BAR_LENGTH = 100
-    BAR_HEIGHT = 10
+    BAR_HEIGHT = 20
     fill = (pct / 100) * BAR_LENGTH
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
     fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
@@ -336,7 +336,7 @@ pygame.mixer.music.play(loops=-1)
 
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-
+powerups = pygame.sprite.Group()
 
 # Game loop
 
