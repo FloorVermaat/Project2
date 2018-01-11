@@ -27,7 +27,7 @@ class Main:
         self.clock = pg.time.Clock()
         self.running = True
         self.background = Background()
-        self.font_name = "Blitz/8.TTF"
+        self.font_name = pygame.font.match_font(FONT_NAME)
 
     # drawing text on screen
     def draw_text(self, surf, text, size, x, y, color):
@@ -88,7 +88,7 @@ class Main:
                     pygame.quit()
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER and len(text) >= 3:
+                    if event.key == pygame.K_RETURN and len(text) >= 3 or event.key == pygame.K_KP_ENTER and len(text) >= 3:
                         movement_down = True
                         pygame.mixer.music.play(loops=1)
                     elif event.key == pygame.K_BACKSPACE:
