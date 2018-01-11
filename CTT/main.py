@@ -92,6 +92,7 @@ class Climb_The_Tower_Game:
             self.events()
             self.update()
             self.draw()
+            print("FPS: " + str(self.clock.get_fps()))
 
     def update(self):
         # Climb_The_Tower_Game Loop - Update
@@ -178,7 +179,7 @@ class Climb_The_Tower_Game:
                     self.playing = False
                 self.running = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE or event.key == pg.K_w:
+                if event.key == pg.K_SPACE:
                     self.player.jump()
                     self.M.jump1.play()
                     self.player.land = False
@@ -194,6 +195,10 @@ class Climb_The_Tower_Game:
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
+
+        if not self.player.djump:
+            self.player.draw_cooldown(self.screen, 25, HEIGHT - 50)
+
         # *after* drawing everything, flip the display
         pg.display.flip()
 
@@ -204,6 +209,16 @@ class Climb_The_Tower_Game:
         self.draw_text("Use AD or the Arrow Keys to move left or right!"
                        "Space is used to jump!", 22, WHITE, WIDTH / 2, HEIGHT / 2)
         self.draw_text("Press the c key to start", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+
+        import imageio
+        imageio.plugins.ffmpeg.download()
+        from moviepy.editor import VideoFileClip
+        clip = VideoFileClip('CTT/assets/retrowave.mp4')
+        clip.preview()
+
+
+
+
         pg.display.flip()
         self.wait_for_key()
 
@@ -264,4 +279,8 @@ def CTT(screen):
             CTT.show_win_screen()
         else:
             CTT.show_go_screen()
+    CTT.spriteArrayTower = []
+    CTT.spriteArrayBackground = []
+
+
 
