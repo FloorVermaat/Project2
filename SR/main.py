@@ -179,6 +179,18 @@ class Wall(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
+class moving_wall(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.wall_img
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
 class Point(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.points
@@ -438,7 +450,15 @@ class Space_race:
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
         pg.event.wait()
-        self.wait_for_key()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_q:
+                    self.playing = False
+                    pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
+                    pg.mixer.music.play(-1)
+        self.wait_for_start()
 
 
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
@@ -467,7 +487,7 @@ class Space_race:
         self.wait_for_escape()
         self.score = 0
 
-    def wait_for_key(self):
+    def wait_for_start(self):
         pg.event.wait()
         waiting = True
         while waiting:
@@ -476,11 +496,12 @@ class Space_race:
                 if event.type == pg.QUIT:
                     waiting = False
                     self.quit()
-                if event.type == pg.KEYUP:
-                    waiting = False
-                    self.playing = True
-                    pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
-                    pg.mixer.music.play(-1)
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_r:
+                        waiting = False
+                        self.playing = True
+                        pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
+                        pg.mixer.music.play(-1)
 
     def wait_for_escape(self):
         import main as M
