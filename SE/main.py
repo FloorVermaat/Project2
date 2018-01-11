@@ -5,6 +5,8 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'img')
 snd_dir = path.join(path.dirname(__file__), 'snd')
 
+POWERUP_TIME = 5000
+
 Name = ""
 
 WIDTH = 1280
@@ -31,6 +33,12 @@ def draw_text(surf, text, size, x, y):
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
+
+def newpowerup():
+    powerups = pygame.sprite.Group()
+    pow = Pow()
+    all_sprites.add(pow)
+    powerups.add(pow)
 
 def newmob():
     m = Mob()
@@ -123,7 +131,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.radius = 26
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.rect.center = (WIDTH / 4, HEIGHT / 2)
         self.speedx = 0
         self.speedy = 0
         self.shield = 100
@@ -132,12 +140,23 @@ class Player(pygame.sprite.Sprite):
         self.lives = 3
         self.hidden = False
         self.hide_timer = pygame.time.get_ticks()
+        self.power = 0
+        self.power_time = pygame.time.get_ticks()
+
+    def powerup(self):
+        self.power += 1
+        self.power_time = pygame.time.get_ticks()
 
     def update(self):
+        # Time out for powerups
+        if self.power >= 1 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+            self.power -= 1
+            self.power_time = pygame.time.get_ticks()
+
         # Unhide if hidden
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
-            self.rect.center = (WIDTH / 2, HEIGHT / 2)
+            self.rect.center = (WIDTH / 4, HEIGHT / 2)
         self.speedx = 0
         self.speedy = 0
         keystate = pygame.key.get_pressed()
@@ -149,8 +168,6 @@ class Player(pygame.sprite.Sprite):
             self.speedx += 10
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.speedx -= 10
-        if keystate[pygame.K_SPACE]:
-            self.shoot()
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -164,10 +181,14 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
-            bullet = Bullet(self.rect.right, self.rect.centery)
-            all_sprites.add(bullet)
-            bullets.add(bullet)
-            shoot_sound.play()
+            if self.power >= 1:
+                bullet = Bullet(self.rect.right, self.rect.centery)
+                all_sprites.add(bullet)
+                bullets.add(bullet)
+                shoot_sound.play()
+                keystate = pygame.key.get_pressed()
+                if keystate[pygame.K_SPACE]:
+                    self.shoot()
 
     def hide(self):
         # hide the player temporarily
@@ -218,6 +239,22 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.bottom = y
         self.rect.centerx = x
         self.speedx = -10
+
+    def update(self):
+        self.rect.x -= self.speedx
+        # Kill the bullet when off the screen
+        if self.rect.centerx < -10:
+            self.kill()
+
+class Pow(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.type = random.choice(['shield', 'gun'])
+        self.image = powerup_images[self.type]
+        self.rect = self.image.get_rect()
+        self.rect.x = 1300
+        self.rect.y = random.randrange(60, 640)
+        self.speedx = random.randrange(5, 15)
 
     def update(self):
         self.rect.x -= self.speedx
@@ -274,6 +311,10 @@ for i in range (9):
     img = pygame.image.load(path.join(img_dir, filename)).convert_alpha()
     explosion_anim['player'].append(img)
 
+powerup_images = {}
+powerup_images['shield'] = pygame.image.load(path.join(img_dir, 'shield_silver.png')).convert_alpha()
+powerup_images['gun'] = pygame.image.load(path.join(img_dir, 'bold_silver.png')).convert_alpha()
+
 # Load all game sounds
 shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'laser1.wav'))
 expl_sound = pygame.mixer.Sound(path.join(snd_dir, 'explosion.wav'))
@@ -318,12 +359,16 @@ def Escape_Game(ext_screen):
 
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
+            powerups = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
 
             for i in range(13):
                 newmob()
             score = 0
+
+            for i in range(3):
+                newpowerup()
 
         # Keep loop running at the right speed
         clock.tick(FPS)
@@ -395,6 +440,16 @@ def Escape_Game(ext_screen):
             expl = Explosion(hit.rect.center, 'lg')
             all_sprites.add(expl)
             newmob()
+
+        # Check to see if the player hit a powerup
+        hits = pygame.sprite.spritecollide(player, powerups, True, True)
+        for hit in hits:
+            if hit.type == 'shield':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                    player.shield = 100
+            if hit.type == 'gun':
+                player.powerup()
 
         # Check to see if the player hits the wall
         hits = pygame.sprite.spritecollide(player, tunnels, False)
