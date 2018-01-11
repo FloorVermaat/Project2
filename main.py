@@ -21,7 +21,7 @@ class Main:
         pg.mixer.init()
         pg.init()
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
