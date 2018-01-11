@@ -3,7 +3,7 @@ import sys
 from os import path
 vec = pg.math.Vector2
 
-# ---------SETTINGS---------
+# ------------------------------------------------SETTINGS------------------------------------------------
 # define some colors (R, G, B)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -51,18 +51,7 @@ BACKGROUND = 'SR/img/background.jpeg'
 BACKGROUNDIMAGE = pg.image.load(BACKGROUND).convert_alpha()
 BACKGROUNDIMAGE = pg.transform.scale(BACKGROUNDIMAGE, (1280, 720))
 
-
-
-
-
-
-
-
-
-
-
-
-# ---------SPRITES---------
+# ------------------------------------------------SPRITES------------------------------------------------
 def collide_with_walls(sprite, group, dir):
     if dir == 'x':
         hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
@@ -191,19 +180,7 @@ class Point(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
-
-
-
-
-
-
-
-
-
-
-
-
-# ---------MAP---------
+# ------------------------------------------------MAP------------------------------------------------
 def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 
@@ -213,7 +190,6 @@ class Map:
         with open(filename, 'rt') as f:
             for line in f:
                 self.data.append(line.strip())
-
         self.tilewidth = len(self.data[0])
         self.tileheight = len(self.data)
         self.width = self.tilewidth * TILESIZE
@@ -231,7 +207,6 @@ class Camera:
     def update(self, target):
         x = -target.rect.centerx + int(WIDTH / 2)
         y = -target.rect.centery + int(HEIGHT / 2)
-
         # limit scrolling to map size
         x = min(0, x)  # left
         y = min(0, y)  # top
@@ -239,24 +214,7 @@ class Camera:
         y = max(-(self.height - HEIGHT), y)  # bottom
         self.camera = pg.Rect(x, y, self.width, self.height)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ---------MAIN---------
+# ------------------------------------------------MAIN------------------------------------------------
 # HUD functions
 def draw_player_health(surf, x, y, pct):
     if pct < 0:
@@ -274,7 +232,6 @@ def draw_player_health(surf, x, y, pct):
         col = RED
     pg.draw.rect(surf, col, fill_rect)
     pg.draw.rect(surf, WHITE, outline_rect, 2)
-
 
 class Space_race:
     def __init__(self, screen):
@@ -398,8 +355,6 @@ class Space_race:
             self.draw_text("Paused", self.title_font, 105, RED, WIDTH / 2, 200, align="center")
             self.draw_text("Press SPACEBAR to continue", self.title_font, 75, WHITE,
                            WIDTH / 2, 350, align="center")
-            self.draw_text("Press ESCAPE to quit", self.title_font, 75, WHITE,
-                           WIDTH / 2, 500, align="center")
             pg.mixer.music.pause()
         pg.display.flip()
         if not self.paused:
@@ -413,14 +368,6 @@ class Space_race:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.paused = not self.paused
-                #if event.key == pg.K_q:
-                    #pg.mixer.music.stop()
-                    #self.show_go_screen()
-                    #self.score = 0
-                    #pg.display.flip()
-                    #self.playing = False
-
-
 
     def show_start_screen(self):
         self.screen.fill(BLACK)
@@ -430,30 +377,28 @@ class Space_race:
                        , WIDTH / 2, 350, align="center")
         self.draw_text("Press SPACEBAR to pause the game", self.title_font, 50, WHITE,
                        WIDTH / 2, 425, align="center")
-        self.draw_text("Press ESCAPE to quit", self.title_font, 50, WHITE,
+        self.draw_text("Press Q (TWICE) to quit", self.title_font, 50, WHITE,
                        WIDTH / 2, 500, align="center")
-        self.draw_text("Press a key to start", self.title_font, 50, WHITE,
+        self.draw_text("Press R (TWICE) to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
         pg.event.wait()
         self.wait_for_key()
-
-
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
         pg.mixer.music.play(-1)
-
 
     def show_go_screen(self):
         self.screen.fill(BLACK)
         self.draw_text("GAME OVER", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY TWICE to go back to the start", self.title_font, 60, WHITE,
+        self.draw_text("Press R (TWICE) to go back to the start", self.title_font, 50, WHITE,
                        WIDTH / 2, 450, align="center")
+        self.draw_text("Press Q (TWICE) to go back to game selection screen", self.title_font, 50, WHITE,
+                       WIDTH / 2, 525, align="center")
         pg.mixer.music.fadeout(1000)
         pg.display.flip()
         self.go_to_start()
         #self.wait_for_key()
-
 
     def show_win_screen(self):
         self.screen.fill(BLACK)
@@ -486,7 +431,6 @@ class Space_race:
                         playing = False
                         waiting = False
 
-
     def wait_for_escape(self):
         import main as M
         pg.event.wait()
@@ -517,8 +461,6 @@ class Space_race:
                     if event.key == pg.K_q:
                         playing = False
                         waiting = False
-
-
 
 playing = True
 
