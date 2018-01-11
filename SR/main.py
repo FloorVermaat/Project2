@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 350
+MOB_SPEED = 335
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -507,7 +507,6 @@ class Space_race:
                 if event.type == pg.KEYDOWN:
                     waiting = False
                     self.show_start_screen()
-
 
 def SR(screen):
     # create the game object
