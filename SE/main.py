@@ -206,7 +206,7 @@ class Mob(pygame.sprite.Sprite):
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(5, 15)
+        self.speedx = random.randrange(7, 15)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -228,7 +228,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(5, 15)
+            self.speedx = random.randrange(7, 15)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -249,18 +249,20 @@ class Bullet(pygame.sprite.Sprite):
 class Pow(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.type = random.choice(['shield', 'gun'])
+        self.type = random.choice(['shield', 'gun', 'pill'])
         self.image = powerup_images[self.type]
         self.rect = self.image.get_rect()
         self.rect.x = 1300
         self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(5, 15)
+        self.speedx = random.randrange(11, 15)
 
     def update(self):
         self.rect.x -= self.speedx
-        # Kill the bullet when off the screen
-        if self.rect.bottom < 0:
-            self.kill()
+        # Kill the power up when going of screen
+        if self.rect.right < 0:
+            self.rect.x = 1300
+            self.rect.y = random.randrange(60, 640)
+            self.speedx = random.randrange(11, 15)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -296,6 +298,7 @@ meteor_list = ['small1.png', 'small2.png', 'small3.png', 'small4.png', 'small5.p
 for img in meteor_list:
     meteor_images.append(pygame.image.load(path.join(img_dir, img)).convert_alpha())
 
+# Directory explosion images
 explosion_anim = {}
 explosion_anim['lg'] = []
 explosion_anim['sm'] = []
@@ -311,9 +314,11 @@ for i in range (9):
     img = pygame.image.load(path.join(img_dir, filename)).convert_alpha()
     explosion_anim['player'].append(img)
 
+# Directory power up images
 powerup_images = {}
 powerup_images['shield'] = pygame.image.load(path.join(img_dir, 'shield_silver.png')).convert_alpha()
 powerup_images['gun'] = pygame.image.load(path.join(img_dir, 'bold_silver.png')).convert_alpha()
+powerup_images['pill'] = pygame.image.load(path.join(img_dir, 'pill_yellow.png')).convert_alpha()
 
 # Load all game sounds
 shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'laser1.wav'))
@@ -367,7 +372,7 @@ def Escape_Game(ext_screen):
                 newmob()
             score = 0
 
-            for i in range(3):
+            for i in range(5):
                 newpowerup()
 
         # Keep loop running at the right speed
@@ -442,13 +447,18 @@ def Escape_Game(ext_screen):
             newmob()
 
         # Check to see if the player hit a powerup
-        hits = pygame.sprite.spritecollide(player, powerups, True, True)
+        hits = pygame.sprite.spritecollide(player, powerups, True)
         for hit in hits:
             if hit.type == 'shield':
                 player.shield += random.randrange(10, 50)
                 if player.shield >= 100:
                     player.shield = 100
             if hit.type == 'gun':
+                player.powerup()
+            if hit.type == 'pill':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                    player.shield = 100
                 player.powerup()
 
         # Check to see if the player hits the wall
@@ -467,6 +477,11 @@ def Escape_Game(ext_screen):
 
         # Check to see if a mob hits the wall
         hits = pygame.sprite.groupcollide(mobs, tunnels, True, False)
+        for hit in hits:
+            newmob()
+
+        # Check to see if a power up hits the wall
+        hits = pygame.sprite.groupcollide(powerups, tunnels, True, False)
         for hit in hits:
             newmob()
 
