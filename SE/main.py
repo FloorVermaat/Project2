@@ -35,7 +35,6 @@ def draw_text(surf, text, size, x, y):
     surf.blit(text_surface, text_rect)
 
 def newpowerup():
-    powerups = pygame.sprite.Group()
     pow = Pow()
     all_sprites.add(pow)
     powerups.add(pow)
@@ -335,12 +334,11 @@ pygame.mixer.music.play(loops=-1)
 
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-powerups = pygame.sprite.Group()
 
 # Game loop
 
 def Escape_Game(ext_screen):
-    global all_sprites, mobs, bullets, tunnel_gat, screen
+    global all_sprites, mobs, bullets, tunnel_gat, screen, powerups, Name
 
     screen = ext_screen
 
@@ -451,22 +449,6 @@ def Escape_Game(ext_screen):
             all_sprites.add(expl)
             newmob()
 
-        # Check to see if the player hit a powerup
-        pygame.sprite.spritecollide(player, powerups, True, pygame.sprite.collide_mask)
-        for hit in hits:
-            if hit.type == 'shield':
-                player.shield += random.randrange(10, 50)
-                if player.shield >= 100:
-                    player.shield = 100
-            if hit.type == 'gun':
-                player.powerup()
-            if hit.type == 'pill':
-                player.shield += random.randrange(10, 50)
-                if player.shield >= 100:
-                    player.shield = 100
-        player.powerup()
-        all_sprites.update()
-
         # Check to see if the player hits the wall
         hits = pygame.sprite.spritecollide(player, tunnels, False, pygame.sprite.collide_circle)
         for hit in hits:
@@ -491,10 +473,25 @@ def Escape_Game(ext_screen):
         for hit in hits:
             newmob()
 
+        # Check to see if the player hit a powerup
+        hits = pygame.sprite.spritecollide(player, powerups, True, pygame.sprite.collide_mask)
+        for hit in hits:
+            if hit.type == 'shield':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                        player.shield = 100
+            if hit.type == 'gun':
+                player.powerup()
+            if hit.type == 'pill':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                    player.shield = 100
+        player.powerup()
+
         # Check to see if a mob hit the player
         hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
         for hit in hits:
-            player.shield -= hit.radius * 2
+            player.shield -= hit.radius
             expl = Explosion(hit.rect.center, 'sm')
             all_sprites.add(expl)
             newmob()
