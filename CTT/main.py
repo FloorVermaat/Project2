@@ -32,6 +32,16 @@ class Climb_The_Tower_Game:
             i += 1
             print("Tower Frame #" + str(len(self.spriteArrayTower)))
 
+        self.spriteArrayBackground = []
+
+        bgi = 100
+        while bgi <= 600:
+            self.path = "CTT/sprites/city_bg/image-" + str(bgi) + ".jpg"
+            #print(i)
+            self.spriteArrayBackground.append(pg.image.load(self.path))
+            bgi += 1
+            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
+
         #Load Sound Effects
         self.M = Music()
 
@@ -47,16 +57,22 @@ class Climb_The_Tower_Game:
         self.tower = pg.sprite.Group()
         self.platforms_last = pg.sprite.Group()
 
+
         self.platforms.spawntimer = 200
         self.platforms_last.rotation = 0
         self.platforms_last.height = 0
 
         self.tower.i = 0
+
+        self.all_sprites.add(Background(self.spriteArrayBackground))
+
         while self.tower.i < 500:
             t = Tower(self.spriteArrayTower, 10, self.tower.i)
             self.all_sprites.add(t)
             self.tower.add(t)
             self.tower.i += 1
+
+
 
         self.player = Player(self)
         self.all_sprites.add(self.player)
@@ -124,10 +140,10 @@ class Climb_The_Tower_Game:
             self.platforms_last.empty()
 
             # Rotation Index 100 is about the middle,
-            rotation = random.randrange(30, 170)
+            rotation = random.randrange(40, 160)
             while (rotation - self.platforms_last.rotation) in range(-30, 30):
                 print("Rotation to close " + str(int(rotation - self.platforms_last.rotation)))
-                rotation = random.randrange(0, 200)
+                rotation = random.randrange(40, 160)
 
 
             height = random.randrange(-280, -55)
