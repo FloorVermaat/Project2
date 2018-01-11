@@ -380,8 +380,6 @@ class Space_race:
         hits = pg.sprite.spritecollide(self.player, self.points, False, collide_hit_rect)
         for hit in hits:
             self.score += POINTS_GIVEN
-            #if self.score > 100:
-                #SR.show_win_screen()
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
