@@ -468,6 +468,7 @@ class Space_race:
         self.score = 0
 
     def wait_for_key(self):
+        global playing
         pg.event.wait()
         waiting = True
         while waiting:
@@ -476,11 +477,17 @@ class Space_race:
                 if event.type == pg.QUIT:
                     waiting = False
                     self.quit()
-                if event.type == pg.KEYUP:
-                    waiting = False
-                    self.playing = True
-                    pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
-                    pg.mixer.music.play(-1)
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_r:
+                        playing = True
+                        self.playing = True
+                        waiting = False
+                        pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
+                        pg.mixer.music.play(-1)
+                    if event.key == pg.K_q:
+                        playing = False
+                        waiting = False
+
 
     def wait_for_escape(self):
         import main as M
@@ -496,6 +503,7 @@ class Space_race:
                     M.select_Minigame()
 
     def go_to_start(self):
+        global playing
         pg.event.wait()
         waiting = True
         while waiting:
@@ -505,15 +513,22 @@ class Space_race:
                     waiting = False
                     self.quit()
                 if event.type == pg.KEYDOWN:
-                    waiting = False
-                    self.show_start_screen()
+                    if event.key == pg.K_r:
+                        self.show_start_screen()
+                        waiting = False
+                    if event.key == pg.K_q:
+                        playing = False
+                        waiting = False
 
+
+
+playing = True
 
 def SR(screen):
     # create the game object
     SR = Space_race(screen)
     SR.show_start_screen()
-    while SR.playing:
+    while playing:
         SR.new()
         SR.run()
         SR.show_go_screen()
