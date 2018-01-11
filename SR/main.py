@@ -26,6 +26,7 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 POINTS_GIVEN = 1
 POINT_IMG = 'point.png'
 WALL_IMG = 'wall.png'
+SOMETHING = 1.1
 
 # Player settings
 PLAYER_HEALTH = 100
@@ -46,7 +47,7 @@ MOB_KNOCKBACK = 20
 game_folder = path.dirname(__file__)
 img_folder = path.join(game_folder, 'img')
 sound_folder = path.join(game_folder, 'sound')
-BACKGROUND = 'SR/img/background.jpg'
+BACKGROUND = 'SR/img/background.jpeg'
 BACKGROUNDIMAGE = pg.image.load(BACKGROUND).convert_alpha()
 BACKGROUNDIMAGE = pg.transform.scale(BACKGROUNDIMAGE, (1280, 720))
 
@@ -275,12 +276,14 @@ def draw_player_health(surf, x, y, pct):
     pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 
-class Game:
+class Space_race:
     def __init__(self, screen):
         pg.init()
         self.screen = screen
         self.clock = pg.time.Clock()
         self.load_data()
+        self.done = False
+        self.playing = True
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
         font = pg.font.Font(font_name, size)
@@ -316,6 +319,7 @@ class Game:
         self.map = Map(path.join(game_folder, 'map2.txt'))
         #player image
         self.player_img = self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (70, 58))
         #mob image
         self.mob_img = pg.image.load(path.join(img_folder, MOB_IMG)).convert_alpha()
         #wall image
@@ -323,7 +327,7 @@ class Game:
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
         #point image
         self.point_img = pg.image.load(path.join(img_folder, POINT_IMG)).convert_alpha()
-        self.point_img = pg.transform.scale(self.point_img, (12, 12))
+        self.point_img = pg.transform.scale(self.point_img, (TILESIZE, TILESIZE))
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -344,6 +348,7 @@ class Game:
                     Point(self, col, row)
         self.camera = Camera(self.map.width, self.map.height)
         self.paused = False
+        self.playing = True
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -376,7 +381,7 @@ class Game:
         for hit in hits:
             self.score += POINTS_GIVEN
             #if self.score > 100:
-                #g.show_win_screen()
+                #SR.show_win_screen()
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -397,7 +402,10 @@ class Game:
                            WIDTH / 2, 350, align="center")
             self.draw_text("Press ESCAPE to quit", self.title_font, 75, WHITE,
                            WIDTH / 2, 500, align="center")
+            pg.mixer.music.pause()
         pg.display.flip()
+        if not self.paused:
+            pg.mixer.music.unpause()
 
     def events(self):
         # catch all events here
@@ -407,12 +415,14 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.paused = not self.paused
-                if event.key == pg.K_ESCAPE:
-                    self.quit()
-                if event.key == pg.K_q:
-                    self.show_start_screen()
-                    self.score = 0
-                    self.map = Map(path.join(game_folder, 'map2.txt'))
+                #if event.key == pg.K_q:
+                    #pg.mixer.music.stop()
+                    #self.show_go_screen()
+                    #self.score = 0
+                    #pg.display.flip()
+                    #self.playing = False
+
+
 
     def show_start_screen(self):
         self.screen.fill(BLACK)
@@ -438,11 +448,12 @@ class Game:
         self.screen.fill(BLACK)
         self.draw_text("GAME OVER", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
+        self.draw_text("Press A KEY to go back to the beginning screen", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
         pg.mixer.music.fadeout(1000)
         pg.display.flip()
-        self.wait_for_key()
+        self.go_to_start()
+        #self.wait_for_key()
 
 
     def show_win_screen(self):
@@ -466,6 +477,9 @@ class Game:
                     self.quit()
                 if event.type == pg.KEYUP:
                     waiting = False
+                    self.playing = True
+                    pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
+                    pg.mixer.music.play(-1)
 
     def wait_for_escape(self):
         pg.event.wait()
@@ -477,17 +491,32 @@ class Game:
                     waiting = False
                     self.quit()
                 if event.type == pg.KEYUP:
-                    waiting = False
-                    done = True
+                    self.waiting = False
+                    self.done = True
 
-#if done = True
+    def go_to_start(self):
+        pg.event.wait()
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pg.KEYDOWN:
+                    pg.mixer.music.stop()
+                    self.show_start_screen()
+                    self.score = 0
+                    pg.display.flip()
+                    self.playing = True
+
 
 def SR(screen):
     # create the game object
-    g = Game(screen)
-    g.show_start_screen()
-    while True:
-        g.new()
-        g.run()
-        g.show_go_screen()
+    SR = Space_race(screen)
+    SR.show_start_screen()
+    while SR.playing:
+        SR.new()
+        SR.run()
+        SR.show_go_screen()
 
