@@ -111,7 +111,7 @@ class Tunnel(pygame.sprite.Sprite):
 
     def update(self):
 
-        self.rect.x += -1
+        self.rect.x += -10
 
 class Player(pygame.sprite.Sprite):
     # Sprite for the Player
@@ -185,7 +185,7 @@ class Mob(pygame.sprite.Sprite):
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(1, 8)
+        self.speedx = random.randrange(5, 15)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -207,7 +207,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(1, 8)
+            self.speedx = random.randrange(5, 15)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -321,7 +321,7 @@ def Escape_Game(ext_screen):
             player = Player()
             all_sprites.add(player)
 
-            for i in range(10):
+            for i in range(13):
                 newmob()
             score = 0
 
@@ -356,23 +356,32 @@ def Escape_Game(ext_screen):
             t = Tunnel(WIDTH + 10, HEIGHT - tunnel_hoogte, tunnel_hoogte)
             tunnels.add(t)
 
-        if score > 100 and not diff_1:
+        if len(tunnels) > 10:
+            score += 1
+
+        if score > 1000 and not diff_1:
             print("Updated")
-            tunnel_gat = 150
+            tunnel_gat = 300
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_1 = True
 
-        if score > 200 and not diff_2:
+        if score > 1000 and not diff_2:
             print("Updated")
-            tunnel_gat = 100
+            tunnel_gat = 200
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_2 = True
 
-        if score > 500 and not diff_3:
+        if score > 3000 and not diff_3:
             print("Updated")
-            tunnel_gat = 75
+            tunnel_gat = 100
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_3 = True
+
+        if score > 4000 and not diff_2:
+            print("Updated")
+            tunnel_gat = 200
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+            diff_2 = True
 
         # Update
         all_sprites.update()
