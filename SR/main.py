@@ -440,6 +440,7 @@ class Space_race:
         pg.event.wait()
         self.wait_for_key()
 
+
         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
         pg.mixer.music.play(-1)
 
@@ -448,7 +449,7 @@ class Space_race:
         self.screen.fill(BLACK)
         self.draw_text("GAME OVER", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to go back to the beginning screen", self.title_font, 75, WHITE,
+        self.draw_text("Press A KEY TWICE to go back to the start", self.title_font, 60, WHITE,
                        WIDTH / 2, 450, align="center")
         pg.mixer.music.fadeout(1000)
         pg.display.flip()
@@ -460,7 +461,7 @@ class Space_race:
         self.screen.fill(BLACK)
         self.draw_text("YOU WIN", self.title_font, 200, RED,
                        WIDTH / 2, 300, align='center')
-        self.draw_text("Press A KEY to quit the game", self.title_font, 75, WHITE,
+        self.draw_text("Press a key TWICE to go back to the start", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
         pg.display.flip()
         self.wait_for_escape()
@@ -482,6 +483,7 @@ class Space_race:
                     pg.mixer.music.play(-1)
 
     def wait_for_escape(self):
+        import main as M
         pg.event.wait()
         waiting = True
         while waiting:
@@ -490,9 +492,8 @@ class Space_race:
                 if event.type == pg.QUIT:
                     waiting = False
                     self.quit()
-                if event.type == pg.KEYUP:
-                    self.waiting = False
-                    self.done = True
+                if event.type == pg.K_ESCAPE:
+                    M.select_Minigame()
 
     def go_to_start(self):
         pg.event.wait()
@@ -504,11 +505,8 @@ class Space_race:
                     waiting = False
                     self.quit()
                 if event.type == pg.KEYDOWN:
-                    pg.mixer.music.stop()
+                    waiting = False
                     self.show_start_screen()
-                    self.score = 0
-                    pg.display.flip()
-                    self.playing = True
 
 
 def SR(screen):
