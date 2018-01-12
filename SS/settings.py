@@ -18,9 +18,11 @@ YELLOW = (255, 255, 0)
 WIDTH = 1280   # 16 * 64 or 32 * 32 or 64 * 16
 HEIGHT = 720  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
-TITLE = "Demo"
+TITLE = "SPACE SHOOTER"
 BGCOLOR = BLACK
-BG = 'spacebackground.jpg'
+BG = 'SS/img/spacebackground.jpg'
+BACKGROUNDIMAGE = pg.image.load(BG).convert_alpha()
+BACKGROUNDIMAGE = pg.transform.scale(BACKGROUNDIMAGE, (1280, 720))
 DONE = True
 
 TILESIZE = 32

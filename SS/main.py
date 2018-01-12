@@ -366,7 +366,7 @@ class Game:
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        self.screen.fill(BGCOLOR)
+        self.screen.blit(BACKGROUNDIMAGE, (0, 0))
         # self.draw_grid()
         for sprite in self.all_sprites:
             self.all_sprites.draw(self.screen)
