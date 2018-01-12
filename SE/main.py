@@ -204,7 +204,7 @@ class Mob(pygame.sprite.Sprite):
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(7, 10)
+        self.speedx = random.randrange(10, 15)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -226,7 +226,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(7, 10)
+            self.speedx = random.randrange(10, 15)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -250,17 +250,27 @@ class Pow(pygame.sprite.Sprite):
         self.type = random.choice(['shield', 'gun', 'pill'])
         self.image = powerup_images[self.type]
         self.rect = self.image.get_rect()
-        self.rect.x = 1300
+        self.rect.x = random.randrange(1300, 1800)
         self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(5, 7)
+        self.speedx = random.randrange(10, 12)
+
+    def rotate(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > 50:
+            self.last_update = now
+            self.rot = (self.rot + self.rot_speed) % 360
+            new_image = pygame.transform.rotate(self.image_orig, self.rot)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
 
     def update(self):
         self.rect.x -= self.speedx
-        # Kill the power up when going of screen
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(5, 7)
+            self.speedx = random.randrange(10, 12)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -365,12 +375,9 @@ def Escape_Game(ext_screen):
             player = Player()
             all_sprites.add(player)
 
-            for i in range(5):
+            for i in range(15):
                 newmob()
             score = 0
-
-            for i in range(9):
-                newpowerup()
 
         if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
             pygame.mixer.music.fadeout(1000)
@@ -462,6 +469,7 @@ def Escape_Game(ext_screen):
                 player.hide()
                 player.lives -= 1
                 player.shield = 100
+            newpowerup()
 
         # Check to see if a mob hits the wall
         hits = pygame.sprite.groupcollide(mobs, tunnels, True, False)
@@ -471,7 +479,7 @@ def Escape_Game(ext_screen):
         # Check to see if a power up hits the wall
         hits = pygame.sprite.groupcollide(powerups, tunnels, True, False)
         for hit in hits:
-            newmob()
+            newpowerup()
 
         # Check to see if the player hit a powerup
         hits = pygame.sprite.spritecollide(player, powerups, True, pygame.sprite.collide_mask)
@@ -486,12 +494,12 @@ def Escape_Game(ext_screen):
                 player.shield += random.randrange(10, 50)
                 if player.shield >= 100:
                     player.shield = 100
-        player.powerup()
+                player.powerup()
 
         # Check to see if a mob hit the player
         hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
         for hit in hits:
-            player.shield -= hit.radius
+            player.shield -= hit.radius * 0.5
             expl = Explosion(hit.rect.center, 'sm')
             all_sprites.add(expl)
             newmob()
