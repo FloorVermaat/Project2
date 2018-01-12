@@ -375,8 +375,12 @@ def Escape_Game(ext_screen):
             player = Player()
             all_sprites.add(player)
 
-            for i in range(15):
+            for i in range(12):
                 newmob()
+
+            for i in range(4):
+                newpowerup()
+
             score = 0
 
         if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
