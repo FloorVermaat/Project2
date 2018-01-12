@@ -217,6 +217,7 @@ class Game:
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.running = True
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
         font = pg.font.Font(font_name, size)
@@ -370,15 +371,18 @@ class Game:
         pg.display.flip()
 
     def events(self):
+        global DONE
         # catch all events here
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                self.quit()
+                if self.playing:
+                    self.playing = False
+                self.running = False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_p:
                     self.paused = not self.paused
                 if event.key == pg.K_ESCAPE:
-                    self.quit()
+                    self.running = False
 
 
     def show_start_screen(self):
@@ -431,7 +435,7 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     waiting = False
-                    self.quit()
+                    self.running = False
                 if event.type == pg.KEYUP:
                     waiting = False
 
@@ -442,7 +446,7 @@ def SS(screen):
     g.show_start_screen()
     # pg.mixer.music.load(path.join(sound_folder, 'music.mp3'))
     # pg.mixer.music.play(-1)
-    while True:
+    while g.running:
         g.new()
         g.run()
         g.show_go_screen()
