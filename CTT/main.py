@@ -5,9 +5,17 @@ from CTT.sprites import *
 from pygame import *
 
 class Climb_The_Tower_Game:
-    def __init__(self, screen):
+    def __init__(self, screen, ship, story):
         #Get Screen from Integration
         self.screen = screen
+        self.ship = ship
+
+        self.ship = pg.transform.rotate(self.ship, 90)
+        self.ship = pg.transform.scale2x(self.ship)
+        self.ship = pg.transform.scale2x(self.ship)
+
+
+        self.story = story
 
         # initialize game window, etc
 
@@ -46,11 +54,18 @@ class Climb_The_Tower_Game:
         self.platforms_last.height = 0
 
         self.tower.i = 0
+        self.tower.d = 0
+
 
         self.all_sprites.add(Background(self.spriteArrayBackground))
 
         while self.tower.i < 500:
             t = Tower(self.spriteArrayTower, 10, self.tower.i)
+
+            if self.tower.i >25 and self.story:
+                t = Tower(self.spriteArrayTower, 10, self.tower.i, self.ship)
+                self.tower.i = 500
+
             self.all_sprites.add(t)
             self.tower.add(t)
             self.tower.i += 1
@@ -103,9 +118,9 @@ class Climb_The_Tower_Game:
             for tower in self.tower:
                 tower.rect.y += abs(self.player.vel.y)
                 if tower.rect.top >= HEIGHT + 1000:
-                    self.tower.i += 1
+                    self.tower.d += 1
                     tower.kill()
-                    print(self.tower.i)
+                    print(self.tower.d)
 
 
         # Die!
@@ -213,19 +228,15 @@ class Climb_The_Tower_Game:
         self.draw_text("The Game Is Loading Right now!"
                        "", 22, WHITE, WIDTH / 2, HEIGHT / 2)
 
-        self.draw_text("Please wait while this is h", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        self.draw_text("Please wait while this is being completed", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
 
         ##Loading
         self.spriteArrayTower = []
 
-        i = 1
-        while i <= 361:
-            self.path = "CTT/tower/" + str(i) + ".png"
-            #print(i)
-            self.spriteArrayTower.append(pg.image.load(self.path).convert_alpha())
-            i += 1
-            print("Tower Frame #" + str(len(self.spriteArrayTower)))
+        ProgressBar = 0
+
+
 
         self.spriteArrayBackground = []
 
@@ -237,6 +248,12 @@ class Climb_The_Tower_Game:
             bgi += 1
             print("City Background Frame #" + str(len(self.spriteArrayBackground)))
 
+            ProgressBar += 1
+            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
+            pg.display.flip()
+
+
+
         while bgi <= 365:
             self.path = "CTT/sprites/city_ash/image-" + str(bgi) + ".png"
             #print(i)
@@ -244,11 +261,31 @@ class Climb_The_Tower_Game:
             bgi += 1
             print("City Background Frame #" + str(len(self.spriteArrayBackground)))
 
+            ProgressBar += 1
+            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
+            pg.display.flip()
 
 
+        ti = 1
+        while ti <= 361:
+            self.path = "CTT/tower/" + str(ti) + ".png"
+            #print(i)
+            self.spriteArrayTower.append(pg.image.load(self.path).convert_alpha())
+            ti += 1
+            print("Tower Frame #" + str(len(self.spriteArrayTower)))
+            ProgressBar += 1
+            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50)
+            pg.display.flip()
 
 
-
+    def draw_loadProgress(self, surf, pb, x, y):
+        bar_length = 500
+        bar_height = 20
+        fill = (pb / 676) * bar_length
+        outline_rect = pg.Rect(x, y, bar_length, bar_height)
+        fill_rect = pg.Rect(x, y, fill, bar_height)
+        pg.draw.rect(surf, GREEN, fill_rect)
+        pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 
     def show_go_screen(self):
@@ -299,8 +336,8 @@ class Climb_The_Tower_Game:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-def CTT(screen):
-    CTT = Climb_The_Tower_Game(screen)
+def CTT(screen, ship, story=True):
+    CTT = Climb_The_Tower_Game(screen, ship, story)
     CTT.show_load_screen()
     CTT.show_start_screen()
     while CTT.running:

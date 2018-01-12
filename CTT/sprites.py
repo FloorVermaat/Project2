@@ -164,15 +164,26 @@ class Platform(pg.sprite.Sprite):
 
 
 class Tower(pg.sprite.Sprite):
-    def __init__(self, sprites, rotation, column):
+    def __init__(self, sprites, rotation, column, rocket=False):
         pg.sprite.Sprite.__init__(self)
         self.rotation = rotation
         self.sprites = sprites
+        self.rocket = rocket
 
-        self.image = self.sprites[self.rotation]
-        self.rect = self.image.get_rect()
-        self.rect.centerx = (WIDTH / 2)
-        self.rect.y = HEIGHT - 65 * column
+        if self.rocket == False:
+            self.image = self.sprites[self.rotation]
+
+            self.rect = self.image.get_rect()
+            self.rect.centerx = (WIDTH / 2)
+            self.rect.y = HEIGHT - 65 * column
+        else:
+            self.image = rocket
+
+            self.rect = self.image.get_rect()
+            self.rect.centerx = (WIDTH / 2)
+            self.rect.y = ((HEIGHT - (65 * column)) - self.rocket.get_height())
+
+
 
         self.rot = vec(0, 0)
         self.vel = vec(0, 0)
@@ -207,8 +218,8 @@ class Tower(pg.sprite.Sprite):
 
         self.rotation = int(self.rot.x)
 
-
-        self.image = self.sprites[self.rotation]
+        if self.rocket == False:
+            self.image = self.sprites[self.rotation]
 
 
 class Background(pg.sprite.Sprite):

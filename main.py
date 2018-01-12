@@ -150,7 +150,11 @@ class Main:
     def load_CTT(self):
         import CTT.main as CTT
         #CTT.init(self.screen)
-        CTT.CTT(self.screen)
+
+
+        self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
+
+        CTT.CTT(self.screen, self.MainSpaceship.image_orig)
 
     def load_Blitz(self):
             import Blitz.main as Blitz
@@ -347,8 +351,8 @@ class Main:
 
 
 
-M = Main(1)
-#Autoload Can be disabled by removing x in Main(x) above
+M = Main()
+#Autoload Can be setup by Main(1) or Main(2)
 #1 For CTT
 #2 For Blitz
 #3 For SR
