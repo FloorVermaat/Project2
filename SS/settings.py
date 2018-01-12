@@ -21,6 +21,7 @@ FPS = 60
 TITLE = "Demo"
 BGCOLOR = BLACK
 BG = 'spacebackground.jpg'
+DONE = True
 
 TILESIZE = 32
 GRIDWIDTH = WIDTH / TILESIZE

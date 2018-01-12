@@ -103,14 +103,30 @@ class Mob(pg.sprite.Sprite):
         self.pos = vec(x, y) * TILESIZE
         # self.vel = vec(0, 0)
         # self.acc = vec(0, 0)
-        self.speedy = random.randrange(-3, 3)
-        self.speedx = random.randrange(-3, 3)
+        self.speedy = random.randrange(-5, 5)
+        self.speedx = random.randrange(-5, 5)
         self.rect.center = self.pos
         self.rot = 0
+        self.rot_speed = random.randrange(-6, 6)
         self.health = MOB_HEALTH
+
+
+    def rotate(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 50:
+            self.last_update = now
+            self.rot = self.rot + self.rot_speed
+            if self.rot >= 360:
+                self.rot = 1
+            new_image = pg.transform.rotate(self.image_orig, self.rot)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
 
     def update(self):
         # self.rot = (self.game.player.pos - self.pos).angle_to(vec(1, 0))
+        self.rot = self.rot + self.rot_speed
         self.image = pg.transform.rotate(self.game.mob_img, self.rot)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
