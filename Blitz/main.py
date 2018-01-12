@@ -996,11 +996,23 @@ class Blitz:
                 self.done = True
 
             if game_over:
+                Blitz_sprites.empty()
+                mobs.empty()
+                enemyship.empty()
+                powerups.empty()
+                enemybullets.empty()
+                bullets.empty()
                 self.intro_screen = True
                 show_gameover_screen()
 
                 # pygame.display.flip()
             if victory:
+                Blitz_sprites.empty()
+                mobs.empty()
+                enemyship.empty()
+                powerups.empty()
+                enemybullets.empty()
+                bullets.empty()
                 self.intro_screen = True
                 show_victory_screen()
 
