@@ -81,6 +81,8 @@ def show_go_screen():
                 pygame.quit()
             if event.type == pygame.KEYUP:
                 waiting = False
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                running = False
 
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -144,6 +146,9 @@ class Player(pygame.sprite.Sprite):
     def powerup(self):
         self.power += 1
         self.power_time = pygame.time.get_ticks()
+    keystate = pygame.key.get_pressed()
+    if keystate[pygame.K_SPACE]:
+        self.shoot()
 
     def update(self):
         # Time out for powerups
@@ -166,6 +171,8 @@ class Player(pygame.sprite.Sprite):
             self.speedx += 10
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.speedx -= 10
+        if keystate[pygame.K_SPACE]:
+            self.shoot()
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -254,17 +261,6 @@ class Pow(pygame.sprite.Sprite):
         self.rect.y = random.randrange(60, 640)
         self.speedx = random.randrange(10, 12)
 
-    def rotate(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_update > 50:
-            self.last_update = now
-            self.rot = (self.rot + self.rot_speed) % 360
-            new_image = pygame.transform.rotate(self.image_orig, self.rot)
-            old_center = self.rect.center
-            self.image = new_image
-            self.rect = self.image.get_rect()
-            self.rect.center = old_center
-
     def update(self):
         self.rect.x -= self.speedx
         if self.rect.right < 0:
@@ -345,6 +341,7 @@ pygame.mixer.music.play(loops=-1)
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
+
 # Game loop
 
 def Escape_Game(ext_screen):
@@ -354,6 +351,8 @@ def Escape_Game(ext_screen):
 
     running = True
     game_over = True
+    finished = True
+
     x = 0
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -368,6 +367,7 @@ def Escape_Game(ext_screen):
         if game_over:
             show_go_screen()
             game_over = False
+            finished = False
 
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
