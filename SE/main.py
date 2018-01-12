@@ -5,15 +5,13 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'img')
 snd_dir = path.join(path.dirname(__file__), 'snd')
 
-POWERUP_TIME = 5000
+POWERUP_TIME = 5000 # 5 seconden power up tijd
 
-Name = ""
+WIDTH = 1280        # breedte scherm
+HEIGHT = 720        # hoogte scherm
+FPS = 60            # frame per second = 60
 
-WIDTH = 1280
-HEIGHT = 720
-FPS = 60
-
-# Define terms
+# Kleuren gedefinieerd
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -23,9 +21,7 @@ BROWN = (101, 67, 33)
 GREY = (20, 20, 20)
 
 pygame.init()
-pygame.mixer.init()
-
-font_name = pygame.font.match_font('arial')
+pygame.mixer.init()     # Pygame code waardoor muziek werkt
 
 def draw_text(surf, text, size, x, y):
     font_name = pygame.font.Font("Blitz/8.TTF", size)
@@ -65,7 +61,6 @@ def draw_lives(surf, x, y, lives, img):
 def show_go_screen():
     global tunnels, all_sprites, running
     screen.blit(background, (0,0))
-    draw_text(screen, "Space Pirate " + Name, 20, 120, 10)
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
     draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
     draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
@@ -77,12 +72,10 @@ def show_go_screen():
     while waiting:
         clock.tick(FPS)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:           # Rood kruisje klikken sluit python
                 pygame.quit()
-        if pygame.key.get_pressed()[pygame.K_r]:
+        if pygame.key.get_pressed()[pygame.K_r]:    # R klikken start de game
             waiting = False
-        if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
-            running = False
 
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -207,8 +200,8 @@ class Mob(pygame.sprite.Sprite):
         self.radius = int(self.rect.width * 0.8 / 2)
         # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
-        self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(10, 15)
+        self.rect.y = HEIGHT / random.randrange(1, 4)
+        self.speedx = random.randrange(10, 20)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -230,7 +223,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(10, 15)
+            self.speedx = random.randrange(10, 20)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -369,11 +362,9 @@ def Escape_Game(ext_screen):
             game_over = False
             finished = False
 
-
-            for i in range(2):
-                newmob()
-
             score = 0
+            for i in range(10):
+                newmob()
 
         # Keep loop running at the right speed
         clock.tick(FPS)
@@ -415,7 +406,7 @@ def Escape_Game(ext_screen):
         if len(tunnels) > 10:
             score += 1
 
-        if score > newscore + 300:
+        if score > newscore + 500:
             newpowerup()
             newscore = score
 
@@ -425,7 +416,7 @@ def Escape_Game(ext_screen):
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_1 = True
 
-        if score > 1000 and not diff_2:
+        if score > 2000 and not diff_2:
             print("Updated")
             tunnel_gat = 200
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -433,15 +424,15 @@ def Escape_Game(ext_screen):
 
         if score > 3000 and not diff_3:
             print("Updated")
-            tunnel_gat = 100
+            tunnel_gat = 150
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_3 = True
 
-        if score > 4000 and not diff_2:
-            print("Updated")
-            tunnel_gat = 200
-            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
-            diff_2 = True
+        #if score > 4000 and not diff_2:
+        #    print("Updated")
+        #    tunnel_gat = 200
+        #    tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+        #    diff_2 = True
 
         # Update
         all_sprites.update()
