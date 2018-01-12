@@ -6,15 +6,8 @@ import sys
 import importlib
 
 
-#CTT Import
-
-
-#Import CTT Minigame
-
-
-
 class Main:
-    def __init__(self):
+    def __init__(self, autoload = 0):
         # initialize game window, etc
 
         pg.mixer.pre_init(44100, -16, 2, 2048)
@@ -28,6 +21,17 @@ class Main:
         self.running = True
         self.background = Background()
         self.font_name = pygame.font.match_font(FONT_NAME)
+
+        if autoload == 1: #Load Climb The Tower
+            self.load_CTT()
+        elif autoload == 2: #Load Blitz
+            self.load_Blitz()
+        elif autoload == 3: #Load SR
+            self.load_SR()
+        elif autoload == 4: #Load SE
+            self.load_SE()
+        elif autoload == 5: #Load SS
+            self.load_SS()
 
     # drawing text on screen
     def draw_text(self, surf, text, size, x, y, color):
@@ -342,7 +346,15 @@ class Main:
 
 
 
-M = Main()
+
+M = Main(1)
+#Autoload Can be disabled by removing x in Main(x) above
+#1 For CTT
+#2 For Blitz
+#3 For SR
+#4 For SE
+#5 For SS
+
 Name = M.name_input_screen()
 print(Name)
 M.select_Minigame()
