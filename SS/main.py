@@ -68,6 +68,7 @@ class Player(pg.sprite.Sprite):
                 choice(self.game.shoot_sounds['gun']).play()
 
 
+
     def update(self):
         self.get_keys()
         self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
@@ -357,6 +358,14 @@ class Game:
         for hit in hits:
             hit.health -= BULLET_DAMAGE
             hit.vel = vec(0, 0)
+
+        hits = pg.sprite.spritecollide(self.player, self.bullets, True, collide_hit_rect)
+        for hit in hits:
+            self.player.health -= BULLET_DAMAGE
+            hit.vel = vec(0, 0)
+            if self.player.health <= 0:
+                self.playing = False
+
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
