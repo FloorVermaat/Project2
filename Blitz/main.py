@@ -63,7 +63,7 @@ def enemymob():
 def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
         pct = 0
-    bar_length = 70
+    bar_length = 200
     bar_height = 20
     fill = (pct / 150) * bar_length
     outline_rect = pygame.Rect(x, y, bar_length, bar_height)
@@ -188,8 +188,9 @@ def show_gameover_screen():
                 Blitz.intro_screen = True
                 game_over = False
                 waiting = False
-            if pygame.key.get_pressed()[pygame.K_q]:
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
                 Blitz.done = True
+                waiting = False
 
 
 def show_intro_screen():
@@ -198,12 +199,12 @@ def show_intro_screen():
     while waiting:
         clock.tick(FPS)
         background.draw(screen)
+        screen.blit(blitzlogo, [W / 2 - 300, -20])
         draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
-        draw_text(screen, "Blitz", 64, W / 2, H / 8)
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
-        draw_text(screen, "Press q key to Exit at any time", 15, W / 2, H / 1.2)
+        draw_text(screen, "Press esc key to Exit at any time", 15, W / 2, H / 1.2)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
         pygame.display.flip()
         for test in pygame.event.get():
@@ -212,7 +213,7 @@ def show_intro_screen():
             if pygame.key.get_pressed()[pygame.K_r]:
                 Blitz.done = False
                 waiting = False
-            if pygame.key.get_pressed()[pygame.K_q]:
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
                 Blitz.done = True
                 Blitz.intro_screen = False
                 waiting = False
@@ -251,6 +252,7 @@ def shield_status():
     if not player.shield_st:
         death_expl = Explosion(player.rect.center, "player")
         Blitz_sprites.add(death_expl)
+        selfexplosion.play()
         player.hide()
         player.lives -= 1
         player.shield = 150
@@ -305,6 +307,7 @@ def collision_checks():
         # if you die this happens
         death_expl = Explosion(player.rect.center, "player")
         Blitz_sprites.add(death_expl)
+        selfexplosion.play()
         player.hide()
         player.lives -= 1
         player.shield = 300
@@ -426,6 +429,7 @@ class Player(pygame.sprite.Sprite):
         self.power_time = pygame.time.get_ticks()
         self.powerbar = 0
         self.powerbar_time = pygame.time.get_ticks()
+        self.shootsoundeffectdelay = 500
 
     def update(self):
         # power up bar timer
@@ -479,11 +483,16 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x -= self.speed
                 # self.image = self.image_left
 
+        if bossbattle and BosShip.shield < 2500:
+            self.shoot_delay = 1000
+            self.shootsoundeffectdelay = 1000
+
         # function keys
 
         if keys[pygame.K_SPACE]: # or event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             # amount of bullets on screen
             self.shoot()
+
 
     def powerup(self):
         self.power += 1
@@ -514,7 +523,7 @@ class Player(pygame.sprite.Sprite):
                 Blitz_sprites.add(bullet1, bullet2, bullet3)
                 bullets.add(bullet1, bullet2, bullet3)
         # delay for the shooting sound
-        if now1 - self.last_update1 > 500:
+        if now1 - self.last_update1 > self.shootsoundeffectdelay:
             self.last_update1 = now1
             shoot_sound.play()
 
@@ -659,6 +668,7 @@ class BossShip(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.shield = 5000
         self.onscreen = False
+        self.say = False
 
     def update(self):
         if bossbattle:
@@ -681,7 +691,10 @@ class BossShip(pygame.sprite.Sprite):
                 self.rect.y += self.speedy
                 if self.shield <= 2500:
                     self.speedx = 25
-                    self.shoot_delay = 125
+                    self.shoot_delay = 100
+                    if not self.say:
+                        shields_50.play()
+                        self.say = True
     def shoot(self):
         # delay for shooting
         now = pygame.time.get_ticks()
@@ -886,7 +899,8 @@ powerup_img["shield"] = shield_img
 
 # enemy ship images
 spaceship_boss_orig = pygame.image.load(os.path.join(img_folder, "64_enemyship.png")).convert_alpha()
-spaceship_boss = pygame.transform.scale(spaceship_boss_orig, (120, 120))
+spaceship_boss_rot = pygame.transform.rotate(spaceship_boss_orig, -90)
+spaceship_boss = pygame.transform.scale(spaceship_boss_rot, (120, 120))
 spaceship_enemy = pygame.transform.rotate(spaceship_image, 180)
 spacemine_image_orig = pygame.image.load(os.path.join(img_folder, "spacemine.png")).convert_alpha()
 spacemine_image = pygame.transform.scale(spacemine_image_orig, (60, 60))
@@ -897,10 +911,15 @@ enemyimages["suicide"] = spacemine_image
 enemyimages["normal"] = spaceship_enemy
 enemyimages["laserbeam"] = spacelaserbeam_image
 
+# Blitz logo
+blitzlogo = pygame.image.load(os.path.join(img_folder, "blitz logo.png")).convert_alpha()
+
 # Sounds
 # shooting sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_folder, "Laser_Shoot11.wav"))
-shoot_soundVolume = shoot_sound.set_volume(0.1)
+shoot_soundVolume = shoot_sound.set_volume(0.05)
+# self explosion
+selfexplosion = pygame.mixer.Sound(os.path.join(snd_folder, "selfexplosion.wav"))
 # explosion sounds
 explosion_sound = []
 explosion_soundList = ['Explosion4.wav', 'Explosion17.wav']
@@ -908,7 +927,7 @@ for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
 pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(0.1)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
@@ -926,7 +945,6 @@ with open(os.path.join(game_folder, HS_File), 'r+') as f:
 game_over = False
 bossbattle = False
 victory = False
-BlitzGameRun = False
 
 background = Background()
 score = 0
@@ -973,16 +991,28 @@ class Blitz:
             #if keys[pygame.K_q]:
              #   self.intro_screen = True
 
-            if keys[pygame.K_q]:
+            if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
                 pygame.mixer.music.fadeout(1000)
                 self.done = True
 
             if game_over:
+                Blitz_sprites.empty()
+                mobs.empty()
+                enemyship.empty()
+                powerups.empty()
+                enemybullets.empty()
+                bullets.empty()
                 self.intro_screen = True
                 show_gameover_screen()
 
                 # pygame.display.flip()
             if victory:
+                Blitz_sprites.empty()
+                mobs.empty()
+                enemyship.empty()
+                powerups.empty()
+                enemybullets.empty()
+                bullets.empty()
                 self.intro_screen = True
                 show_victory_screen()
 
@@ -1012,20 +1042,19 @@ class Blitz:
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            #if score >= 1000 and not bossbattle:
-                #Blitz_sprites.remove(enemyship)
-                #Blitz_sprites.remove(mobs)
-                #mobs.empty()
-                #enemyship.empty()
-                #Blitz_sprites.add(BosShip)
-                #bossbattle = True
+            if score >= 1000 and not bossbattle:
+                Blitz_sprites.remove(enemyship)
+                Blitz_sprites.remove(mobs)
+                mobs.empty()
+                enemyship.empty()
+                Blitz_sprites.add(BosShip)
+                bossbattle = True
             if bossbattle:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
                 mobs.remove()
                 enemyship.remove()
 
-            print(self.intro_screen)
             # Draw / Render
             self.screen.fill(BLACK)
             background.draw(self.screen)
@@ -1034,7 +1063,7 @@ class Blitz:
             draw_text(self.screen, "Space Pirate " + Name, 12, 120, 10)
             # draw shield, only if you have shield
             if player.shield > 0:
-                draw_shield_bar(self.screen, W - 80, H - 70, player.shield)
+                draw_shield_bar(self.screen, W - 280, H - 70, player.shield)
             # draw power up, only if you have an active powerup
             if player.powerbar > 0:
                 draw_powerup_bar(self.screen, W - W + 10, H - 70, player.powerbar)
@@ -1051,9 +1080,12 @@ class Blitz:
 
 
 
-def Start(ext_screen, ext_name):
-    global screen, Name
+def Start(ext_screen, ext_name, Shipimage):
+    global screen, Name, spaceship_image
+    shipimage_straight = pygame.transform.rotate(Shipimage, 90)
+    spaceship_image = shipimage_straight
     BLITZ = Blitz(ext_screen)
     screen = ext_screen
     Name = ext_name
     BLITZ.blitz_Game()
+
