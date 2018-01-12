@@ -346,8 +346,10 @@ def CTT(screen, ship, story=True):
             CTT.show_win_screen()
         else:
             CTT.show_go_screen()
-    CTT.spriteArrayTower = []
-    CTT.spriteArrayBackground = []
+    del CTT.spriteArrayTower[:]
+    del CTT.spriteArrayBackground[:]
+
+
 
 
 
