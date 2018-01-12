@@ -63,13 +63,13 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites
+    global tunnels, all_sprites, running
     screen.blit(background, (0,0))
     draw_text(screen, "Space Pirate " + Name, 20, 120, 10)
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
     draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
     draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
-    draw_text(screen, "Press any key to begin", 20, WIDTH / 2, HEIGHT / 1.3)
+    draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.3)
     draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.2)
     #draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
     pygame.display.flip()
@@ -79,10 +79,10 @@ def show_go_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYUP:
-                waiting = False
-            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
-                running = False
+        if pygame.key.get_pressed()[pygame.K_r]:
+            waiting = False
+        if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+            running = False
 
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -333,8 +333,6 @@ clock = pygame.time.Clock()
 
 background = pygame.image.load("SE/starfield.jpg").convert()
 
-pygame.mixer.music.play(loops=-1)
-
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
@@ -342,13 +340,13 @@ all_sprites = pygame.sprite.Group()
 # Game loop
 
 def Escape_Game(ext_screen):
-    global all_sprites, mobs, bullets, tunnel_gat, screen, powerups, Name
+    global all_sprites, mobs, bullets, tunnel_gat, screen, powerups
 
     screen = ext_screen
     newscore = 0
     running = True
     game_over = True
-    finished = True
+    pygame.mixer.music.play(loops=-1)
 
     x = 0
     tunnel_gat = 400
@@ -363,23 +361,19 @@ def Escape_Game(ext_screen):
     while running:
         if game_over:
             show_go_screen()
-            game_over = False
-            finished = False
-
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
             powerups = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
+            game_over = False
+            finished = False
+
 
             for i in range(2):
                 newmob()
 
             score = 0
-
-        if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
-            pygame.mixer.music.fadeout(1000)
-            running = False
 
         # Keep loop running at the right speed
         clock.tick(FPS)
@@ -387,6 +381,10 @@ def Escape_Game(ext_screen):
         for event in pygame.event.get():
             # Check for closing window
             if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                all_sprites.empty()
+                mobs.empty()
+                bullets.empty()
+                powerups.empty()
                 running = False
             if running == False:
                 pygame.mixer.music.fadeout(1000)
@@ -417,8 +415,7 @@ def Escape_Game(ext_screen):
         if len(tunnels) > 10:
             score += 1
 
-
-        if score > newscore + 500:
+        if score > newscore + 300:
             newpowerup()
             newscore = score
 
