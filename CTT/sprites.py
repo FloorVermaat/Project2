@@ -90,6 +90,7 @@ class Platform(pg.sprite.Sprite):
         self.y = y
 
 
+
         # Add some offset to make platforms line up with tower
         self.offset = 40
 
@@ -246,10 +247,10 @@ class Background(pg.sprite.Sprite):
         self.rot += self.vel + 0.5 * self.acc
 
         # Make sure that image is not out of bounds
-        if self.rot.x > 500:
-            self.rot.x += -500
+        if self.rot.x > 300:
+            self.rot.x += -300
         if self.rot.x < 1:
-            self.rot.x += 500
+            self.rot.x += 300
 
 
         self.rotation = int(self.rot.x)

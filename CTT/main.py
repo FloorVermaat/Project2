@@ -23,24 +23,7 @@ class Climb_The_Tower_Game:
         self.font_name = pg.font.match_font(FONT_NAME)
 
 
-        self.spriteArrayTower = []
-        i = 1
-        while i <= 361:
-            self.path = "CTT/tower/" + str(i) + ".png"
-            #print(i)
-            self.spriteArrayTower.append(pg.image.load(self.path).convert_alpha())
-            i += 1
-            print("Tower Frame #" + str(len(self.spriteArrayTower)))
 
-        self.spriteArrayBackground = []
-
-        bgi = 100
-        while bgi <= 600:
-            self.path = "CTT/sprites/city_bg/image-" + str(bgi) + ".jpg"
-            #print(i)
-            self.spriteArrayBackground.append(pg.image.load(self.path))
-            bgi += 1
-            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
 
         #Load Sound Effects
         self.M = Music()
@@ -92,7 +75,7 @@ class Climb_The_Tower_Game:
             self.events()
             self.update()
             self.draw()
-            print("FPS: " + str(self.clock.get_fps()))
+            #print("FPS: " + str(self.clock.get_fps()))
 
     def update(self):
         # Climb_The_Tower_Game Loop - Update
@@ -120,8 +103,10 @@ class Climb_The_Tower_Game:
             for tower in self.tower:
                 tower.rect.y += abs(self.player.vel.y)
                 if tower.rect.top >= HEIGHT + 1000:
+                    self.tower.i += 1
                     tower.kill()
-                    self.tower.i += -1
+                    print(self.tower.i)
+
 
         # Die!
         if self.player.rect.bottom > HEIGHT:
@@ -201,7 +186,6 @@ class Climb_The_Tower_Game:
 
         # *after* drawing everything, flip the display
         pg.display.flip()
-
     def show_start_screen(self):
         # game splash/start screen
         self.screen.fill(BGCOLOR)
@@ -210,17 +194,62 @@ class Climb_The_Tower_Game:
                        "Space is used to jump!", 22, WHITE, WIDTH / 2, HEIGHT / 2)
         self.draw_text("Press the c key to start", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
 
-        import imageio
-        imageio.plugins.ffmpeg.download()
-        from moviepy.editor import VideoFileClip
-        clip = VideoFileClip('CTT/assets/retrowave.mp4')
-        clip.preview()
+        #import imageio
+        #imageio.plugins.ffmpeg.download()
+        #from moviepy.editor import VideoFileClip
+        #clip = VideoFileClip('CTT/assets/retrowave.mp4')
+        #clip.preview()
 
 
 
 
         pg.display.flip()
         self.wait_for_key()
+
+    def show_load_screen(self):
+        # game splash/start screen
+        self.screen.fill(BGCOLOR)
+        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.draw_text("The Game Is Loading Right now!"
+                       "", 22, WHITE, WIDTH / 2, HEIGHT / 2)
+
+        self.draw_text("Please wait while this is h", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        pg.display.flip()
+
+        ##Loading
+        self.spriteArrayTower = []
+
+        i = 1
+        while i <= 361:
+            self.path = "CTT/tower/" + str(i) + ".png"
+            #print(i)
+            self.spriteArrayTower.append(pg.image.load(self.path).convert_alpha())
+            i += 1
+            print("Tower Frame #" + str(len(self.spriteArrayTower)))
+
+        self.spriteArrayBackground = []
+
+        bgi = 50
+        while bgi <= 99:
+            self.path = "CTT/sprites/city_ash/image-0" + str(bgi) + ".png"
+            #print(i)
+            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
+            bgi += 1
+            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
+
+        while bgi <= 365:
+            self.path = "CTT/sprites/city_ash/image-" + str(bgi) + ".png"
+            #print(i)
+            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
+            bgi += 1
+            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
+
+
+
+
+
+
+
 
     def show_go_screen(self):
         # game over/continue
@@ -272,6 +301,7 @@ class Climb_The_Tower_Game:
 
 def CTT(screen):
     CTT = Climb_The_Tower_Game(screen)
+    CTT.show_load_screen()
     CTT.show_start_screen()
     while CTT.running:
         CTT.new()
