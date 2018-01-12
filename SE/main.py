@@ -363,14 +363,14 @@ def Escape_Game(ext_screen):
     while running:
         if game_over:
             show_go_screen()
-            game_over = False
-            finished = False
-
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
             powerups = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
+            game_over = False
+            finished = False
+
 
             for i in range(2):
                 newmob()
@@ -387,6 +387,10 @@ def Escape_Game(ext_screen):
         for event in pygame.event.get():
             # Check for closing window
             if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                all_sprites.empty()
+                mobs.empty()
+                bullets.empty()
+                powerups.empty()
                 running = False
             if running == False:
                 pygame.mixer.music.fadeout(1000)
