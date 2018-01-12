@@ -146,9 +146,6 @@ class Player(pygame.sprite.Sprite):
     def powerup(self):
         self.power += 1
         self.power_time = pygame.time.get_ticks()
-    keystate = pygame.key.get_pressed()
-    if keystate[pygame.K_SPACE]:
-        self.shoot()
 
     def update(self):
         # Time out for powerups
@@ -473,7 +470,6 @@ def Escape_Game(ext_screen):
                 player.hide()
                 player.lives -= 1
                 player.shield = 100
-            newpowerup()
 
         # Check to see if a mob hits the wall
         hits = pygame.sprite.groupcollide(mobs, tunnels, True, False)
