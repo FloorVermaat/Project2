@@ -255,14 +255,14 @@ class Pow(pygame.sprite.Sprite):
         self.image = powerup_images[self.type]
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(1300, 1800)
-        self.rect.y = random.randrange(60, 640)
+        self.rect.y = HEIGHT / 2
         self.speedx = random.randrange(10, 12)
 
     def update(self):
         self.rect.x -= self.speedx
         if self.rect.right < 0:
             self.rect.x = 1300
-            self.rect.y = random.randrange(60, 640)
+            self.rect.y = HEIGHT / 2
             self.speedx = random.randrange(10, 12)
 
 class Explosion(pygame.sprite.Sprite):
@@ -345,7 +345,7 @@ def Escape_Game(ext_screen):
     global all_sprites, mobs, bullets, tunnel_gat, screen, powerups, Name
 
     screen = ext_screen
-
+    newscore = 0
     running = True
     game_over = True
     finished = True
@@ -372,11 +372,8 @@ def Escape_Game(ext_screen):
             player = Player()
             all_sprites.add(player)
 
-            for i in range(12):
+            for i in range(2):
                 newmob()
-
-            for i in range(4):
-                newpowerup()
 
             score = 0
 
@@ -419,6 +416,11 @@ def Escape_Game(ext_screen):
 
         if len(tunnels) > 10:
             score += 1
+
+
+        if score > newscore + 500:
+            newpowerup()
+            newscore = score
 
         if score > 1000 and not diff_1:
             print("Updated")
@@ -536,4 +538,3 @@ def Escape_Game(ext_screen):
         draw_lives(screen, WIDTH - 100, 5, player.lives, live)
         # After drawing everything, flip the display
         pygame.display.flip()
-
