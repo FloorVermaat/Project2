@@ -122,8 +122,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, 270)
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
-        self.radius = 26
-        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        self.radius = 20
+        pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.center = (WIDTH / 4, HEIGHT / 2)
         self.speedx = 0
         self.speedy = 0
@@ -197,8 +197,8 @@ class Mob(pygame.sprite.Sprite):
         self.image_orig = random.choice(meteor_images)
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
-        self.radius = int(self.rect.width * 0.8 / 2)
-        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        self.radius = int(self.rect.width * 0.45 / 2)
+        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = HEIGHT / random.randrange(1, 4)
         self.speedx = random.randrange(10, 20)
@@ -467,7 +467,7 @@ def Escape_Game(ext_screen):
             newmob()
 
         # Check to see if a power up hits the wall
-        hits = pygame.sprite.groupcollide(powerups, tunnels, True, False)
+        hits = pygame.sprite.groupcollide(powerups, tunnel, True, False)
         for hit in hits:
             newpowerup()
 
