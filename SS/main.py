@@ -454,7 +454,7 @@ class Game:
                        WIDTH / 2, 300, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
-        self.draw_text("Press ESC or Q to quit", self.title_font, 75, WHITE,
+        self.draw_text("Press ESC or Q to continue", self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
         pg.display.flip()
         self.wait_for_key()
