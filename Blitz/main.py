@@ -203,6 +203,7 @@ def show_intro_screen():
         draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
+        draw_text(screen, "Keep shooting stuff to win", 15, W / 2, H / 2.2)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
         draw_text(screen, "Press esc key to Exit at any time", 15, W / 2, H / 1.2)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
