@@ -465,7 +465,7 @@ class Game:
                     waiting = False
 
 
-def SS(screen):
+def SS(screen, story):
     # create the game object
     g = Game(screen)
     g.show_start_screen()

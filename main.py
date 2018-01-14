@@ -14,6 +14,8 @@ class Main:
         pg.mixer.init()
         pg.init()
 
+        self.name = "Undefined"
+
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
 
@@ -109,6 +111,7 @@ class Main:
                 background_mov += 1
                 movement += 5
                 if movement > 1000:
+                    self.name = text
                     return text
             if Number_mov:
                 number_mov_speed += 16.3
@@ -147,30 +150,30 @@ class Main:
             pygame.display.flip()
             self.clock.tick(FPS)
 
-    def load_CTT(self):
+    def load_CTT(self, story=False):
         import CTT.main as CTT
         #CTT.init(self.screen)
 
 
         self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
 
-        CTT.CTT(self.screen, self.MainSpaceship.image_orig)
+        CTT.CTT(self.screen, story, self.MainSpaceship.image_orig)
 
-    def load_Blitz(self):
+    def load_Blitz(self, story=False):
             import Blitz.main as Blitz
-            Blitz.Start(self.screen, Name, self.MainSpaceship.image_orig)
+            Blitz.Start(self.screen, story, self.name, self.MainSpaceship.image_orig)
 
-    def load_SR(self):
+    def load_SR(self, story=False):
         import SR.main as SR
-        SR.SR(self.screen)
+        SR.SR(self.screen, story)
 
-    def load_SS(self):
+    def load_SS(self, story=False):
         import SS.main as SS
-        SS.SS(self.screen)
+        SS.SS(self.screen, story)
 
-    def load_SE(self):
+    def load_SE(self, story=False):
         import SE.main as SE
-        SE.Escape_Game(self.screen)
+        SE.Escape_Game(self.screen, story)
 
     # loading the planets to the spritegroup
     def load_Planets(self):
@@ -251,19 +254,19 @@ class Main:
                 # If the user clicks on the planets they load with this
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.BlitzPlanet.rect.collidepoint(event.pos):
-                        M.load_Blitz()
+                        self.load_Blitz()
 
                     if self.ClimbPlanet.rect.collidepoint(event.pos):
-                        M.load_CTT()
+                        self.load_CTT()
 
                     if self.RacePlanet.rect.collidepoint(event.pos):
-                        M.load_SR()
+                        self.load_SR()
 
                     if self.ShootPlanet.rect.collidepoint(event.pos):
-                        M.load_SS()
+                        self.load_SS()
 
                     if self.EvadePlanet.rect.collidepoint(event.pos):
-                        M.load_SE()
+                        self.load_SE()
 
                     if self.CreditsPlanet.rect.collidepoint(event.pos):
                         self.Credits_screen()
@@ -308,7 +311,7 @@ class Main:
                            self.BlackHolePlanet.rect.y - 25, WHITE)
             self.draw_text(self.screen, "Credits", 14, self.CreditsPlanet.rect.x + self.CreditsPlanet.rect.w / 2,
                            self.CreditsPlanet.rect.y - 40, WHITE)
-            self.draw_text(self.screen, "space pirate " + Name + ":", 14, W / 2,
+            self.draw_text(self.screen, "space pirate " + self.name + ":", 14, W / 2,
                            H - 140, WHITE)
             self.draw_text(self.screen, "To Play...Fly To A Planet And Press Enter", 14, W / 2,
                            H - 100, WHITE)
@@ -322,13 +325,6 @@ class Main:
 
             # Flip the screen
             pygame.display.flip()
-
-
-
-
-
-
-
 
 #      waiting = True
 #        while waiting:
@@ -351,14 +347,31 @@ class Main:
 
 
 
-M = Main()
-#Autoload Can be setup by Main(1) or Main(2)
-#1 For CTT
-#2 For Blitz
-#3 For SR
-#4 For SE
-#5 For SS
 
-Name = M.name_input_screen()
-print(Name)
-M.select_Minigame()
+
+def run():
+    story = True
+    M = Main()
+    # Autoload Can be setup by Main(1) or Main(2)
+    # 1 For CTT
+    # 2 For Blitz
+    # 3 For SR
+    # 4 For SE
+    # 5 For SS
+
+    M.name_input_screen()
+
+    if story:
+        M.load_CTT(True)
+        M.load_SR(True)
+        M.load_SE(True)
+        M.load_SS(True)
+        M.load_Blitz(True)
+
+    else:
+        M.select_Minigame()
+
+run()
+
+
+

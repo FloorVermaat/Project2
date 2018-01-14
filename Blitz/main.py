@@ -1084,7 +1084,7 @@ class Blitz:
 
 
 
-def Start(ext_screen, ext_name, Shipimage):
+def Start(ext_screen, story, ext_name, Shipimage):
     global screen, Name, spaceship_image
     shipimage_straight = pygame.transform.rotate(Shipimage, 90)
     spaceship_image = shipimage_straight
