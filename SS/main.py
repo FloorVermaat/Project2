@@ -324,7 +324,7 @@ class Game:
                     while len(self.mobs) < 6:
                         Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                         self.score += MOB_SCORE
-                if self.score >= 100:
+                if self.score >= 1000:
                     self.playing = False
                     #you win
             if self.story == False:
