@@ -196,7 +196,7 @@ class Main:
         #CTT.init(self.screen)
 
 
-        self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
+        #self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
 
         CTT.CTT(self.screen, story, self.MainSpaceship.image_orig)
 

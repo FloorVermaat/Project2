@@ -472,4 +472,3 @@ def SR(screen, story):
         SR.new()
         SR.run()
         SR.show_go_screen()
-

@@ -59,14 +59,15 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites, running
+    global tunnels, all_sprites, score, highscore
     screen.blit(background, (0,0))
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
     draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
     draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
     draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.3)
     draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.2)
-    #draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
+    #draw_text(screen, "Highscore: " + str(highscore), 20, WIDTH / 2, HEIGHT / 3)
+    pygame.display.flip()
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -112,7 +113,7 @@ class Tunnel(pygame.sprite.Sprite):
 
     def update(self):
 
-        self.rect.x += -10
+        self.rect.x += -5
 
 class Player(pygame.sprite.Sprite):
     # Sprite for the Player
@@ -154,13 +155,13 @@ class Player(pygame.sprite.Sprite):
         self.speedy = 0
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            self.speedy += 10
+            self.speedy += 5
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            self.speedy -= 10
+            self.speedy -= 5
         if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            self.speedx += 10
+            self.speedx += 5
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            self.speedx -= 10
+            self.speedx -= 5
         if keystate[pygame.K_SPACE]:
             self.shoot()
 
@@ -201,7 +202,7 @@ class Mob(pygame.sprite.Sprite):
         #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = HEIGHT / random.randrange(1, 4)
-        self.speedx = random.randrange(10, 20)
+        self.speedx = random.randrange(6, 10)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -223,7 +224,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(10, 20)
+            self.speedx = random.randrange(6, 10)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -233,13 +234,15 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = y
         self.rect.centerx = x
-        self.speedx = -10
+        self.speedx = -4
 
     def update(self):
         self.rect.x -= self.speedx
         # Kill the bullet when off the screen
         if self.rect.centerx < -10:
             self.kill()
+        #if self.rect.centerx > 500:
+        #    self.kill()
 
 class Pow(pygame.sprite.Sprite):
     def __init__(self):
@@ -249,14 +252,14 @@ class Pow(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(1300, 1800)
         self.rect.y = HEIGHT / 2
-        self.speedx = random.randrange(10, 12)
+        self.speedx = random.randrange(6, 10)
 
     def update(self):
         self.rect.x -= self.speedx
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = HEIGHT / 2
-            self.speedx = random.randrange(10, 12)
+            self.speedx = random.randrange(6, 10)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -283,7 +286,7 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect.center = center
 
 # Load all game graphics
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 heart = pygame.image.load(path.join(img_dir, "heart_2.gif")).convert()
 live = pygame.transform.scale(heart, (30, 30))
 meteor_images = []
@@ -316,10 +319,13 @@ powerup_images['pill'] = pygame.image.load(path.join(img_dir, 'pill_yellow.png')
 
 # Load all game sounds
 shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'laser1.wav'))
+shoot_sound.set_volume(0.2)
 expl_sound = pygame.mixer.Sound(path.join(snd_dir, 'explosion.wav'))
+expl_sound.set_volume(0.2)
 player_die_sound = pygame.mixer.Sound(path.join(snd_dir, 'rumble1.ogg'))
+player_die_sound.set_volume(0.2)
 pygame.mixer.music.load(path.join(snd_dir, 'space.ogg'))
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.35)
 
 pygame.display.set_caption("Space Escape")
 clock = pygame.time.Clock()
@@ -328,7 +334,6 @@ background = pygame.image.load("SE/starfield.jpg").convert()
 
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-
 
 # Game loop
 
@@ -361,7 +366,6 @@ def Escape_Game(ext_screen, story):
             player = Player()
             all_sprites.add(player)
             game_over = False
-            finished = False
 
             score = 0
             for i in range(10):
@@ -395,7 +399,7 @@ def Escape_Game(ext_screen, story):
                 tunnel_hoogte += 10
                 print('2')
 
-            tunnel_hoogte += random.randrange(-5, 7)
+            tunnel_hoogte += random.randrange(-5, 8)
 
             # Boven Helft Tunnel
             t = Tunnel(WIDTH + 10, 0, tunnel_hoogte)
@@ -404,7 +408,7 @@ def Escape_Game(ext_screen, story):
             t = Tunnel(WIDTH + 10, HEIGHT - tunnel_hoogte, tunnel_hoogte)
             tunnels.add(t)
 
-        if len(tunnels) > 10:
+        if x < 100:
             score += 1
 
         if score > newscore + 500:
@@ -503,7 +507,7 @@ def Escape_Game(ext_screen, story):
                 player.shield = 100
 
         # If the player died and the explosion has finished playing
-        if player.lives == 0 and not death_explosion.alive():
+        if player.lives <= 0 and not death_explosion.alive():
             game_over = True
             tunnels.empty()
             all_sprites.empty()
