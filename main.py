@@ -47,6 +47,8 @@ class Main:
         done = False
         cycle = 0
         blitzlogo = pygame.image.load(os.path.join(img_folder, "Blitz logo.png")).convert_alpha()
+        arrowRight = pygame.image.load(os.path.join(img_folder, "arrow.png")).convert_alpha()
+        arrowLeft = pygame.transform.rotate(arrowRight, 180)
         while not done:
             # moving background
             self.background.draw(self.screen, 0)
@@ -54,8 +56,9 @@ class Main:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
+                    if event.key == pygame.K_ESCAPE:
                         done = True
+
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         if cycle < 4:
                             cycle += 1
@@ -70,25 +73,34 @@ class Main:
 
             if cycle == 0:
                 self.screen.blit(blitzlogo, [W / 2 - 300, -20])
-                self.draw_text(self.screen, "Made by Rene van Til", 30, W / 2, 400, WHITE)
+                self.draw_text(self.screen, "Made by ", 30, W / 2, 450, WHITE)
+                self.draw_text(self.screen, "Rene van Til", 30, W / 2, 500, RED)
 
             elif cycle == 1:
                 self.draw_text(self.screen, "Climb The Tower", 30, W / 2, 100, WHITE)
-                self.draw_text(self.screen, "Made by Jurre Koetse", 30, W / 2, 400, WHITE)
+                self.draw_text(self.screen, "Made by ", 30, W / 2, 450, WHITE)
+                self.draw_text(self.screen, "Jurre Koetse", 30, W / 2, 500, RED)
 
             elif cycle == 2:
                 self.draw_text(self.screen, "Space Race", 30, W / 2, 100, WHITE)
-                self.draw_text(self.screen, "Made by Thijs van Deurzen", 30, W / 2, 400, WHITE)
+                self.draw_text(self.screen, "Made by ", 30, W / 2, 450, WHITE)
+                self.draw_text(self.screen, "Thijs van Deurzen", 30, W / 2, 500, RED)
 
             elif cycle == 3:
                 self.draw_text(self.screen, "Space Escape", 30, W / 2, 100, WHITE)
-                self.draw_text(self.screen, "Made by Floor Vermaat", 30, W / 2, 400, WHITE)
+                self.draw_text(self.screen, "Made by ", 30, W / 2, 450, WHITE)
+                self.draw_text(self.screen, "Floor Vermaat", 30, W / 2, 500, RED)
 
             elif cycle == 4:
                 self.draw_text(self.screen, "Space Shooter", 30, W / 2, 100, WHITE)
-                self.draw_text(self.screen, "Made by Maarten Vermeulen", 30, W / 2, 400, WHITE)
+                self.draw_text(self.screen, "Made by ", 30, W / 2, 450, WHITE)
+                self.draw_text(self.screen, "Maarten Vermeulen", 30, W / 2, 500, RED)
 
+            self.draw_text(self.screen, "Press esc to go back", 14, 150, 20, WHITE)
+            self.draw_text(self.screen, "Press left and right to toggle between games", 14, W / 2, H - 20, WHITE)
 
+            self.screen.blit(arrowRight, [W - 200, H / 2 - 100])
+            self.screen.blit(arrowLeft, [0, H / 2 - 100])
 
             pygame.display.flip()
             self.clock.tick(FPS)
