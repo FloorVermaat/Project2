@@ -289,7 +289,7 @@ class Game:
         for sound in MOB_HIT_SOUND:
             self.mob_hit_sounds['explosion'].append(pg.mixer.Sound(path.join(sound_folder, sound)))
         for sound in self.shoot_sounds['gun']:
-            sound.set_volume(0.2)
+            sound.set_volume(0.1)
 
 
     def new(self):
@@ -421,9 +421,9 @@ class Game:
                        WIDTH / 2, 375, align="center")
         self.draw_text("Press P to pause", self.title_font, 50, WHITE,
                        WIDTH / 2, 450, align="center")
-        self.draw_text("Press ESCAPE to quit", self.title_font, 50, WHITE,
+        self.draw_text("Press ESCAPE or Q to quit", self.title_font, 50, WHITE,
                        WIDTH / 2, 525, align="center")
-        self.draw_text("Press a key to start", self.title_font, 50, WHITE,
+        self.draw_text("Press R to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 600, align="center")
         pg.display.flip()
         self.wait_for_key()
@@ -433,10 +433,12 @@ class Game:
         self.screen.fill(BLACK)
         self.draw_text("GAME OVER", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
+        self.draw_text("Press R KEY to try again", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
+        self.draw_text("Press ESC or R to quit", self.title_font, 75, WHITE,
+                      WIDTH / 2, 650, align="center")
         pg.display.flip()
         self.wait_for_key()
         #pass
@@ -445,10 +447,12 @@ class Game:
         self.screen.fill(BLACK)
         self.draw_text("You WIN!!!", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
+        self.draw_text("Press R KEY to try again", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
+        self.draw_text("Press ESC or R to quit", self.title_font, 75, WHITE,
+                       WIDTH / 2, 650, align="center")
         pg.display.flip()
         self.wait_for_key()
         # pass
