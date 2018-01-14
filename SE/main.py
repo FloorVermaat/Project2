@@ -202,7 +202,7 @@ class Mob(pygame.sprite.Sprite):
         #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = HEIGHT / random.randrange(1, 4)
-        self.speedx = random.randrange(5, 10)
+        self.speedx = random.randrange(6, 10)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -224,7 +224,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(5, 10)
+            self.speedx = random.randrange(6, 10)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -252,14 +252,14 @@ class Pow(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(1300, 1800)
         self.rect.y = HEIGHT / 2
-        self.speedx = random.randrange(10, 12)
+        self.speedx = random.randrange(6, 10)
 
     def update(self):
         self.rect.x -= self.speedx
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = HEIGHT / 2
-            self.speedx = random.randrange(10, 12)
+            self.speedx = random.randrange(6, 10)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -319,10 +319,13 @@ powerup_images['pill'] = pygame.image.load(path.join(img_dir, 'pill_yellow.png')
 
 # Load all game sounds
 shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'laser1.wav'))
+shoot_sound.set_volume(0.2)
 expl_sound = pygame.mixer.Sound(path.join(snd_dir, 'explosion.wav'))
+expl_sound.set_volume(0.2)
 player_die_sound = pygame.mixer.Sound(path.join(snd_dir, 'rumble1.ogg'))
+player_die_sound.set_volume(0.2)
 pygame.mixer.music.load(path.join(snd_dir, 'space.ogg'))
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.35)
 
 pygame.display.set_caption("Space Escape")
 clock = pygame.time.Clock()
