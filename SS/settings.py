@@ -34,7 +34,7 @@ WALL_IMG = 'wall.png'
 # player setings
 PLAYER_HEALTH = 100
 PLAYER_SPEED = 375
-PLAYER_ROT_SPEED = 275
+PLAYER_ROT_SPEED = 300
 PLAYER_IMG = 'spaceship.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 BARREL_OFFSET = vec(35, 0)

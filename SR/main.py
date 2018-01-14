@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 650
+MOB_SPEED = 655
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -234,11 +234,14 @@ def draw_player_health(surf, x, y, pct):
     pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 class Space_race:
-    def __init__(self, screen):
-        pg.init()
+    def __init__(self, screen, story):
+        self.story = story
         self.screen = screen
         self.clock = pg.time.Clock()
         self.load_data()
+        self.done = False
+        self.playing = True
+
         self.done = False
         self.playing = True
 
@@ -309,8 +312,7 @@ class Space_race:
 
     def run(self):
         # game loop - set self.playing = False to end the game
-        self.done = False
-        self.playing = True
+
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0  # fix for Python 2.x
             self.events()
@@ -323,6 +325,8 @@ class Space_race:
         sys.exit()
 
     def update(self):
+        global playing
+        global waiting
         # update portion of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
@@ -337,6 +341,12 @@ class Space_race:
         hits = pg.sprite.spritecollide(self.player, self.points, False, collide_hit_rect)
         for hit in hits:
             self.score += POINTS_GIVEN
+            if self.story == True:
+                if self.score >= 7500:
+                    pg.mixer.music.fadeout(1000)
+                    waiting = False
+                    self.playing = False
+                    playing = False
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -383,8 +393,9 @@ class Space_race:
         self.draw_text("Press R (TWICE) to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
-        pg.event.wait()
+        #pg.event.wait()
         self.wait_for_key()
+        self.playing = True
 
     def show_go_screen(self):
         self.screen.fill(BLACK)
@@ -412,23 +423,24 @@ class Space_race:
     def wait_for_key(self):
         global playing
         pg.event.wait()
-        waiting = True
-        while waiting:
+        self.waiting = True
+        while self.waiting:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = False
-                    self.quit()
+                    self.waiting = False
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
                         playing = True
                         self.playing = True
-                        waiting = False
+                        self.waiting = False
                         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
                         pg.mixer.music.play(-1)
+
                     if event.key == pg.K_q:
+                        self.playing = False
                         playing = False
-                        waiting = False
+                        self.waiting = False
 
     def wait_for_escape(self):
         import main as M
@@ -446,29 +458,31 @@ class Space_race:
     def go_to_start(self):
         global playing
         pg.event.wait()
-        waiting = True
-        while waiting:
+        self.waiting = True
+        while self.waiting:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = False
+                    self.waiting = False
                     self.quit()
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
                         self.show_start_screen()
-                        waiting = False
+                        self.waiting = False
                     if event.key == pg.K_q:
                         playing = False
-                        waiting = False
+                        self.waiting = False
 
 playing = True
 
 def SR(screen, story):
     print(story)
     # create the game object
-    SR = Space_race(screen)
+    screen, story
+    SR = Space_race(screen, story)
     SR.show_start_screen()
     while playing:
         SR.new()
         SR.run()
-        SR.show_go_screen()
+        if not story:
+            SR.show_go_screen()
