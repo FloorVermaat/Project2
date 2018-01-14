@@ -5,15 +5,13 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'img')
 snd_dir = path.join(path.dirname(__file__), 'snd')
 
-POWERUP_TIME = 5000
+POWERUP_TIME = 5000 # 5 seconden power up tijd
 
-Name = ""
+WIDTH = 1280        # breedte scherm
+HEIGHT = 720        # hoogte scherm
+FPS = 60            # frame per second = 60
 
-WIDTH = 1280
-HEIGHT = 720
-FPS = 60
-
-# Define terms
+# Kleuren gedefinieerd
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -23,9 +21,7 @@ BROWN = (101, 67, 33)
 GREY = (20, 20, 20)
 
 pygame.init()
-pygame.mixer.init()
-
-font_name = pygame.font.match_font('arial')
+pygame.mixer.init()     # Pygame code waardoor muziek werkt
 
 def draw_text(surf, text, size, x, y):
     font_name = pygame.font.Font("Blitz/8.TTF", size)
@@ -35,7 +31,6 @@ def draw_text(surf, text, size, x, y):
     surf.blit(text_surface, text_rect)
 
 def newpowerup():
-    powerups = pygame.sprite.Group()
     pow = Pow()
     all_sprites.add(pow)
     powerups.add(pow)
@@ -49,7 +44,7 @@ def draw_shield_bar(surf, x, y, pct):
     if pct < 0:
         pct = 0
     BAR_LENGTH = 100
-    BAR_HEIGHT = 10
+    BAR_HEIGHT = 20
     fill = (pct / 100) * BAR_LENGTH
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
     fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
@@ -64,13 +59,12 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites
+    global tunnels, all_sprites, running
     screen.blit(background, (0,0))
-    draw_text(screen, "Space Pirate " + Name, 20, 120, 10)
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
     draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
     draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
-    draw_text(screen, "Press any key to begin", 20, WIDTH / 2, HEIGHT / 1.3)
+    draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.3)
     draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.2)
     #draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
     pygame.display.flip()
@@ -78,11 +72,10 @@ def show_go_screen():
     while waiting:
         clock.tick(FPS)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:           # Rood kruisje klikken sluit python
                 pygame.quit()
-            if event.type == pygame.KEYUP:
-                waiting = False
-
+        if pygame.key.get_pressed()[pygame.K_r]:    # R klikken start de game
+            waiting = False
 
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -129,8 +122,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, 270)
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
-        self.radius = 26
-        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        self.radius = 20
+        pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.center = (WIDTH / 4, HEIGHT / 2)
         self.speedx = 0
         self.speedy = 0
@@ -168,6 +161,8 @@ class Player(pygame.sprite.Sprite):
             self.speedx += 10
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.speedx -= 10
+        if keystate[pygame.K_SPACE]:
+            self.shoot()
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -202,11 +197,11 @@ class Mob(pygame.sprite.Sprite):
         self.image_orig = random.choice(meteor_images)
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
-        self.radius = int(self.rect.width * 0.8 / 2)
-        # pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        self.radius = int(self.rect.width * 0.45 / 2)
+        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
-        self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(5, 15)
+        self.rect.y = HEIGHT / random.randrange(1, 4)
+        self.speedx = random.randrange(10, 20)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
         self.last_update = pygame.time.get_ticks()
@@ -228,7 +223,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.rect.x = 1300
             self.rect.y = random.randrange(60, 640)
-            self.speedx = random.randrange(5, 15)
+            self.speedx = random.randrange(10, 20)
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -249,18 +244,19 @@ class Bullet(pygame.sprite.Sprite):
 class Pow(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.type = random.choice(['shield', 'gun'])
+        self.type = random.choice(['shield', 'gun', 'pill'])
         self.image = powerup_images[self.type]
         self.rect = self.image.get_rect()
-        self.rect.x = 1300
-        self.rect.y = random.randrange(60, 640)
-        self.speedx = random.randrange(5, 15)
+        self.rect.x = random.randrange(1300, 1800)
+        self.rect.y = HEIGHT / 2
+        self.speedx = random.randrange(10, 12)
 
     def update(self):
         self.rect.x -= self.speedx
-        # Kill the bullet when off the screen
-        if self.rect.bottom < 0:
-            self.kill()
+        if self.rect.right < 0:
+            self.rect.x = 1300
+            self.rect.y = HEIGHT / 2
+            self.speedx = random.randrange(10, 12)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, size):
@@ -296,6 +292,7 @@ meteor_list = ['small1.png', 'small2.png', 'small3.png', 'small4.png', 'small5.p
 for img in meteor_list:
     meteor_images.append(pygame.image.load(path.join(img_dir, img)).convert_alpha())
 
+# Directory explosion images
 explosion_anim = {}
 explosion_anim['lg'] = []
 explosion_anim['sm'] = []
@@ -311,9 +308,11 @@ for i in range (9):
     img = pygame.image.load(path.join(img_dir, filename)).convert_alpha()
     explosion_anim['player'].append(img)
 
+# Directory power up images
 powerup_images = {}
 powerup_images['shield'] = pygame.image.load(path.join(img_dir, 'shield_silver.png')).convert_alpha()
 powerup_images['gun'] = pygame.image.load(path.join(img_dir, 'bold_silver.png')).convert_alpha()
+powerup_images['pill'] = pygame.image.load(path.join(img_dir, 'pill_yellow.png')).convert_alpha()
 
 # Load all game sounds
 shoot_sound = pygame.mixer.Sound(path.join(snd_dir, 'laser1.wav'))
@@ -327,21 +326,22 @@ clock = pygame.time.Clock()
 
 background = pygame.image.load("SE/starfield.jpg").convert()
 
-pygame.mixer.music.play(loops=-1)
-
 tunnels = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 
 
 # Game loop
 
-def Escape_Game(ext_screen):
-    global all_sprites, mobs, bullets, tunnel_gat, screen
+def Escape_Game(ext_screen, story):
+    print(story)
+    global all_sprites, mobs, bullets, tunnel_gat, screen, powerups
 
     screen = ext_screen
-
+    newscore = 0
     running = True
     game_over = True
+    pygame.mixer.music.play(loops=-1)
+
     x = 0
     tunnel_gat = 400
     tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -355,20 +355,17 @@ def Escape_Game(ext_screen):
     while running:
         if game_over:
             show_go_screen()
-            game_over = False
-
             mobs = pygame.sprite.Group()
             bullets = pygame.sprite.Group()
             powerups = pygame.sprite.Group()
             player = Player()
             all_sprites.add(player)
+            game_over = False
+            finished = False
 
-            for i in range(13):
-                newmob()
             score = 0
-
-            for i in range(3):
-                newpowerup()
+            for i in range(10):
+                newmob()
 
         # Keep loop running at the right speed
         clock.tick(FPS)
@@ -376,7 +373,13 @@ def Escape_Game(ext_screen):
         for event in pygame.event.get():
             # Check for closing window
             if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                all_sprites.empty()
+                mobs.empty()
+                bullets.empty()
+                powerups.empty()
                 running = False
+            if running == False:
+                pygame.mixer.music.fadeout(1000)
 
         # Keep Creating Tunnels
         for tunnel in tunnels:    # Tunnels weghalen als ze van scherm af gaan
@@ -404,13 +407,17 @@ def Escape_Game(ext_screen):
         if len(tunnels) > 10:
             score += 1
 
+        if score > newscore + 500:
+            newpowerup()
+            newscore = score
+
         if score > 1000 and not diff_1:
             print("Updated")
             tunnel_gat = 300
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_1 = True
 
-        if score > 1000 and not diff_2:
+        if score > 2000 and not diff_2:
             print("Updated")
             tunnel_gat = 200
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
@@ -418,15 +425,15 @@ def Escape_Game(ext_screen):
 
         if score > 3000 and not diff_3:
             print("Updated")
-            tunnel_gat = 100
+            tunnel_gat = 150
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_3 = True
 
-        if score > 4000 and not diff_2:
-            print("Updated")
-            tunnel_gat = 200
-            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
-            diff_2 = True
+        #if score > 4000 and not diff_2:
+        #    print("Updated")
+        #    tunnel_gat = 200
+        #    tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
+        #    diff_2 = True
 
         # Update
         all_sprites.update()
@@ -441,20 +448,10 @@ def Escape_Game(ext_screen):
             all_sprites.add(expl)
             newmob()
 
-        # Check to see if the player hit a powerup
-        hits = pygame.sprite.spritecollide(player, powerups, True, True)
-        for hit in hits:
-            if hit.type == 'shield':
-                player.shield += random.randrange(10, 50)
-                if player.shield >= 100:
-                    player.shield = 100
-            if hit.type == 'gun':
-                player.powerup()
-
         # Check to see if the player hits the wall
-        hits = pygame.sprite.spritecollide(player, tunnels, False)
+        hits = pygame.sprite.spritecollide(player, tunnels, False, pygame.sprite.collide_circle)
         for hit in hits:
-            player.shield = 0
+            player.shield -= 10
             expl = Explosion(hit.rect.center, 'sm')
             all_sprites.add(expl)
             if player.shield <= 0:
@@ -470,10 +467,30 @@ def Escape_Game(ext_screen):
         for hit in hits:
             newmob()
 
+        # Check to see if a power up hits the wall
+        hits = pygame.sprite.groupcollide(powerups, tunnels, True, False)
+        for hit in hits:
+            newpowerup()
+
+        # Check to see if the player hit a powerup
+        hits = pygame.sprite.spritecollide(player, powerups, True, pygame.sprite.collide_mask)
+        for hit in hits:
+            if hit.type == 'shield':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                        player.shield = 100
+            if hit.type == 'gun':
+                player.powerup()
+            if hit.type == 'pill':
+                player.shield += random.randrange(10, 50)
+                if player.shield >= 100:
+                    player.shield = 100
+                player.powerup()
+
         # Check to see if a mob hit the player
         hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
         for hit in hits:
-            player.shield -= hit.radius * 2
+            player.shield -= hit.radius * 0.5
             expl = Explosion(hit.rect.center, 'sm')
             all_sprites.add(expl)
             newmob()
@@ -494,7 +511,6 @@ def Escape_Game(ext_screen):
             diff_2 = False
             diff_3 = False
 
-
         # Draw / Render
         rel_x = x % background.get_rect().width
 
@@ -511,4 +527,3 @@ def Escape_Game(ext_screen):
         draw_lives(screen, WIDTH - 100, 5, player.lives, live)
         # After drawing everything, flip the display
         pygame.display.flip()
-

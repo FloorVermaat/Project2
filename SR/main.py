@@ -463,7 +463,8 @@ class Space_race:
 
 playing = True
 
-def SR(screen):
+def SR(screen, story):
+    print(story)
     # create the game object
     SR = Space_race(screen)
     SR.show_start_screen()

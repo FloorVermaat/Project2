@@ -19,14 +19,32 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.land = False
+        self.djump = True
+        self.djumpcool = 500
+
+    def draw_cooldown(self, surf, x, y):
+        bar_length = 200
+        bar_height = 20
+        fill = ((500 - self.djumpcool) / 500) * bar_length
+        outline_rect = pg.Rect(x, y, bar_length, bar_height)
+        fill_rect = pg.Rect(x, y, fill, bar_height)
+        pg.draw.rect(surf, GREEN, fill_rect)
+        pg.draw.rect(surf, WHITE, outline_rect, 2)
 
     def jump(self):
         # jump only if standing on a platform
+        self.image = self.sprites_jump
         self.rect.x += 1
         hits = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.x -= 1
         if hits:
             self.vel.y = -PLAYER_JUMP
+
+        elif self.djump:
+            self.vel.y = -PLAYER_JUMP
+            print("Double")
+            self.djump = False
+            self.djumpcool = 500
 
 
     def update(self):
@@ -34,10 +52,17 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.image = self.sprites_right
+
         elif keys[pg.K_LEFT] or keys[pg.K_a]:
             self.image = self.sprites_left
         else:
             self.image = self.sprites_idle
+
+        if not self.djump:
+            self.djumpcool += -1
+            if self.djumpcool <= 0:
+                self.djump = True
+                self.djumpcool = 0
 
 
         # apply friction
@@ -63,6 +88,7 @@ class Platform(pg.sprite.Sprite):
         self.color = Color
 
         self.y = y
+
 
 
         # Add some offset to make platforms line up with tower
@@ -138,15 +164,26 @@ class Platform(pg.sprite.Sprite):
 
 
 class Tower(pg.sprite.Sprite):
-    def __init__(self, sprites, rotation, column):
+    def __init__(self, sprites, rotation, column, rocket=False):
         pg.sprite.Sprite.__init__(self)
         self.rotation = rotation
         self.sprites = sprites
+        self.rocket = rocket
 
-        self.image = self.sprites[self.rotation]
-        self.rect = self.image.get_rect()
-        self.rect.centerx = (WIDTH / 2)
-        self.rect.y = HEIGHT - 65 * column
+        if self.rocket == False:
+            self.image = self.sprites[self.rotation]
+
+            self.rect = self.image.get_rect()
+            self.rect.centerx = (WIDTH / 2)
+            self.rect.y = HEIGHT - 65 * column
+        else:
+            self.image = rocket
+
+            self.rect = self.image.get_rect()
+            self.rect.centerx = (WIDTH / 2)
+            self.rect.y = ((HEIGHT - (65 * column)) - self.rocket.get_height())
+
+
 
         self.rot = vec(0, 0)
         self.vel = vec(0, 0)
@@ -181,8 +218,8 @@ class Tower(pg.sprite.Sprite):
 
         self.rotation = int(self.rot.x)
 
-
-        self.image = self.sprites[self.rotation]
+        if self.rocket == False:
+            self.image = self.sprites[self.rotation]
 
 
 class Background(pg.sprite.Sprite):
@@ -221,10 +258,10 @@ class Background(pg.sprite.Sprite):
         self.rot += self.vel + 0.5 * self.acc
 
         # Make sure that image is not out of bounds
-        if self.rot.x > 500:
-            self.rot.x += -500
+        if self.rot.x > 300:
+            self.rot.x += -300
         if self.rot.x < 1:
-            self.rot.x += 500
+            self.rot.x += 300
 
 
         self.rotation = int(self.rot.x)

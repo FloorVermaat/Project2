@@ -15,7 +15,6 @@ def collide_with_walls(sprite, group, dir):
     if dir == 'x':
         hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-
             if hits[0].rect.centerx > sprite.hit_rect.centerx:
                 sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2
             if hits[0].rect.centerx < sprite.hit_rect.centerx:
@@ -69,6 +68,7 @@ class Player(pg.sprite.Sprite):
                 choice(self.game.shoot_sounds['gun']).play()
 
 
+
     def update(self):
         self.get_keys()
         self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
@@ -99,19 +99,35 @@ class Mob(pg.sprite.Sprite):
         self.game = game
         self.image = game.mob_img
         self.rect = self.image.get_rect()
-        self.hit_rect = MOB_HIT_RECT.copy()
+        self.hit_rect = MOB_HIT_RECT
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y) * TILESIZE
         # self.vel = vec(0, 0)
         # self.acc = vec(0, 0)
-        self.speedy = random.randrange(-3, 3)
-        self.speedx = random.randrange(-3, 3)
+        self.speedy = random.randrange(-5, 5)
+        self.speedx = random.randrange(-5, 5)
         self.rect.center = self.pos
         self.rot = 0
+        self.rot_speed = random.randrange(-6, 6)
         self.health = MOB_HEALTH
+
+
+    def rotate(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 50:
+            self.last_update = now
+            self.rot = self.rot + self.rot_speed
+            if self.rot >= 360:
+                self.rot = 1
+            new_image = pg.transform.rotate(self.image_orig, self.rot)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
 
     def update(self):
         # self.rot = (self.game.player.pos - self.pos).angle_to(vec(1, 0))
+        self.rot = self.rot + self.rot_speed
         self.image = pg.transform.rotate(self.game.mob_img, self.rot)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
@@ -218,6 +234,7 @@ class Game:
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.running = True
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
         font = pg.font.Font(font_name, size)
@@ -342,6 +359,14 @@ class Game:
             hit.health -= BULLET_DAMAGE
             hit.vel = vec(0, 0)
 
+        hits = pg.sprite.spritecollide(self.player, self.bullets, True, collide_hit_rect)
+        for hit in hits:
+            self.player.health -= BULLET_DAMAGE
+            hit.vel = vec(0, 0)
+            if self.player.health <= 0:
+                self.playing = False
+
+
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
@@ -350,7 +375,7 @@ class Game:
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        self.screen.fill(BGCOLOR)
+        self.screen.blit(BACKGROUNDIMAGE, (0, 0))
         # self.draw_grid()
         for sprite in self.all_sprites:
             self.all_sprites.draw(self.screen)
@@ -371,15 +396,18 @@ class Game:
         pg.display.flip()
 
     def events(self):
+        global DONE
         # catch all events here
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                self.quit()
+                if self.playing:
+                    self.playing = False
+                self.running = False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_p:
                     self.paused = not self.paused
                 if event.key == pg.K_ESCAPE:
-                    self.quit()
+                    self.running = False
 
 
     def show_start_screen(self):
@@ -432,18 +460,19 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     waiting = False
-                    self.quit()
+                    self.running = False
                 if event.type == pg.KEYUP:
                     waiting = False
 
 
-def SS(screen):
+def SS(screen, story):
+    print(story)
     # create the game object
     g = Game(screen)
     g.show_start_screen()
     # pg.mixer.music.load(path.join(sound_folder, 'music.mp3'))
     # pg.mixer.music.play(-1)
-    while True:
+    while g.running:
         g.new()
         g.run()
         g.show_go_screen()
