@@ -59,7 +59,7 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites, score, highscore
+    global tunnels, all_sprites, tunnel_hoogte, tunnel_gat, diff_1, diff_2, diff_3
     screen.blit(background, (0,0))
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 4)
 
@@ -74,7 +74,6 @@ def show_go_screen():
     draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.15)
     draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.1)
     #draw_text(screen, "Highscore: " + str(highscore), 20, WIDTH / 2, HEIGHT / 3)
-    pygame.display.flip()
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -93,6 +92,7 @@ def show_go_screen():
     diff_1 = False
     diff_2 = False
     diff_3 = False
+
 
     while len(tunnels) < 128 * 2 + 10:
         while tunnel_hoogte > tunnel_half:
@@ -208,7 +208,7 @@ class Mob(pygame.sprite.Sprite):
         self.radius = int(self.rect.width * 0.45 / 2)
         #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
-        self.rect.y = HEIGHT / random.randrange(1, 4)
+        self.rect.y = random.randrange(60, 640)
         self.speedx = random.randrange(6, 10)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
@@ -521,6 +521,8 @@ def Escape_Game(ext_screen, story):
             diff_1 = False
             diff_2 = False
             diff_3 = False
+            tunnel_gat = 400
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
 
         # Draw / Render
         rel_x = x % background.get_rect().width

@@ -144,7 +144,7 @@ class Mob(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
         if self.health <= 0:
             self.kill()
-            choice(self.game.mob_hit_sounds['explosion']).play()
+            #choice(self.game.mob_hit_sounds['explosion']).play()
         if self.pos.x > WIDTH:
             self.pos.x = 0
         if self.pos.x < 0:
@@ -324,8 +324,10 @@ class Game:
                     while len(self.mobs) < 6:
                         Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                         self.score += MOB_SCORE
-                if self.score >= 100:
+                if self.score >= 1000:
                     self.playing = False
+                    self.show_win_screen()
+
                     #you win
             if self.story == False:
                 if self.score >= 0:
@@ -359,6 +361,7 @@ class Game:
             hit.vel = vec(0, 0)
             if self.player.health <= 0:
                 self.playing = False
+                self.show_go_screen()
         # if hits:
             # self.player.pos += vec(MOB_KNOCKBACK, 0).rotate (-hits[0].rot)
         hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
@@ -372,6 +375,7 @@ class Game:
             hit.vel = vec(0, 0)
             if self.player.health <= 0:
                 self.playing = False
+                self.show_go_screen()
 
 
     def draw_grid(self):
@@ -454,7 +458,7 @@ class Game:
                        WIDTH / 2, 300, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
-        self.draw_text("Press ESC or Q to quit", self.title_font, 75, WHITE,
+        self.draw_text("Press ESC or Q to continue", self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
         pg.display.flip()
         self.wait_for_key()
@@ -467,10 +471,12 @@ class Game:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    pg.quit()
+                    self.running = False
+                    waiting = False
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
                         waiting = False
+                        self.running = True
                     if event.key == pg.K_q or event.key == pg.K_ESCAPE:
                         pg.mixer.music.fadeout(1000)
                         self.running = False
@@ -486,8 +492,4 @@ def SS(screen, story):
     while g.running:
         g.new()
         g.run()
-        if story == True:
-            g.show_win_screen()
-        if story == False:
-            g.show_go_screen()
 
