@@ -342,7 +342,7 @@ class Space_race:
         for hit in hits:
             self.score += POINTS_GIVEN
             if self.story == True:
-                if self.score >= 1000:
+                if self.score >= 7500:
                     pg.mixer.music.fadeout(1000)
                     waiting = False
                     self.playing = False
