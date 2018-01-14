@@ -320,15 +320,15 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect):
-                            M.load_Blitz()
+                            self.load_Blitz()
                         if self.ClimbPlanet.rect.colliderect(self.MainSpaceship.rect):
-                            M.load_CTT()
+                            self.load_CTT()
                         if self.RacePlanet.rect.colliderect(self.MainSpaceship.rect):
-                            M.load_SR()
+                            self.load_SR()
                         if self.ShootPlanet.rect.colliderect(self.MainSpaceship.rect):
-                            M.load_SS()
+                            self.load_SS()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
-                            M.load_SE()
+                            self.load_SE()
                         if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.Credits_screen()
                         if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect):
