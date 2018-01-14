@@ -203,6 +203,7 @@ def show_intro_screen():
         draw_text(screen, "Space Pirate " + Name, 12, 120, 10)
         draw_text(screen, "use WASD to move around", 15, W / 2, H / 3)
         draw_text(screen, "Space to shoot", 15, W / 2, H / 2.5)
+        draw_text(screen, "Keep shooting stuff to win", 15, W / 2, H / 2.2)
         draw_text(screen, "Press R key to begin", 15, W / 2, H / 1.3)
         draw_text(screen, "Press esc key to Exit at any time", 15, W / 2, H / 1.2)
         draw_text(screen, "Highscore " + str(highscore), 15, W / 2, H / 1.1)
@@ -401,6 +402,11 @@ def collision_checks():
             pow = Powerup(i.rect.center)
             Blitz_sprites.add(pow)
             powerups.add(pow)
+        if BosShip.shield <= 2500 and BosShip.say:
+            overheating.play()
+            BosShip.say = False
+
+
 
 
 class Player(pygame.sprite.Sprite):
@@ -487,6 +493,8 @@ class Player(pygame.sprite.Sprite):
             self.shoot_delay = 1000
             self.shootsoundeffectdelay = 1000
 
+        if keys[pygame.K_KP_MULTIPLY]:
+            self.shoot_delay = 10
         # function keys
 
         if keys[pygame.K_SPACE]: # or event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -669,7 +677,7 @@ class BossShip(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.shield = 5000
         self.onscreen = False
-        self.say = False
+        self.say = True
 
     def update(self):
         if bossbattle:
@@ -693,9 +701,9 @@ class BossShip(pygame.sprite.Sprite):
                 if self.shield <= 2500:
                     self.speedx = 25
                     self.shoot_delay = 100
-                    if not self.say:
-                        shields_50.play()
-                        self.say = True
+                    #if not self.say:
+                     ##rene
+                    #   self.say = True
     def shoot(self):
         # delay for shooting
         now = pygame.time.get_ticks()
@@ -932,6 +940,7 @@ pygame.mixer.music.set_volume(0.1)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
 shields_50 = pygame.mixer.Sound(os.path.join(snd_folder, "shield_at_50.wav"))
+overheating = pygame.mixer.Sound(os.path.join(snd_folder, "overheating_01.wav"))
 
 
 #Look up the highscore
@@ -1044,7 +1053,7 @@ class Blitz:
                     if self.newscore <= 100:
                         self.newscore = 100
                     else:
-                        self.newscore -= 2
+                        self.newscore -= 4
                     enemyfleet.distance += 100
                     enemymob()
                     enemyfleet.enemyspawn = score
@@ -1054,6 +1063,7 @@ class Blitz:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
                 mobs.empty()
+
                 enemyship.empty()
                 Blitz_sprites.add(BosShip)
                 bossbattle = True
