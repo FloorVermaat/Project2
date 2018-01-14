@@ -93,7 +93,6 @@ def show_go_screen():
     diff_2 = False
     diff_3 = False
 
-
     while len(tunnels) < 128 * 2 + 10:
         while tunnel_hoogte > tunnel_half:
             tunnel_hoogte += -5
@@ -206,7 +205,7 @@ class Mob(pygame.sprite.Sprite):
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width * 0.45 / 2)
-        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
         self.rect.y = random.randrange(60, 640)
         self.speedx = random.randrange(6, 10)
@@ -389,6 +388,8 @@ def Escape_Game(ext_screen, story):
                 bullets.empty()
                 powerups.empty()
                 running = False
+                tunnel_gat = 400
+                tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             if running == False:
                 pygame.mixer.music.fadeout(1000)
 
@@ -439,6 +440,9 @@ def Escape_Game(ext_screen, story):
             tunnel_gat = 150
             tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
             diff_3 = True
+
+        if score > 3000 and story == True:
+            running = False
 
         #if score > 4000 and not diff_2:
         #    print("Updated")
