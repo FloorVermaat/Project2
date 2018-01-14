@@ -315,7 +315,7 @@ class Background(object):
 
 
 class MainPlayer(pg.sprite.Sprite):
-    def __init__(self, x, y, select=False):
+    def __init__(self, x, y):
         pg.sprite.Sprite.__init__(self)
         self.image_orig = pg.image.load(os.path.join(img_folder, "spaceship.png")).convert_alpha()
         self.image2 = pg.image.load(os.path.join(img_folder, "64_enemyship.png")).convert_alpha()
@@ -327,79 +327,35 @@ class MainPlayer(pg.sprite.Sprite):
         self.clock = pg.time.Clock()
         self.dt = self.clock.tick(FPS) / 1000.0
 
-        self.select = select
-        self.ship = 1
-        self.animation = 0
-
-        self.image = pg.transform.rotate(self.image_orig, self.rot)
-
     def get_keys(self):
+        self.rot_speed = 0
+        self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
-        if not self.select:
-            self.rot_speed = 0
-            self.vel = vec(0, 0)
-
-            if keys[pg.K_LEFT] or keys[pg.K_a]:
-                self.rot_speed = 200
-            if keys[pg.K_RIGHT] or keys[pg.K_d]:
-                self.rot_speed = -200
-            if keys[pg.K_UP] or keys[pg.K_w]:
-                    self.vel = vec(300, 0).rotate(-self.rot)
-            if keys[pg.K_DOWN] or keys[pg.K_s]:
-                self.vel = vec(-300 / 2, 0).rotate(-self.rot)
-            if keys[pg.K_o]:
-                self.image_orig = self.image2
-
-        elif self.animation == 0:
-            print(self.ship)
-            if keys[pg.K_LEFT] or keys[pg.K_a]:
-                if self.ship <= 1:
-                    self.ship = 1
-                else:
-                    self.ship += 1
-                    self.animation = 1
-
-            if keys[pg.K_RIGHT] or keys[pg.K_d]:
-                if self.ship >= 2:
-                    self.ship = 2
-                else:
-                    self.ship += -1
-                    self.animation = 1
-
-
+        if keys[pg.K_LEFT] or keys[pg.K_a]:
+            self.rot_speed = 200
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            self.rot_speed = -200
+        if keys[pg.K_UP] or keys[pg.K_w]:
+                self.vel = vec(300, 0).rotate(-self.rot)
+        if keys[pg.K_DOWN] or keys[pg.K_s]:
+            self.vel = vec(-300 / 2, 0).rotate(-self.rot)
+        if keys[pg.K_o]:
+            self.image_orig = self.image2
 
     def update(self):
         self.get_keys()
-
-        if not self.select:
-
-            self.rot = (self.rot + self.rot_speed * self.dt) % 360
-            self.image = pg.transform.rotate(self.image_orig, self.rot)
-            self.rect = self.image.get_rect()
-            self.rect.center = self.pos
-            self.pos += self.vel * self.dt
-
-
-            if self.pos.x > WIDTH:
-                self.pos.x = 0
-            if self.pos.x < 0:
-                self.pos.x = WIDTH
-            if self.pos.y > HEIGHT:
-                self.pos.y = 0
-            if self.pos.y < 0:
-                self.pos.y = HEIGHT
-
-        elif self.animation == 2:
-            self.pos += self.vel
-            if self.pos.y > HEIGHT / 2:
-                self.pos.y = HEIGHT / 2
-                self.vel = vec(0, 0)
-
-            if self.pos.y < -100:
-                self.pos.y = HEIGHT + 100
-
-
-
-
+        self.rot = (self.rot + self.rot_speed * self.dt) % 360
+        self.image = pg.transform.rotate(self.image_orig, self.rot)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.pos += self.vel * self.dt
+        if self.pos.x > WIDTH:
+            self.pos.x = 0
+        if self.pos.x < 0:
+            self.pos.x = WIDTH
+        if self.pos.y > HEIGHT:
+            self.pos.y = 0
+        if self.pos.y < 0:
+            self.pos.y = HEIGHT
 
 
