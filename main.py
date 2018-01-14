@@ -147,12 +147,30 @@ class Main:
             pygame.display.flip()
             self.clock.tick(FPS)
 
+    def ship_select_screen(self):
+        self.select_screen_sprites = pg.sprite.Group()
+        self.select_screen_sprites.add(MainPlayer((WIDTH / 2), (HEIGHT / 2), False))
+
+        while True:
+            self.screen.fill(BLACK)
+            self.clock.tick(FPS)
+
+
+
+            # game loop update
+            self.select_screen_sprites.update()
+
+            # gameloop draw
+            self.select_screen_sprites.draw(self.screen)
+
+            pygame.display.flip()
+
     def load_CTT(self):
         import CTT.main as CTT
         #CTT.init(self.screen)
 
 
-        self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
+        #self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
 
         CTT.CTT(self.screen, self.MainSpaceship.image_orig)
 
@@ -191,7 +209,6 @@ class Main:
         self.MainGame_sprites.add(self.BlackHolePlanet)
         self.MainSpaceship = MainPlayer(W / 2, H - 200)
         self.MainGame_sprites.add(self.MainSpaceship)
-
 
     def MouseOver_Actions(self):
         if self.BlitzPlanet.rect.colliderect(self.MainSpaceship.rect) or \
@@ -360,5 +377,7 @@ M = Main()
 #5 For SS
 
 Name = M.name_input_screen()
+M.ship_select_screen()
+
 print(Name)
 M.select_Minigame()
