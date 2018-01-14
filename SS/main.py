@@ -460,11 +460,14 @@ class Game:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = False
-                    self.running = False
-                if event.type == pg.KEYUP:
-                    waiting = False
-
+                    pg.quit()
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_r:
+                        waiting = False
+                    if event.key == pg.K_q or event.key == pg.K_ESCAPE:
+                        pg.mixer.music.fadeout(1000)
+                        self.running = False
+                        waiting = False
 
 def SS(screen, story):
     print(story)
