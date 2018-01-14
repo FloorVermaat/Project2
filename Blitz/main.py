@@ -590,8 +590,8 @@ class EnemyShip(pygame.sprite.Sprite):
 
         if self.type == "suicide":
             self.rotate()
-            self.speedx = random.randrange(1, 4)
-            self.speedy = random.randrange(1, 4)
+            self.speedx = random.randrange(1, 5)
+            self.speedy = random.randrange(1, 5)
             self.follow()
 
         if self.type == "laserbeam":
@@ -716,7 +716,7 @@ class Mob(pygame.sprite.Sprite):
         self.radius = int(self.rect.width * .85 / 2)
         self.rect.x = random.randrange(W - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
-        self.speedy = random.randrange(5, 17)
+        self.speedy = random.randrange(5, 10)
         self.speedx = random.randrange(-3, 3)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
@@ -955,6 +955,7 @@ class Blitz:
         self.screen = screen
         self.done = False
         self.intro_screen = True
+        self.newscore = 650
 
     def blitz_Game(self):
         global nameinputscreen, bossbattle, victory, Blitz_sprites, mobs, enemyship, bullets, enemybullets, powerups, BosShip, enemyfleet, player, score, game_over, Name
@@ -981,7 +982,7 @@ class Blitz:
                 player = Player()
                 Blitz_sprites.add(player)
                 # number of enemies
-                for i in range(10):
+                for i in range(7):
                     newmob()
                 # scoreboard
                 score = 0
@@ -1035,15 +1036,21 @@ class Blitz:
                 game_over = True
 
 
+
             # enemyspawner that takes points in consideration
-            if score >= enemyfleet.enemyspawn + 500 and not bossbattle:
+            if score >= enemyfleet.enemyspawn + self.newscore and not bossbattle:
                 for i in range(1):
+                    print (self.newscore)
+                    if self.newscore <= 100:
+                        self.newscore = 100
+                    else:
+                        self.newscore -= 2
                     enemyfleet.distance += 100
                     enemymob()
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            if score >= 5000 and not bossbattle:
+            if score >= 10000 and not bossbattle and Blitzstory:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
                 mobs.empty()
@@ -1085,8 +1092,9 @@ class Blitz:
 
 
 def Start(ext_screen, story, ext_name, Shipimage):
+    global screen, Name, spaceship_image, Blitzstory
+    Blitzstory = story
     print(story)
-    global screen, Name, spaceship_image
     shipimage_straight = pygame.transform.rotate(Shipimage, 90)
     spaceship_image = shipimage_straight
     BLITZ = Blitz(ext_screen)
