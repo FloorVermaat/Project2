@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 650
+MOB_SPEED = 655
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -342,7 +342,7 @@ class Space_race:
         for hit in hits:
             self.score += POINTS_GIVEN
             if self.story == True:
-                if self.score >= 1000:
+                if self.score >= 7500:
                     pg.mixer.music.fadeout(1000)
                     waiting = False
                     self.playing = False
