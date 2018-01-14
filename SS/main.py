@@ -323,19 +323,19 @@ class Game:
                     #you win
             # if mode = 'survival':
             if self.score >= 0:
-                while len(self.mobs) < 6:
+                while len(self.mobs) < 8:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 1000:
-                while len(self.mobs) < 12:
+                while len(self.mobs) < 14:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 2500:
-                while len(self.mobs) < 18:
+                while len(self.mobs) < 20:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 4000:
-                while len(self.mobs) < 26:
+                while len(self.mobs) < 28:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             self.draw()
