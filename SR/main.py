@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 350
+MOB_SPEED = 335
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -385,8 +385,6 @@ class Space_race:
         pg.display.flip()
         pg.event.wait()
         self.wait_for_key()
-        pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
-        pg.mixer.music.play(-1)
 
     def show_go_screen(self):
         self.screen.fill(BLACK)
