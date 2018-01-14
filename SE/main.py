@@ -333,6 +333,7 @@ all_sprites = pygame.sprite.Group()
 # Game loop
 
 def Escape_Game(ext_screen, story):
+    print(story)
     global all_sprites, mobs, bullets, tunnel_gat, screen, powerups
 
     screen = ext_screen

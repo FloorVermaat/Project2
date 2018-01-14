@@ -466,6 +466,7 @@ class Game:
 
 
 def SS(screen, story):
+    print(story)
     # create the game object
     g = Game(screen)
     g.show_start_screen()

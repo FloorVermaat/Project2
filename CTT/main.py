@@ -336,7 +336,8 @@ class Climb_The_Tower_Game:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-def CTT(screen, ship, story=True):
+def CTT(screen, story, ship):
+    print(story)
     CTT = Climb_The_Tower_Game(screen, ship, story)
     CTT.show_load_screen()
     CTT.show_start_screen()
