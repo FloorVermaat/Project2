@@ -242,6 +242,9 @@ class Space_race:
         self.done = False
         self.playing = True
 
+        self.done = False
+        self.playing = True
+
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
         font = pg.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
@@ -309,8 +312,7 @@ class Space_race:
 
     def run(self):
         # game loop - set self.playing = False to end the game
-        self.done = False
-        self.playing = True
+
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0  # fix for Python 2.x
             self.events()
@@ -343,6 +345,7 @@ class Space_race:
                 if self.score >= 1000:
                     pg.mixer.music.fadeout(1000)
                     waiting = False
+                    self.playing = False
                     playing = False
 
     def draw(self):
@@ -390,8 +393,9 @@ class Space_race:
         self.draw_text("Press R (TWICE) to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 575, align="center")
         pg.display.flip()
-        pg.event.wait()
+        #pg.event.wait()
         self.wait_for_key()
+        self.playing = True
 
     def show_go_screen(self):
         self.screen.fill(BLACK)
@@ -419,23 +423,24 @@ class Space_race:
     def wait_for_key(self):
         global playing
         pg.event.wait()
-        waiting = True
-        while waiting:
+        self.waiting = True
+        while self.waiting:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = False
-                    self.quit()
+                    self.waiting = False
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
                         playing = True
                         self.playing = True
-                        waiting = False
+                        self.waiting = False
                         pg.mixer.music.load(path.join(sound_folder, 'main.mp3'))
                         pg.mixer.music.play(-1)
+
                     if event.key == pg.K_q:
+                        self.playing = False
                         playing = False
-                        waiting = False
+                        self.waiting = False
 
     def wait_for_escape(self):
         import main as M
@@ -453,20 +458,20 @@ class Space_race:
     def go_to_start(self):
         global playing
         pg.event.wait()
-        waiting = True
-        while waiting:
+        self.waiting = True
+        while self.waiting:
             self.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = False
+                    self.waiting = False
                     self.quit()
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_r:
                         self.show_start_screen()
-                        waiting = False
+                        self.waiting = False
                     if event.key == pg.K_q:
                         playing = False
-                        waiting = False
+                        self.waiting = False
 
 playing = True
 
@@ -479,4 +484,5 @@ def SR(screen, story):
     while playing:
         SR.new()
         SR.run()
-        SR.show_go_screen()
+        if not story:
+            SR.show_go_screen()
