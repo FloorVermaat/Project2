@@ -45,21 +45,50 @@ class Main:
 
     def Credits_screen(self):
         done = False
-        movement = 0
+        cycle = 0
+        blitzlogo = pygame.image.load(os.path.join(img_folder, "Blitz logo.png")).convert_alpha()
         while not done:
             # moving background
             self.background.draw(self.screen, 0)
-            movement_down = True
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            if movement_down:
-                movement -= 5
-                #if movement > 1000:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        done = True
+                    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                        if cycle < 4:
+                            cycle += 1
+                        else:
+                            cycle = 0
 
-            self.draw_text(self.screen, "The Number One", 64, W / 2, 50 + movement, WHITE)
-            self.draw_text(self.screen, "Insert Name", 30, W / 2, 200 + movement, WHITE)
-            self.draw_text(self.screen, "Name has to be atleast 3 characters long", 15, W / 2, H / 2 + 50 + movement, WHITE)
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                        if cycle > 0:
+                            cycle -= 1
+                        else:
+                            cycle = 4
+
+            if cycle == 0:
+                self.screen.blit(blitzlogo, [W / 2 - 300, -20])
+                self.draw_text(self.screen, "Made by Rene van Til", 30, W / 2, 400, WHITE)
+
+            elif cycle == 1:
+                self.draw_text(self.screen, "Climb The Tower", 30, W / 2, 100, WHITE)
+                self.draw_text(self.screen, "Made by Jurre Koetse", 30, W / 2, 400, WHITE)
+
+            elif cycle == 2:
+                self.draw_text(self.screen, "Space Race", 30, W / 2, 100, WHITE)
+                self.draw_text(self.screen, "Made by Thijs van Deurzen", 30, W / 2, 400, WHITE)
+
+            elif cycle == 3:
+                self.draw_text(self.screen, "Space Escape", 30, W / 2, 100, WHITE)
+                self.draw_text(self.screen, "Made by Floor Vermaat", 30, W / 2, 400, WHITE)
+
+            elif cycle == 4:
+                self.draw_text(self.screen, "Space Shooter", 30, W / 2, 100, WHITE)
+                self.draw_text(self.screen, "Made by Maarten Vermeulen", 30, W / 2, 400, WHITE)
+
+
 
             pygame.display.flip()
             self.clock.tick(FPS)
