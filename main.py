@@ -16,7 +16,7 @@ class Main:
 
         self.name = "Undefined"
 
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pg.FULLSCREEN)
         pg.display.set_caption(TITLE)
 
         self.clock = pg.time.Clock()
