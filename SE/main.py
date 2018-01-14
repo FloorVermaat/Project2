@@ -59,7 +59,7 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites, score, highscore
+    global tunnels, all_sprites
     screen.blit(background, (0,0))
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 4)
 
@@ -74,7 +74,6 @@ def show_go_screen():
     draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.15)
     draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.1)
     #draw_text(screen, "Highscore: " + str(highscore), 20, WIDTH / 2, HEIGHT / 3)
-    pygame.display.flip()
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -208,7 +207,7 @@ class Mob(pygame.sprite.Sprite):
         self.radius = int(self.rect.width * 0.45 / 2)
         #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.x = 1300
-        self.rect.y = HEIGHT / random.randrange(1, 4)
+        self.rect.y = random.randrange(60, 640)
         self.speedx = random.randrange(6, 10)
         self.rot = 0
         self.rot_speed = random.randrange(-8, 8)
