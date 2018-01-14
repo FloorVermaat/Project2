@@ -392,8 +392,7 @@ class Game:
             self.draw_text("Paused", self.title_font, 105, RED, WIDTH / 2, 200, align="center")
             self.draw_text("Press P to continue", self.title_font, 75, WHITE,
                            WIDTH / 2, 350, align="center")
-            self.draw_text("Press ESCAPE to quit", self.title_font, 75, WHITE,
-                           WIDTH / 2, 500, align="center")
+
         pg.display.flip()
 
     def events(self):
