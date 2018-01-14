@@ -59,7 +59,7 @@ def draw_lives(surf, x, y, lives, img):
         surf.blit(img, img_rect)
 
 def show_go_screen():
-    global tunnels, all_sprites
+    global tunnels, all_sprites, tunnel_hoogte, tunnel_gat, diff_1, diff_2, diff_3
     screen.blit(background, (0,0))
     draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 4)
 
@@ -92,6 +92,7 @@ def show_go_screen():
     diff_1 = False
     diff_2 = False
     diff_3 = False
+
 
     while len(tunnels) < 128 * 2 + 10:
         while tunnel_hoogte > tunnel_half:
@@ -520,6 +521,8 @@ def Escape_Game(ext_screen, story):
             diff_1 = False
             diff_2 = False
             diff_3 = False
+            tunnel_gat = 400
+            tunnel_half = (HEIGHT / 2) - (tunnel_gat / 2)
 
         # Draw / Render
         rel_x = x % background.get_rect().width
