@@ -33,7 +33,7 @@ WALL_IMG = 'wall.png'
 
 # player setings
 PLAYER_HEALTH = 100
-PLAYER_SPEED = 300
+PLAYER_SPEED = 350
 PLAYER_ROT_SPEED = 250
 PLAYER_IMG = 'spaceship.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
