@@ -1043,7 +1043,7 @@ class Blitz:
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            if score >= 1000 and not bossbattle:
+            if score >= 5000 and not bossbattle:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
                 mobs.empty()
