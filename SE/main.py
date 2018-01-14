@@ -467,7 +467,7 @@ def Escape_Game(ext_screen):
             newmob()
 
         # Check to see if a power up hits the wall
-        hits = pygame.sprite.groupcollide(powerups, tunnel, True, False)
+        hits = pygame.sprite.groupcollide(powerups, tunnels, True, False)
         for hit in hits:
             newpowerup()
 

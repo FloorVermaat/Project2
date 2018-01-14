@@ -86,7 +86,7 @@ def draw_bosshield_bar(surf, x, y, pct):
 def draw_powerup_bar(surf, x, y, time):
     if time < 0:
         time = 0
-    bar_length = 100
+    bar_length = 200
     bar_height = 20
     fill = (time / poweruptime) * bar_length
     outline_rect = pygame.Rect(x, y, bar_length, bar_height)
@@ -526,6 +526,7 @@ class Player(pygame.sprite.Sprite):
         if now1 - self.last_update1 > self.shootsoundeffectdelay:
             self.last_update1 = now1
             shoot_sound.play()
+            pygame.mixer.music.set_volume(0.1)
 
     def hide(self):
         # hide the player temporarily
@@ -926,7 +927,7 @@ explosion_soundList = ['Explosion4.wav', 'Explosion17.wav']
 for explosion in explosion_soundList:
     explosion_sound.append(pygame.mixer.Sound(os.path.join(snd_folder, explosion)))
 # background music
-pygame.mixer.music.load(os.path.join(snd_folder, "starwars.mp3"))
+pygame.mixer.music.load(os.path.join(snd_folder, "Background loop.mp3"))
 pygame.mixer.music.set_volume(0.1)
 # shield sounds
 shields = pygame.mixer.Sound(os.path.join(snd_folder, "shield depleted.wav"))
@@ -1063,12 +1064,15 @@ class Blitz:
             draw_text(self.screen, "Space Pirate " + Name, 12, 120, 10)
             # draw shield, only if you have shield
             if player.shield > 0:
+                draw_text(self.screen, "Shields", 12, W - 180, H - 90)
                 draw_shield_bar(self.screen, W - 280, H - 70, player.shield)
             # draw power up, only if you have an active powerup
             if player.powerbar > 0:
-                draw_powerup_bar(self.screen, W - W + 10, H - 70, player.powerbar)
+                draw_text(self.screen, "Powerup timer", 12, 110, H - 90)
+                draw_powerup_bar(self.screen, 10, H - 70, player.powerbar)
             # draw bossbar, only when bossbattle
             if bossbattle:
+                draw_text(self.screen, "Boss Health", 16, W / 2 + 40 + 300, 40)
                 draw_bosshield_bar(self.screen, W / 2 + 40, 10, BosShip.shield)
             draw_lives(self.screen, W - (W - 100), H - H + 70, player.lives, player_minilives)
             # --- updating screen
