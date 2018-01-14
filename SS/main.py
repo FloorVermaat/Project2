@@ -230,8 +230,9 @@ def draw_player_health(surf, x, y, pct):
     pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, story):
         self.screen = screen
+        self.story = story
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
@@ -289,7 +290,7 @@ class Game:
         for sound in MOB_HIT_SOUND:
             self.mob_hit_sounds['explosion'].append(pg.mixer.Sound(path.join(sound_folder, sound)))
         for sound in self.shoot_sounds['gun']:
-            sound.set_volume(0.2)
+            sound.set_volume(0.1)
 
 
     def new(self):
@@ -318,26 +319,31 @@ class Game:
             self.events()
             if not self.paused:
                 self.update()
-            # if mode = 'story':
-                #if self.score > 2500:
+            if self.story == True:
+                if self.score >= 0:
+                    while len(self.mobs) < 6:
+                        Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
+                        self.score += MOB_SCORE
+                if self.score >= 100:
+                    self.playing = False
                     #you win
-            # if mode = 'survival':
-            if self.score >= 0:
-                while len(self.mobs) < 8:
-                    Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-                    self.score += MOB_SCORE
-            if self.score > 1000:
-                while len(self.mobs) < 14:
-                    Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-                    self.score += MOB_SCORE
-            if self.score > 2500:
-                while len(self.mobs) < 20:
-                    Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-                    self.score += MOB_SCORE
-            if self.score > 4000:
-                while len(self.mobs) < 28:
-                    Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
-                    self.score += MOB_SCORE
+            if self.story == False:
+                if self.score >= 0:
+                    while len(self.mobs) < 6:
+                        Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
+                        self.score += MOB_SCORE
+                if self.score > 1000:
+                    while len(self.mobs) < 12:
+                        Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
+                        self.score += MOB_SCORE
+                if self.score > 2500:
+                    while len(self.mobs) < 18:
+                        Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
+                        self.score += MOB_SCORE
+                if self.score > 4000:
+                    while len(self.mobs) < 26:
+                        Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
+                        self.score += MOB_SCORE
             self.draw()
 
     def quit(self):
@@ -392,8 +398,7 @@ class Game:
             self.draw_text("Paused", self.title_font, 105, RED, WIDTH / 2, 200, align="center")
             self.draw_text("Press P to continue", self.title_font, 75, WHITE,
                            WIDTH / 2, 350, align="center")
-            self.draw_text("Press ESCAPE to quit", self.title_font, 75, WHITE,
-                           WIDTH / 2, 500, align="center")
+
         pg.display.flip()
 
     def events(self):
@@ -421,9 +426,9 @@ class Game:
                        WIDTH / 2, 375, align="center")
         self.draw_text("Press P to pause", self.title_font, 50, WHITE,
                        WIDTH / 2, 450, align="center")
-        self.draw_text("Press ESCAPE to quit", self.title_font, 50, WHITE,
+        self.draw_text("Press ESCAPE or Q to quit", self.title_font, 50, WHITE,
                        WIDTH / 2, 525, align="center")
-        self.draw_text("Press a key to start", self.title_font, 50, WHITE,
+        self.draw_text("Press R to start", self.title_font, 50, WHITE,
                        WIDTH / 2, 600, align="center")
         pg.display.flip()
         self.wait_for_key()
@@ -433,10 +438,12 @@ class Game:
         self.screen.fill(BLACK)
         self.draw_text("GAME OVER", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
+        self.draw_text("Press R KEY to try again", self.title_font, 75, WHITE,
                        WIDTH / 2, 450, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
+        self.draw_text("Press ESC or Q to quit", self.title_font, 75, WHITE,
+                      WIDTH / 2, 650, align="center")
         pg.display.flip()
         self.wait_for_key()
         #pass
@@ -445,9 +452,9 @@ class Game:
         self.screen.fill(BLACK)
         self.draw_text("You WIN!!!", self.title_font, 200, RED,
                        WIDTH / 2, 300, align="center")
-        self.draw_text("Press A KEY to try again", self.title_font, 75, WHITE,
-                       WIDTH / 2, 450, align="center")
         self.draw_text("score = " + str(self.score), self.title_font, 75, WHITE,
+                       WIDTH / 2, 450, align="center")
+        self.draw_text("Press ESC or Q to quit", self.title_font, 75, WHITE,
                        WIDTH / 2, 550, align="center")
         pg.display.flip()
         self.wait_for_key()
@@ -472,12 +479,15 @@ class Game:
 def SS(screen, story):
     print(story)
     # create the game object
-    g = Game(screen)
+    g = Game(screen, story)
     g.show_start_screen()
     # pg.mixer.music.load(path.join(sound_folder, 'music.mp3'))
     # pg.mixer.music.play(-1)
     while g.running:
         g.new()
         g.run()
-        g.show_go_screen()
+        if story == True:
+            g.show_win_screen()
+        if story == False:
+            g.show_go_screen()
 

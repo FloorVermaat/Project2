@@ -30,7 +30,7 @@ SOMETHING = 1.1
 
 # Player settings
 PLAYER_HEALTH = 100
-PLAYER_SPEED = 300
+PLAYER_SPEED = 500
 PLAYER_ROT_SPEED = 200
 PLAYER_IMG = 'spaceship.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
@@ -38,7 +38,7 @@ BARREL_OFFSET = vec(30, 10)
 
 # Mob settings
 MOB_IMG = 'spaceship2.png'
-MOB_SPEED = 335
+MOB_SPEED = 650
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_HEALTH = 100
 MOB_DAMAGE = 10
@@ -234,8 +234,8 @@ def draw_player_health(surf, x, y, pct):
     pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 class Space_race:
-    def __init__(self, screen):
-        pg.init()
+    def __init__(self, screen, story):
+        self.story = story
         self.screen = screen
         self.clock = pg.time.Clock()
         self.load_data()
@@ -323,6 +323,8 @@ class Space_race:
         sys.exit()
 
     def update(self):
+        global playing
+        global waiting
         # update portion of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
@@ -337,6 +339,11 @@ class Space_race:
         hits = pg.sprite.spritecollide(self.player, self.points, False, collide_hit_rect)
         for hit in hits:
             self.score += POINTS_GIVEN
+            if self.story == True:
+                if self.score >= 1000:
+                    pg.mixer.music.fadeout(1000)
+                    waiting = False
+                    playing = False
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -466,7 +473,8 @@ playing = True
 def SR(screen, story):
     print(story)
     # create the game object
-    SR = Space_race(screen)
+    screen, story
+    SR = Space_race(screen, story)
     SR.show_start_screen()
     while playing:
         SR.new()

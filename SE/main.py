@@ -61,11 +61,18 @@ def draw_lives(surf, x, y, lives, img):
 def show_go_screen():
     global tunnels, all_sprites, score, highscore
     screen.blit(background, (0,0))
-    draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 3)
-    draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.8)
-    draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.7)
-    draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.3)
-    draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.2)
+    draw_text(screen, "Space Escape", 70, WIDTH / 2, HEIGHT / 4)
+
+    draw_text(screen, "PowerUps", 30, WIDTH / 2, HEIGHT / 2)
+    draw_text(screen, "Pill gives Shield Restore and Bullets", 20, WIDTH / 2, HEIGHT / 1.8)
+    draw_text(screen, "Shield gives Shield Restore", 20, WIDTH / 2, HEIGHT / 1.7)
+    draw_text(screen, "Bolt gives Bullets", 20, WIDTH / 2, HEIGHT / 1.6)
+
+    draw_text(screen, "Keys", 30, WIDTH / 2, HEIGHT / 1.4)
+    draw_text(screen, "Use the arrow keys to move around", 20, WIDTH / 2, HEIGHT / 1.3)
+    draw_text(screen, "Use space to shoot", 20, WIDTH / 2, HEIGHT / 1.25)
+    draw_text(screen, "Press R to begin", 20, WIDTH / 2, HEIGHT / 1.15)
+    draw_text(screen, "Press esc or q key to Exit at any time", 20, WIDTH / 2, HEIGHT / 1.1)
     #draw_text(screen, "Highscore: " + str(highscore), 20, WIDTH / 2, HEIGHT / 3)
     pygame.display.flip()
     pygame.display.flip()
@@ -409,9 +416,9 @@ def Escape_Game(ext_screen, story):
             tunnels.add(t)
 
         if x < 100:
-            score += 1
+            score += 0.25
 
-        if score > newscore + 500:
+        if score > newscore + 400:
             newpowerup()
             newscore = score
 
@@ -526,7 +533,7 @@ def Escape_Game(ext_screen, story):
         all_sprites.draw(screen)
         tunnels.draw(screen)
 
-        draw_text(screen, str(score), 30, WIDTH / 2, 10)
+        draw_text(screen, str(int(score)), 30, WIDTH / 2, 10)
         draw_shield_bar(screen, 5, 5, player.shield)
         draw_lives(screen, WIDTH - 100, 5, player.lives, live)
         # After drawing everything, flip the display
