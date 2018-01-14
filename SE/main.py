@@ -123,7 +123,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
         self.radius = 20
-        pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
+        #pygame.draw.circle(self.image, RED, self.rect.center, self.radius)
         self.rect.center = (WIDTH / 4, HEIGHT / 2)
         self.speedx = 0
         self.speedy = 0
