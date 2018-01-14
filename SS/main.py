@@ -144,6 +144,7 @@ class Mob(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
         if self.health <= 0:
             self.kill()
+            choice(self.game.mob_hit_sounds['explosion']).play()
         if self.pos.x > WIDTH:
             self.pos.x = 0
         if self.pos.x < 0:
@@ -326,15 +327,15 @@ class Game:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 1000:
-                while len(self.mobs) < 16:
+                while len(self.mobs) < 14:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 2500:
-                while len(self.mobs) < 25:
+                while len(self.mobs) < 20:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             if self.score > 4000:
-                while len(self.mobs) < 40:
+                while len(self.mobs) < 28:
                     Mob(self, random.randrange(0, WIDTH), random.randrange(0, HEIGHT))
                     self.score += MOB_SCORE
             self.draw()
