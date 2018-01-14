@@ -416,9 +416,9 @@ def Escape_Game(ext_screen, story):
             tunnels.add(t)
 
         if x < 100:
-            score += 1
+            score += 0.25
 
-        if score > newscore + 500:
+        if score > newscore + 400:
             newpowerup()
             newscore = score
 
@@ -533,7 +533,7 @@ def Escape_Game(ext_screen, story):
         all_sprites.draw(screen)
         tunnels.draw(screen)
 
-        draw_text(screen, str(score), 30, WIDTH / 2, 10)
+        draw_text(screen, str(int(score)), 30, WIDTH / 2, 10)
         draw_shield_bar(screen, 5, 5, player.shield)
         draw_lives(screen, WIDTH - 100, 5, player.lives, live)
         # After drawing everything, flip the display
