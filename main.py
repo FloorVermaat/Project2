@@ -233,7 +233,10 @@ class Main:
         self.MainGame_sprites.add(self.CreditsPlanet)
         self.BlackHolePlanet = BlackHolePlanet()
         self.MainGame_sprites.add(self.BlackHolePlanet)
-        self.MainSpaceship = MainPlayer(W / 2, H - 200)
+        self.StoryPlanet = StoryPlanet()
+        self.MainGame_sprites.add(self.StoryPlanet)
+
+        self.MainSpaceship = MainPlayer(W / 2 - 100, H - 200)
         self.MainGame_sprites.add(self.MainSpaceship)
 
 
@@ -267,6 +270,12 @@ class Main:
             self.EvadePlanet.active = True
         else:
             self.EvadePlanet.active = False
+
+        if self.StoryPlanet.rect.colliderect(self.MainSpaceship.rect) or \
+                self.StoryPlanet.rect.collidepoint(pygame.mouse.get_pos()):
+            self.StoryPlanet.active = True
+        else:
+            self.StoryPlanet.active = False
 
         if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect) or \
                 self.CreditsPlanet.rect.collidepoint(pygame.mouse.get_pos()):
@@ -309,6 +318,9 @@ class Main:
                     if self.EvadePlanet.rect.collidepoint(event.pos):
                         self.load_SE()
 
+                    if self.StoryPlanet.rect.collidepoint(event.pos):
+                        pass
+
                     if self.CreditsPlanet.rect.collidepoint(event.pos):
                         self.Credits_screen()
 
@@ -329,6 +341,8 @@ class Main:
                             self.load_SS()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.load_SE()
+                        if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
+                            pass
                         if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.Credits_screen()
                         if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect):
@@ -348,6 +362,10 @@ class Main:
                            self.EvadePlanet.rect.y - 40, WHITE)
             self.draw_text(self.screen, "Space Shooter", 14, self.ShootPlanet.rect.x + self.ShootPlanet.rect.w / 2,
                            self.ShootPlanet.rect.y - 40, WHITE)
+            self.draw_text(self.screen, "Story Mode", 14, self.StoryPlanet.rect.x + self.StoryPlanet.rect.w / 2,
+                           self.StoryPlanet.rect.y - 40, WHITE)
+
+
             self.draw_text(self.screen, "Exit", 14, self.BlackHolePlanet.rect.x + self.BlackHolePlanet.rect.w / 2 - 50,
                            self.BlackHolePlanet.rect.y - 25, WHITE)
             self.draw_text(self.screen, "Credits", 14, self.CreditsPlanet.rect.x + self.CreditsPlanet.rect.w / 2,
