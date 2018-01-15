@@ -366,7 +366,7 @@ class Main:
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.load_SE()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
-                            pass
+                            self.story()
                         if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.Credits_screen()
                         if self.BlackHolePlanet.rect.colliderect(self.MainSpaceship.rect):
