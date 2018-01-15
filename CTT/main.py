@@ -9,6 +9,7 @@ class Climb_The_Tower_Game:
         #Get Screen from Integration
         self.screen = screen
         self.ship = ship
+        self.win = False
 
         self.ship = pg.transform.rotate(self.ship, 90)
         self.ship = pg.transform.scale2x(self.ship)
@@ -308,7 +309,8 @@ class Climb_The_Tower_Game:
         self.screen.blit(self.loadbg, [0, 0])
         #self.draw_text(TITLE, 48, WHITE, WIDTH / 2, 70)
         self.draw_text("You Died", 48, WHITE, WIDTH / 2, 70)
-        self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2)
+        self.draw_text("High Score: " + "19240", 22, WHITE, WIDTH / 2, HEIGHT / 2 -20)
+        self.draw_text("Your Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2 +20)
         self.draw_text("Press the c key to play again", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
         self.wait_for_key()
@@ -319,12 +321,14 @@ class Climb_The_Tower_Game:
             return
         #self.screen.fill(BGCOLOR)
         self.screen.blit(self.loadbg, [0, 0])
+        self.win = True
 
         self.draw_text("You Won!", 48, WHITE, WIDTH / 2, 70)
         self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2)
         self.draw_text("Press the c to continue", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
         self.wait_for_key()
+
 
     def wait_for_key(self):
         waiting = True
@@ -340,6 +344,9 @@ class Climb_The_Tower_Game:
                     self.M.bg.stop()
                     print("c is pressed")
                     waiting = False
+
+                    if self.win:
+                        self.running = False
 
                 if pressed[pg.K_q]:
                     waiting = False

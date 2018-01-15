@@ -343,7 +343,7 @@ class Main:
                         self.load_SE()
 
                     if self.StoryPlanet.rect.collidepoint(event.pos):
-                        pass
+                        self.story()
 
                     if self.CreditsPlanet.rect.collidepoint(event.pos):
                         self.Credits_screen()
@@ -408,6 +408,63 @@ class Main:
 
             # Flip the screen
             pygame.display.flip()
+
+    def story(self):
+        story = True
+
+        #Load JPG 1
+        self.load_image("story/Story1.png")
+        if self.wait_for_space():
+            story = False
+
+        #Load JPG 2
+        self.load_image("story/Story2.png")
+        if self.wait_for_space():
+            story = False
+
+        #Load Legendary Space Pirate [Name]
+
+
+        if story:
+           self.load_CTT(True)
+
+        # Load JPG 3
+        self.load_image("story/Story3.png")
+        if self.wait_for_space():
+            story = False
+
+        if story:
+            self.load_SR(True)
+
+        # Load JPG 4
+        self.load_image("story/Story4.png")
+        if self.wait_for_space():
+            story = False
+
+        if story:
+            self.load_SE(True)
+
+        # Load JPG 5
+        self.load_image("story/Story5.png")
+        if self.wait_for_space():
+            story = False
+
+        if story:
+            self.load_SS(True)
+
+        # Load JPG 6
+        self.load_image("story/Story6.png")
+        if self.wait_for_space():
+            story = False
+
+        if story:
+            self.load_Blitz(True)
+
+        # Load JPG 7
+        self.load_image("story/Story7.png")
+        if self.wait_for_space():
+            story = False
+
 
 #      waiting = True
 #        while waiting:
