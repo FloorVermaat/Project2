@@ -365,7 +365,7 @@ class Main:
                             self.load_SS()
                         if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.load_SE()
-                        if self.EvadePlanet.rect.colliderect(self.MainSpaceship.rect):
+                        if self.StoryPlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.story()
                         if self.CreditsPlanet.rect.colliderect(self.MainSpaceship.rect):
                             self.Credits_screen()
@@ -460,7 +460,7 @@ class Main:
         if story:
             self.load_Blitz(True)
 
-        # Load JPG 7
+
         self.load_image("story/Story7.png")
         if self.wait_for_space():
             story = False
