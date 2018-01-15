@@ -232,7 +232,7 @@ def show_victory_screen():
         draw_text(screen, "VICTORY", 64, W / 2, H / 8)
         draw_text(screen, "your score was " + str(score), 15, W / 2, H / 3)
         draw_text(screen, "Press R key to return to homescreen", 15, W / 2, H / 2)
-        draw_text(screen, "Or press ESC to continue with the story when in story mode!", 15, W / 2, H / 2+ 50)
+        draw_text(screen, "Or press ESC twice to continue with the story when in story mode!", 15, W / 2, H / 2+ 50)
         if score > highscore:
             highscore = score
             newhighscore = True
@@ -247,6 +247,10 @@ def show_victory_screen():
             if pygame.key.get_pressed()[pygame.K_r]:
                 intro_screen = True
                 victory = False
+                waiting = False
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_q]:
+                Blitz.done = True
+                Blitz.intro_screen = False
                 waiting = False
 
 
@@ -1025,7 +1029,7 @@ class Blitz:
                 powerups.empty()
                 enemybullets.empty()
                 bullets.empty()
-                self.intro_screen = True
+                #self.intro_screen = True
                 show_victory_screen()
 
             # loop at right fps
