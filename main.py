@@ -43,6 +43,11 @@ class Main:
         text_rect.midtop = (x, y)
         surf.blit(text_surface, text_rect)
 
+    def load_image(self, path):
+        image = pygame.image.load(path).convert_alpha()
+        self.screen.blit(image, [0, 0])
+        pygame.display.flip()
+
     def Credits_screen(self):
         done = False
         cycle = 0
@@ -104,6 +109,25 @@ class Main:
 
             pygame.display.flip()
             self.clock.tick(FPS)
+
+    def wait_for_space(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    #waiting = False
+                    return True
+
+                pressed = pg.key.get_pressed()
+                if pressed[pg.K_SPACE]:
+                    #waiting = False
+                    return False
+
+                if pressed[pg.K_q]:
+                    #waiting = False
+                    return True
+
 
 
     def name_input_screen(self):
@@ -196,13 +220,13 @@ class Main:
         #CTT.init(self.screen)
 
 
-        #self.MainSpaceship = MainPlayer(-10000, -10000) #For Production Remove This Line
+        self.Spaceship = pygame.image.load("img/spaceship.png").convert_alpha()
 
-        CTT.CTT(self.screen, story, self.MainSpaceship.image_orig)
+        CTT.CTT(self.screen, story, self.Spaceship)
 
     def load_Blitz(self, story=False):
             import Blitz.main as Blitz
-            Blitz.Start(self.screen, story, self.name, self.MainSpaceship.image_orig)
+            Blitz.Start(self.screen, story, self.name, self.Spaceship)
 
     def load_SR(self, story=False):
         import SR.main as SR
@@ -391,7 +415,7 @@ class Main:
 
 
 def run():
-    story = False
+    story = True
     M = Main()
     # Autoload Can be setup by Main(1) or Main(2)
     # 1 For CTT
@@ -403,13 +427,59 @@ def run():
     M.name_input_screen()
 
     if story:
-        M.load_CTT(True)
-        M.load_SR(True)
-        M.load_SE(True)
-        M.load_SS(True)
-        M.load_Blitz(True)
+        #Load JPG 1
+        M.load_image("story/Story1.png")
 
-    else:
+        if M.wait_for_space():
+            story = False
+
+        M.load_image("story/Story2.png")
+
+        #Load JPG 2
+        if M.wait_for_space():
+            story = False
+
+        #Load Legendary Space Pirate [Name]
+
+
+        if story:
+           M.load_CTT(True)
+
+        M.load_image("story/Story3.png")
+        if M.wait_for_space():
+            story = False
+
+        if story:
+            M.load_SR(True)
+
+        M.load_image("story/Story4.png")
+        if M.wait_for_space():
+            story = False
+
+        if story:
+            M.load_SE(True)
+
+        M.load_image("story/Story5.png")
+        if M.wait_for_space():
+            story = False
+
+        if story:
+            M.load_SS(True)
+
+        M.load_image("story/Story6.png")
+        if M.wait_for_space():
+            story = False
+
+        if story:
+            M.load_Blitz(True)
+
+        M.load_image("story/Story7.png")
+        if M.wait_for_space():
+            story = False
+
+        story = False
+
+    if not story:
         M.select_Minigame()
 
 run()
