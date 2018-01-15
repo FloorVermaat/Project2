@@ -232,6 +232,7 @@ def show_victory_screen():
         draw_text(screen, "VICTORY", 64, W / 2, H / 8)
         draw_text(screen, "your score was " + str(score), 15, W / 2, H / 3)
         draw_text(screen, "Press R key to return to homescreen", 15, W / 2, H / 2)
+        draw_text(screen, "Or press ESC to continue with the story when in story mode!", 15, W / 2, H / 2+ 50)
         if score > highscore:
             highscore = score
             newhighscore = True
@@ -1059,7 +1060,7 @@ class Blitz:
                     enemyfleet.enemyspawn = score
 
             # BOSS BATTLE!
-            if score >= 10000 and not bossbattle and Blitzstory:
+            if score >= 15000 and not bossbattle and Blitzstory:
                 Blitz_sprites.remove(enemyship)
                 Blitz_sprites.remove(mobs)
                 mobs.empty()
