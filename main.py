@@ -433,7 +433,7 @@ class Main:
 
 
 def run():
-    story = True
+    story = False
     M = Main()
     # Autoload Can be setup by Main(1) or Main(2)
     # 1 For CTT

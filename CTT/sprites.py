@@ -21,6 +21,7 @@ class Player(pg.sprite.Sprite):
         self.land = False
         self.djump = True
         self.djumpcool = 500
+        self.boostersound = pg.mixer.Sound("CTT/assets/boost.wav")
 
     def draw_cooldown(self, surf, x, y):
         bar_length = 200
@@ -61,6 +62,7 @@ class Player(pg.sprite.Sprite):
         if not self.djump:
             self.djumpcool += -1
             if self.djumpcool <= 0:
+                self.boostersound.play()
                 self.djump = True
                 self.djumpcool = 0
 
@@ -280,5 +282,7 @@ class Music:
 
         self.bg = pg.mixer.Sound("CTT/assets/ErrorManagement.ogg")
         self.bg.set_volume(0.02)
+
+        self.booster = pg.mixer.Sound("CTT/assets/boost.wav")
 
 

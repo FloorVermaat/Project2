@@ -14,6 +14,8 @@ class Climb_The_Tower_Game:
         self.ship = pg.transform.scale2x(self.ship)
         self.ship = pg.transform.scale2x(self.ship)
 
+        self.loadbg = pg.image.load("CTT/sprites/Intro_bg.jpg")
+
 
         self.story = story
 
@@ -61,10 +63,6 @@ class Climb_The_Tower_Game:
 
         while self.tower.i < 500:
             t = Tower(self.spriteArrayTower, 10, self.tower.i)
-
-            if self.tower.i >25 and self.story:
-                t = Tower(self.spriteArrayTower, 10, self.tower.i, self.ship)
-                self.tower.i = 500
 
             self.all_sprites.add(t)
             self.tower.add(t)
@@ -123,6 +121,9 @@ class Climb_The_Tower_Game:
                     print(self.tower.d)
 
 
+
+
+
         # Die!
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.all_sprites:
@@ -165,7 +166,7 @@ class Climb_The_Tower_Game:
             self.platforms_last.height = height
 
 
-        if self.score >= 1000:
+        if self.score >= 1000 and self.story:
             self.win = True
             self.playing = False
 
@@ -203,10 +204,13 @@ class Climb_The_Tower_Game:
         pg.display.flip()
     def show_start_screen(self):
         # game splash/start screen
-        self.screen.fill(BGCOLOR)
-        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
-        self.draw_text("Use AD or the Arrow Keys to move left or right!"
-                       "Space is used to jump!", 22, WHITE, WIDTH / 2, HEIGHT / 2)
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(self.loadbg, [0, 0])
+        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, 70)
+        self.draw_text("Use AD or the Arrow Keys to move left or right", 22, WHITE, WIDTH / 2, HEIGHT / 2 - 20)
+        self.draw_text("Space is used to jump", 22, WHITE, WIDTH / 2, HEIGHT / 2 + 20)
+        self.draw_text("Press space while jumping for a double Jump!", 22, WHITE, WIDTH / 2, HEIGHT / 2 + 60)
+
         self.draw_text("Press the c key to start", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
 
         #import imageio
@@ -223,8 +227,9 @@ class Climb_The_Tower_Game:
 
     def show_load_screen(self):
         # game splash/start screen
-        self.screen.fill(BGCOLOR)
-        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(self.loadbg, [0,0])
+        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, 70)
         self.draw_text("The Game Is Loading Right now!"
                        "", 22, WHITE, WIDTH / 2, HEIGHT / 2)
 
@@ -232,38 +237,10 @@ class Climb_The_Tower_Game:
         pg.display.flip()
 
         ##Loading
-        self.spriteArrayTower = []
-
         ProgressBar = 0
 
+        self.spriteArrayTower = []
 
-
-        self.spriteArrayBackground = []
-
-        bgi = 50
-        while bgi <= 99:
-            self.path = "CTT/sprites/city_ash/image-0" + str(bgi) + ".png"
-            #print(i)
-            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
-            bgi += 1
-            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
-
-            ProgressBar += 1
-            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
-            pg.display.flip()
-
-
-
-        while bgi <= 365:
-            self.path = "CTT/sprites/city_ash/image-" + str(bgi) + ".png"
-            #print(i)
-            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
-            bgi += 1
-            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
-
-            ProgressBar += 1
-            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
-            pg.display.flip()
 
 
         ti = 1
@@ -276,6 +253,41 @@ class Climb_The_Tower_Game:
             ProgressBar += 1
             self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50)
             pg.display.flip()
+
+
+
+
+
+
+        self.spriteArrayBackground = []
+
+        bgi = 50
+        while bgi <= 99:
+            self.path = "CTT/sprites/city_small/image-0" + str(bgi) + ".jpg"
+            #print(i)
+            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
+            bgi += 1
+            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
+
+            ProgressBar += 1
+            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
+            pg.display.flip()
+
+
+
+        while bgi <= 365:
+            self.path = "CTT/sprites/city_small/image-" + str(bgi) + ".jpg"
+            #print(i)
+            self.spriteArrayBackground.append(pg.image.load(self.path).convert_alpha())
+            bgi += 1
+            print("City Background Frame #" + str(len(self.spriteArrayBackground)))
+
+            ProgressBar += 1
+            self.draw_loadProgress(self.screen, ProgressBar, WIDTH / 2 - 250, HEIGHT * 3 / 4 + 50 )
+            pg.display.flip()
+
+
+
 
 
     def draw_loadProgress(self, surf, pb, x, y):
@@ -292,8 +304,10 @@ class Climb_The_Tower_Game:
         # game over/continue
         if not self.running:
             return
-        self.screen.fill(BGCOLOR)
-        self.draw_text("U DED", 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(self.loadbg, [0, 0])
+        #self.draw_text(TITLE, 48, WHITE, WIDTH / 2, 70)
+        self.draw_text("You Died", 48, WHITE, WIDTH / 2, 70)
         self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2)
         self.draw_text("Press the c key to play again", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
@@ -303,10 +317,12 @@ class Climb_The_Tower_Game:
         # game over/continue
         if not self.running:
             return
-        self.screen.fill(BGCOLOR)
-        self.draw_text("U Win", 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(self.loadbg, [0, 0])
+
+        self.draw_text("You Won!", 48, WHITE, WIDTH / 2, 70)
         self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2)
-        self.draw_text("Press the c key to play again", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        self.draw_text("Press the c to continue", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         pg.display.flip()
         self.wait_for_key()
 
